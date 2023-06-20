@@ -37,6 +37,7 @@ public class Game {
         Spawn.create();
         Environnement.setGamerules();
         Spawn.teleportPlayers();
+        Spawn.giveItemsPlayers();
     }
 
     public void setDefiBonus(boolean defiBonus) {
