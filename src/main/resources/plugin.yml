@@ -1,4 +1,8 @@
 name: Bingo
 version: '${project.version}'
 main: fr.sny1411.bingo.Bingo
-api-version: 1.20
+api-version: '1.20'
+commands:
+  newGame:
+    description: create a new game
+    permission: bingo.newGame
