@@ -21,7 +21,8 @@ public class NewGame implements CommandExecutor {
                 }
             }
             Bingo.setGame(new Game());
+            return false;
         }
-        return false;
+        return true;
     }
 }
