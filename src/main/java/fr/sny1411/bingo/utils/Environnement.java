@@ -8,7 +8,7 @@ import org.bukkit.World;
 import java.util.List;
 import java.util.Objects;
 
-public class Environnement {
+public abstract class Environnement {
 
     private static final List<World> worlds = Bukkit.getWorlds();
 
