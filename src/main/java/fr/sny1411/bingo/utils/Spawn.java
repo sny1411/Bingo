@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -43,5 +44,20 @@ public abstract class Spawn {
                 Bukkit.getLogger().log(Level.WARNING, String.format("%s teleport error", player.getName()));
             }
         });
+    }
+
+    public static void giveItemsPlayers() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            giveItemsPlayer(player);
+        }
+    }
+
+    public static void giveItemsPlayer(Player player) {
+        Inventory playerInventory = player.getInventory();
+        playerInventory.clear();
+        if (player.isOp()) {
+            playerInventory.setItem(0, Items.getSettings());
+        }
+        playerInventory.setItem(4, Items.getTeamSelector());
     }
 }

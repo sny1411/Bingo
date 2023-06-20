@@ -15,7 +15,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent e) {
-        e.joinMessage(Component.text(String.format("§8[§a+§8]§e %s", e.getPlayer())));
+        e.joinMessage(Component.text(String.format("§8[§a+§8]§e %s", e.getPlayer().getName())));
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
             Spawn.teleportPlayer(e.getPlayer());
         }
@@ -23,7 +23,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     private void onPlayerQuit(PlayerQuitEvent e) {
-        e.quitMessage(Component.text(String.format("§8[§c-§8]§e %s", e.getPlayer())));
+        e.quitMessage(Component.text(String.format("§8[§c-§8]§e %s", e.getPlayer().getName())));
     }
 
     @EventHandler
