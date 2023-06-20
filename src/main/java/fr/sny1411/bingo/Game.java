@@ -1,13 +1,16 @@
 package fr.sny1411.bingo;
 
+import fr.sny1411.bingo.utils.Environnement;
+import fr.sny1411.bingo.utils.Spawn;
+
 public class Game {
-    enum ModeAffichage {CHILL, COMPETITION}
+    public enum ModeAffichage {CHILL, COMPETITION}
 
-    enum ModeJeu {CLASSIC, DUEL, HANDICAP}
+    public enum ModeJeu {CLASSIC, DUEL, HANDICAP}
 
-    enum ModeVictoire {BINGO, DEFIS}
+    public enum ModeVictoire {BINGO, DEFIS}
 
-    enum Etat {SETUP, INGAME, ENDGAME}
+    public enum Etat {SETUP, INGAME, ENDGAME}
 
     private boolean defiBonus;
     private boolean playersDamage;
@@ -27,6 +30,13 @@ public class Game {
 
     public Game() {
         this(false, false, ModeAffichage.CHILL, ModeJeu.CLASSIC, ModeVictoire.BINGO, Etat.SETUP);
+        setup();
+    }
+
+    private void setup() {
+        Spawn.create();
+        Environnement.setGamerules();
+        Spawn.teleportPlayers();
     }
 
     public void setDefiBonus(boolean defiBonus) {
