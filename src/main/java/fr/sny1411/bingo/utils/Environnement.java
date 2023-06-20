@@ -12,7 +12,7 @@ public abstract class Environnement {
 
     private static final List<World> worlds = Bukkit.getWorlds();
 
-    public void setGamerule() {
+    public static void setGamerules() {
         for (World world : worlds) {
             Objects.requireNonNull(Bukkit.getWorld(world.getName())).setDifficulty(Difficulty.HARD);
             world.setGameRule(GameRule.DO_WEATHER_CYCLE, true);
