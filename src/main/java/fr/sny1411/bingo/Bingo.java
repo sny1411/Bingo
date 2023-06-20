@@ -3,6 +3,7 @@ package fr.sny1411.bingo;
 import fr.sny1411.bingo.commands.NewGame;
 import fr.sny1411.bingo.listener.PlayerListener;
 import fr.sny1411.bingo.listener.SetupListener;
+import fr.sny1411.bingo.utils.Items;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,6 +16,7 @@ public final class Bingo extends JavaPlugin {
     @Override
     public void onEnable() {
         PaperLib.suggestPaper(this);
+        Items.init();
         game = new Game();
 
         Objects.requireNonNull(getCommand("newGame")).setExecutor(new NewGame());
