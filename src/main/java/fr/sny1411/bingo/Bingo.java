@@ -3,6 +3,7 @@ package fr.sny1411.bingo;
 import fr.sny1411.bingo.commands.NewGame;
 import fr.sny1411.bingo.listener.PlayerListener;
 import fr.sny1411.bingo.listener.SetupListener;
+import fr.sny1411.bingo.listener.gui.TeamsGui;
 import fr.sny1411.bingo.utils.Items;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ public final class Bingo extends JavaPlugin {
         Objects.requireNonNull(getCommand("newGame")).setExecutor(new NewGame());
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new SetupListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new TeamsGui(), this);
     }
 
     @Override

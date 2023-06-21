@@ -8,10 +8,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 public abstract class Items {
     private static ItemStack settings;
     private static ItemStack teamSelector;
+    private static ItemStack glassForGui;
 
     public static void init() {
         initSettings();
         initTeamSelector();
+        initGlassForGui();
+    }
+
+    private static void initGlassForGui() {
+        glassForGui = new ItemStack(Material.GRAY_STAINED_GLASS_PANE, 1);
+        ItemMeta metaGlassGui = glassForGui.getItemMeta();
+        metaGlassGui.displayName(Component.text(" "));
+        glassForGui.setItemMeta(metaGlassGui);
     }
 
     private static void initSettings() {
@@ -34,5 +43,9 @@ public abstract class Items {
 
     public static ItemStack getTeamSelector() {
         return teamSelector;
+    }
+
+    public static ItemStack getGlassForGui() {
+        return glassForGui;
     }
 }

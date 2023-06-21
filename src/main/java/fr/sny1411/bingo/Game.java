@@ -2,6 +2,7 @@ package fr.sny1411.bingo;
 
 import fr.sny1411.bingo.utils.Environnement;
 import fr.sny1411.bingo.utils.Spawn;
+import fr.sny1411.bingo.utils.Team;
 
 public class Game {
     public enum ModeAffichage {CHILL, COMPETITION}
@@ -38,6 +39,7 @@ public class Game {
         Environnement.setGamerules();
         Spawn.teleportPlayers();
         Spawn.giveItemsPlayers();
+        Team.init();
     }
 
     public void setDefiBonus(boolean defiBonus) {
