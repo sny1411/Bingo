@@ -6,3 +6,6 @@ commands:
   newGame:
     description: create a new game
     permission: bingo.newGame
+  start:
+    description: start game
+    permission: bingo.start
