@@ -22,6 +22,8 @@ public final class Bingo extends JavaPlugin {
         game = new Game();
 
         Objects.requireNonNull(getCommand("newGame")).setExecutor(new NewGame());
+        Objects.requireNonNull(getCommand("start")).setExecutor(new NewGame());
+
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new SetupListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new TeamsGui(), this);

@@ -1,5 +1,6 @@
 package fr.sny1411.bingo;
 
+import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Environnement;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
@@ -40,6 +41,7 @@ public class Game {
         Spawn.teleportPlayers();
         Spawn.giveItemsPlayers();
         Team.createTeams();
+        Challenge.init();
     }
 
     public void setDefiBonus(boolean defiBonus) {
