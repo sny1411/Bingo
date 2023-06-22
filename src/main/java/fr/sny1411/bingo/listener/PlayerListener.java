@@ -3,6 +3,7 @@ package fr.sny1411.bingo.listener;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Spawn;
+import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,7 +28,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     private void onPlayerQuit(PlayerQuitEvent e) {
         e.quitMessage(Component.text(String.format("§8[§c-§8]§e %s", e.getPlayer().getName())));
-        // TODO : après création team, ne pas oublier retirer team au joueur qui se déco
+        Team.removeTeam(e.getPlayer());
     }
 
     @EventHandler

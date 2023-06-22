@@ -21,13 +21,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class TeamsGui implements Listener {
-    private static Inventory gui;
+    private static final Inventory gui = Bukkit.createInventory(null, 27, Component.text("§3§lSélection des équipes"));
     private static final Set<Player> playersInGui = new HashSet<>();
 
     public static void openGui(Player player) {
-        gui = Bukkit.createInventory(null, 27, Component.text("§3§lSélection des équipes"));
-
+        gui.clear();
         Iterator<Team> iteratorTeam = Team.getTeams().values().iterator();
+        Bukkit.getConsoleSender().sendMessage(Component.text(Team.getTeams().values().toString()));
         int compteurTeam = 0;
         for (int i = 0; i < 27; i++) {
             if (i > 9 && i < 17) {
