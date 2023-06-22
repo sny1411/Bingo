@@ -10,12 +10,8 @@ import java.util.Set;
 public class Team {
     private static HashMap<Color, Team> teams;
 
-    public static void init() {
-        removeTeams();
-        createTeams();
-    }
-
     public static void createTeams() {
+        removeTeams();
         int i = 0;
         for (Color color : Color.values()) {
             createTeam(color);
@@ -136,5 +132,6 @@ public class Team {
 
     public static void setNbPlayerTeams(int nbPlayerTeams) {
         Team.nbPlayerTeams = nbPlayerTeams;
+        createTeams();
     }
 }

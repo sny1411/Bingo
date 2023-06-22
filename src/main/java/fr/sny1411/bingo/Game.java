@@ -39,7 +39,7 @@ public class Game {
         Environnement.setGamerules();
         Spawn.teleportPlayers();
         Spawn.giveItemsPlayers();
-        Team.init();
+        Team.createTeams();
     }
 
     public void setDefiBonus(boolean defiBonus) {
