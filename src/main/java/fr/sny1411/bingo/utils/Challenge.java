@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class Challenge {
@@ -23,6 +25,32 @@ public class Challenge {
     private static int maxMedium;
     private static int maxHard;
     private static int maxExtreme;
+    private static int nbEasy = 0;
+    private static int nbMedium = 0;
+    private static int nbHard = 0;
+    private static int nbExtreme = 0;
+
+    private static List<Challenge> challenges = new ArrayList<>();
+
+    public static List<Challenge> getChallenges() {
+        return challenges;
+    }
+
+    public static int getNbEasy() {
+        return nbEasy;
+    }
+
+    public static int getNbMedium() {
+        return nbMedium;
+    }
+
+    public static int getNbHard() {
+        return nbHard;
+    }
+
+    public static int getNbExtreme() {
+        return nbExtreme;
+    }
 
     public static int getMaxEasy() {
         return maxEasy;
@@ -87,13 +115,14 @@ public class Challenge {
     private static void createChallenges() {
         try {
             URL resourceURL = Game.getBingoInstance().getClass().getResource("/challenges.csv");
+            assert resourceURL != null;
             URLConnection connection = resourceURL.openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] lineSplit = line.split("\\|");
                 ItemStack item = createItem(lineSplit[0], lineSplit[1], lineSplit[3]);
-
+                challenges.add(new Challenge(lineSplit[2], lineSplit[0], item));
             }
             Bukkit.getConsoleSender().sendMessage(Component.text(resourceURL.getPath()));
 
@@ -185,12 +214,30 @@ public class Challenge {
     private Boolean realized;
     private Boolean validated;
 
-    private Challenge(Difficult difficult, String name, ItemStack item) {
-        this.difficult = difficult;
+    private Challenge(String difficult, String name, ItemStack item) {
         this.name = name;
         this.item = item;
         this.realized = false;
         this.validated = false;
+
+        switch (Difficult.valueOf(difficult)) {
+            case EASY -> {
+                nbEasy++;
+                this.difficult = Difficult.EASY;
+            }
+            case MEDIUM -> {
+                nbMedium++;
+                this.difficult = Difficult.MEDIUM;
+            }
+            case HARD -> {
+                nbHard++;
+                this.difficult = Difficult.HARD;
+            }
+            case EXTREME -> {
+                nbExtreme++;
+                this.difficult = Difficult.EXTREME;
+            }
+        }
     }
 
     public Difficult getDifficult() {
