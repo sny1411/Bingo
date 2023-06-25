@@ -20,6 +20,7 @@ public class Game {
     private ModeJeu modeJeu;
     private ModeVictoire modeVictoire;
     private Etat etat;
+    private static Bingo bingoInstance;
 
     private Game(boolean defiBonus, boolean playersDamage, ModeAffichage modeAffichage, ModeJeu modeJeu, ModeVictoire modeVictoire, Etat etat) {
         this.defiBonus = defiBonus;
@@ -42,6 +43,14 @@ public class Game {
         Spawn.giveItemsPlayers();
         Team.createTeams();
         Challenge.init();
+    }
+
+    public static Bingo getBingoInstance() {
+        return bingoInstance;
+    }
+
+    public static void setBingoInstance(Bingo bingoInstance) {
+        Game.bingoInstance = bingoInstance;
     }
 
     public void setDefiBonus(boolean defiBonus) {

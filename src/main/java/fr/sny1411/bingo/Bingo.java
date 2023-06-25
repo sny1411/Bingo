@@ -19,6 +19,7 @@ public final class Bingo extends JavaPlugin {
     public void onEnable() {
         PaperLib.suggestPaper(this);
         Items.init();
+        Game.setBingoInstance(this);
         game = new Game();
 
         Objects.requireNonNull(getCommand("newGame")).setExecutor(new NewGame());

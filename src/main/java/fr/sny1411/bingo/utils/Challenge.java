@@ -1,6 +1,18 @@
 package fr.sny1411.bingo.utils;
 
+import fr.sny1411.bingo.Game;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.logging.Level;
 
 public class Challenge {
     public enum Difficult {EASY, MEDIUM, HARD, EXTREME}
@@ -69,15 +81,143 @@ public class Challenge {
 
     public static void init() {
         presetThreePlayers();
+        createChallenges();
+    }
+
+    private static void createChallenges() {
+        try {
+            URL resourceURL = Game.getBingoInstance().getClass().getResource("/challenges.csv");
+            URLConnection connection = resourceURL.openConnection();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] lineSplit = line.split("\\|");
+                ItemStack item = createItem(lineSplit[0], lineSplit[1], lineSplit[3]);
+
+            }
+            Bukkit.getConsoleSender().sendMessage(Component.text(resourceURL.getPath()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static ItemStack createItem(String name, String description, String type) {
+        ItemStack item = null;
+        if (Character.isUpperCase(type.charAt(0))) {
+            Material material = Material.valueOf(type);
+            Bukkit.getLogger().log(Level.INFO, material.toString());
+            item = new ItemStack(material);
+        } else {
+            switch (type) {
+                case "harming":
+                    item = Items.Challenge.getHarming();
+                    break;
+                case "dolphin":
+                    item = Items.Challenge.getDolphin();
+                    break;
+                case "fox":
+                    item = Items.Challenge.getFox();
+                    break;
+                case "horse":
+                    item = Items.Challenge.getHorse();
+                    break;
+                case "strider":
+                    item = Items.Challenge.getStrider();
+                    break;
+                case "cavespider":
+                    item = Items.Challenge.getCavespider();
+                    break;
+                case "llama":
+                    item = Items.Challenge.getLlama();
+                    break;
+                case "parrot":
+                    item = Items.Challenge.getParrot();
+                    break;
+                case "pillager":
+                    item = Items.Challenge.getPillager();
+                    break;
+                case "leatherBoots":
+                    item = Items.Challenge.getLeatherBoots();
+                    break;
+                case "piglin":
+                    item = Items.Challenge.getPiglin();
+                    break;
+                case "ghast":
+                    item = Items.Challenge.getGhast();
+                    break;
+                case "elderGuardian":
+                    item = Items.Challenge.getElderGuardian();
+                    break;
+                case "ironGolem":
+                    item = Items.Challenge.getIronGolem();
+                    break;
+                case "regen":
+                    item = Items.Challenge.getRegen();
+                    break;
+                case "diamondChestplate":
+                    item = Items.Challenge.getDiamondChestplate();
+                    break;
+                case "silverfish":
+                    item = Items.Challenge.getSilverfish();
+                    break;
+                case "enderman":
+                    item = Items.Challenge.getEnderman();
+                    break;
+                case "bowser":
+                    item = Items.Challenge.getBowser();
+                    break;
+            }
+        }
+        assert item != null;
+        ItemMeta itemMeta = item.getItemMeta();
+        itemMeta.displayName(Component.text(name));
+        itemMeta.lore(Text.divideString(description));
+        item.setItemMeta(itemMeta);
+        return item;
     }
 
     // Object
     private Difficult difficult;
     private String name;
-    private String description;
     private ItemStack item;
     private Boolean realized;
     private Boolean validated;
 
+    private Challenge(Difficult difficult, String name, ItemStack item) {
+        this.difficult = difficult;
+        this.name = name;
+        this.item = item;
+        this.realized = false;
+        this.validated = false;
+    }
 
+    public Difficult getDifficult() {
+        return difficult;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ItemStack getItem() {
+        return item;
+    }
+
+    public Boolean getRealized() {
+        return realized;
+    }
+
+    public Boolean getValidated() {
+        return validated;
+    }
+
+    public void setRealized(Boolean realized) {
+        this.realized = realized;
+    }
+
+    public void setValidated(Boolean validated) {
+        this.validated = validated;
+    }
 }
