@@ -2,7 +2,6 @@ package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Game;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,9 +11,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
 
 public class Challenge {
     public enum Difficult {EASY, MEDIUM, HARD, EXTREME}
@@ -117,14 +117,14 @@ public class Challenge {
             URL resourceURL = Game.getBingoInstance().getClass().getResource("/challenges.csv");
             assert resourceURL != null;
             URLConnection connection = resourceURL.openConnection();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] lineSplit = line.split("\\|");
                 ItemStack item = createItem(lineSplit[0], lineSplit[1], lineSplit[3]);
                 challenges.add(new Challenge(lineSplit[2], lineSplit[0], item));
             }
-            Bukkit.getConsoleSender().sendMessage(Component.text(resourceURL.getPath()));
+            Collections.shuffle(challenges);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -136,7 +136,6 @@ public class Challenge {
         ItemStack item = null;
         if (Character.isUpperCase(type.charAt(0))) {
             Material material = Material.valueOf(type);
-            Bukkit.getLogger().log(Level.INFO, material.toString());
             item = new ItemStack(material);
         } else {
             switch (type) {
@@ -221,22 +220,22 @@ public class Challenge {
         this.validated = false;
 
         switch (Difficult.valueOf(difficult)) {
-            case EASY -> {
+            case EASY:
                 nbEasy++;
                 this.difficult = Difficult.EASY;
-            }
-            case MEDIUM -> {
+                break;
+            case MEDIUM:
                 nbMedium++;
                 this.difficult = Difficult.MEDIUM;
-            }
-            case HARD -> {
+                break;
+            case HARD:
                 nbHard++;
                 this.difficult = Difficult.HARD;
-            }
-            case EXTREME -> {
+                break;
+            case EXTREME:
                 nbExtreme++;
                 this.difficult = Difficult.EXTREME;
-            }
+                break;
         }
     }
 

@@ -1,7 +1,7 @@
-§d§lVa te faire foutre!|§e§oMeurs.|EASY|SKELETON_SKULL
+§d§lSuicide Squad|§e§oMeurs.|EASY|SKELETON_SKULL
 §d§lBoulets de canon|§e§oRécupérer 6 fire charges|EASY|FIRE_CHARGE
 §d§lDéforestation|§e§oRécupérer 64 bûches d'acacia|EASY|IRON_AXE
-§d§lTerroriste???|§e§oPosséder 5 TNT|EASY|TNT
+§d§lEt ça fait bim bam boom|§e§oPosséder 5 TNT|EASY|TNT
 §d§lTop Chef|§e§oPosséder un gâteau|MEDIUM|CAKE
 §d§lForgeron|§e§oPosséder une enclume|EASY|ANVIL
 §d§lLa dame du CDI|§e§oPosséder 16 livres|EASY|BOOK
@@ -28,7 +28,7 @@
 §d§lTu es grosse Mélissandre|§e§oPosséder une tarte à la citrouille|EASY|PUMPKIN_PIE
 §d§lDestrier des Enfers|§e§oTuer un strider|MEDIUM|strider
 §d§lY'a du bambou là !|§e§oRécupérer 64 bambous|MEDIUM|BAMBOO
-§d§lCollectionneur|§e§oPosséder un block de chaque minerai, sauf la Netherite|MEDIUM|DIAMOND_BLOCK
+§d§lCollectionneur|§e§oPosséder un block de chaque minerai, sauf la Netherite|HARD|DIAMOND_BLOCK
 §d§lTu es un sorcier Harry !|§e§oBoire une potion de speed II en tenant une baguette de pain dans la seconde main|MEDIUM|BREAD
 §d§lBienvenue en Enfer|§e§oPénétrer dans le Nether|EASY|OBSIDIAN
 §d§lArachnophobe|§e§oTuer une cave spider|MEDIUM|cavespider
@@ -86,7 +86,7 @@
 §d§lStonks Industries|§e§oFaire un échange avec un villageois|EASY|EMERALD
 §d§lIl est bon mon poisson|§e§oTuer un Elder Guardian|HARD|elderGuardian
 §d§lTricot|§e§oTondre un mouton violet|EASY|PURPLE_WOOL
-§d§lLe géant de fer|§e§oTuer un golem de fer|EASY|ironGolem
+§d§lOptimum prime|§e§oTuer un golem de fer|EASY|ironGolem
 §d§lRecyclage|§e§oFaire de la bone meal depuis un composteur|EASY|COMPOSTER
 §d§lBatman|§e§oRenommer une chauve-souris Batman|MEDIUM|NAME_TAG
 §d§lRemède magique|§e§oAvoir l'effet régenération II|MEDIUM|regen

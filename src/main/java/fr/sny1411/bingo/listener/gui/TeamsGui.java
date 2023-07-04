@@ -49,7 +49,7 @@ public class TeamsGui implements Listener {
     }
 
     private static ItemStack itemTeam(Team.Color color) {
-        ItemStack item = new ItemStack(color.getMaterial());
+        ItemStack item = new ItemStack(color.getMaterialTeamGui());
         ItemMeta itemMeta = item.getItemMeta();
 
         itemMeta.displayName(Component.text(String.format("%s%s", color.getPrefixe(), color.getNom())));
