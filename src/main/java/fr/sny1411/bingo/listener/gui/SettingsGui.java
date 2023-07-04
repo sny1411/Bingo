@@ -481,5 +481,6 @@ public class SettingsGui implements Listener {
                 }
             }
         }
+        e.setCancelled(true);
     }
 }

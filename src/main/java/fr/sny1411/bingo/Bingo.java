@@ -1,13 +1,17 @@
 package fr.sny1411.bingo;
 
 import fr.sny1411.bingo.commands.NewGame;
+import fr.sny1411.bingo.commands.Start;
+import fr.sny1411.bingo.listener.ChallengesListener;
 import fr.sny1411.bingo.listener.PlayerListener;
 import fr.sny1411.bingo.listener.SetupListener;
+import fr.sny1411.bingo.listener.gui.BingoGui;
 import fr.sny1411.bingo.listener.gui.SettingsGui;
 import fr.sny1411.bingo.listener.gui.TeamsGui;
 import fr.sny1411.bingo.utils.Items;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -21,14 +25,18 @@ public final class Bingo extends JavaPlugin {
         Items.init();
         Game.setBingoInstance(this);
         game = new Game();
+        PluginManager pluginManager = Bukkit.getServer().getPluginManager();
 
         Objects.requireNonNull(getCommand("newGame")).setExecutor(new NewGame());
-        Objects.requireNonNull(getCommand("start")).setExecutor(new NewGame());
+        Objects.requireNonNull(getCommand("start")).setExecutor(new Start(this));
+        Objects.requireNonNull(getCommand("bingo")).setExecutor(new fr.sny1411.bingo.commands.Bingo());
 
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new SetupListener(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new TeamsGui(), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new SettingsGui(), this);
+        pluginManager.registerEvents(new PlayerListener(), this);
+        pluginManager.registerEvents(new SetupListener(), this);
+        pluginManager.registerEvents(new TeamsGui(), this);
+        pluginManager.registerEvents(new SettingsGui(), this);
+        pluginManager.registerEvents(new BingoGui(), this);
+        pluginManager.registerEvents(new ChallengesListener(), this);
     }
 
     @Override

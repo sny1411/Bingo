@@ -9,3 +9,5 @@ commands:
   start:
     description: start game
     permission: bingo.start
+  bingo:
+    description: open bingo gui

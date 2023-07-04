@@ -52,22 +52,24 @@ public class Team {
     }
 
     public enum Color {
-        ORANGE("§6", "Orange", Material.ORANGE_BANNER),
-        ROUGE("§c", "Rouge", Material.RED_BANNER),
-        VIOLET("§5", "Violet", Material.PURPLE_BANNER),
-        ROSE("§d", "Rose", Material.PINK_BANNER),
-        VERT("§a", "Vert", Material.LIME_BANNER),
-        BLEU("§b", "Bleu", Material.LIGHT_BLUE_BANNER),
-        SPECTATOR("§8[SPEC] §7§o", "Spectateur", Material.ENDER_EYE);
+        ORANGE("§6", "Orange", Material.ORANGE_BANNER, Material.ORANGE_CONCRETE),
+        ROUGE("§c", "Rouge", Material.RED_BANNER, Material.RED_CONCRETE),
+        VIOLET("§5", "Violet", Material.PURPLE_BANNER, Material.PURPLE_CONCRETE),
+        ROSE("§d", "Rose", Material.PINK_BANNER, Material.PINK_CONCRETE),
+        VERT("§a", "Vert", Material.LIME_BANNER, Material.LIME_CONCRETE),
+        BLEU("§b", "Bleu", Material.LIGHT_BLUE_BANNER, Material.LIGHT_BLUE_CONCRETE),
+        SPECTATOR("§8[SPEC] §7§o", "Spectateur", Material.ENDER_EYE, null);
 
         private final String prefixe;
         private final String nom;
-        private final Material material;
+        private final Material materialTeamGui;
+        private final Material materialBingoGui;
 
-        Color(String prefixe, String nom, Material material) {
+        Color(String prefixe, String nom, Material materialTeamGui, Material materialBingoGui) {
             this.prefixe = prefixe;
             this.nom = nom;
-            this.material = material;
+            this.materialTeamGui = materialTeamGui;
+            this.materialBingoGui = materialBingoGui;
         }
 
         public String getPrefixe() {
@@ -78,15 +80,19 @@ public class Team {
             return nom;
         }
 
-        public Material getMaterial() {
-            return material;
+        public Material getMaterialTeamGui() {
+            return materialTeamGui;
+        }
+
+        public Material getMaterialBingoGui() {
+            return materialBingoGui;
         }
     }
 
     private static int nbTeams = 4;
     private static int nbPlayerTeams = 2;
     private final Set<Player> players;
-    private Color color;
+    private final Color color;
 
     private Team(Color color) {
         this.color = color;

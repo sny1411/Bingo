@@ -16,13 +16,13 @@ public interface Text {
             if (currentString.length() + word.length() <= 30) {
                 currentString.append(word).append(" ");
             } else {
-                dividedStrings.add(Component.text(currentString.toString().trim()));
+                dividedStrings.add(Component.text("§e§o" + currentString.toString().trim()));
                 currentString = new StringBuilder(word).append(" ");
             }
         }
 
         if (currentString.length() > 0) {
-            dividedStrings.add(Component.text(currentString.toString().trim()));
+            dividedStrings.add(Component.text("§e§o" + currentString.toString().trim()));
         }
 
         return dividedStrings;
