@@ -16,12 +16,15 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.logging.Level;
+
 public class SetupListener implements Listener {
     private final Game game = Bingo.getGame();
 
     @EventHandler
     private void onInventoryMove(InventoryClickEvent e) {
         if (game.getEtat() == Game.Etat.SETUP) {
+            Bukkit.getLogger().log(Level.INFO, "click1");
             e.setCancelled(true);
         }
     }

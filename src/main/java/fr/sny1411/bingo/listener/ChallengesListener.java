@@ -1,37 +1,39 @@
 package fr.sny1411.bingo.listener;
 
-import fr.sny1411.bingo.utils.Challenge;
-import fr.sny1411.bingo.utils.Grid;
-import fr.sny1411.bingo.utils.Team;
-import fr.sny1411.bingo.utils.Terracota;
-import org.bukkit.Bukkit;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.Statistic;
+import fr.sny1411.bingo.utils.*;
+import net.kyori.adventure.text.Component;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Levelled;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.CauldronLevelChangeEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.event.raid.RaidTriggerEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class ChallengesListener implements Listener {
     private static boolean verifSetOfItems(Inventory inventory, ItemStack... items) {
@@ -43,29 +45,31 @@ public class ChallengesListener implements Listener {
 
     private static void realizeChallenge(Player player, String challengeName) {
         Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeName);
-        if (challenge != null) {
+        if (challenge != null && !challenge.getRealized()) {
             challenge.setRealized(true);
         }
     }
 
     private static void valideChallenge(Player player, String challengeName) {
         Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeName);
-        if (challenge != null) {
+        if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
+            Text.validMessage(Team.getTeam(player), challengeName);
         }
     }
 
     private static void verifValideChallenge(Player player, String challengeName) {
-        if (Objects.requireNonNull(Grid.getChallenge(Team.getTeam(player), challengeName)).getRealized()) {
+        if (Boolean.TRUE.equals(Objects.requireNonNull(Grid.getChallenge(Team.getTeam(player), challengeName)).getRealized())) {
             valideChallenge(player, challengeName);
         }
     }
 
     private static void valideAndRealizeChallenge(Player player, String challengeName) {
         Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeName);
-        if (challenge != null) {
+        if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
             challenge.setRealized(true);
+            Text.validMessage(Team.getTeam(player), challengeName);
         }
     }
 
@@ -106,10 +110,18 @@ public class ChallengesListener implements Listener {
             case IRON_GOLEM:
                 realizeChallenge(killer, "§d§lOptimum prime");
                 break;
+            case SILVERFISH:
+                realizeChallenge(killer, "§d§lTéma la taille du rat");
+                break;
+            case TURTLE:
+                if (e.getEntity().getWorld() == Bukkit.getWorlds().get(1)) {
+                    realizeChallenge(killer, "§d§lMario contre Bowser");
+                }
+                break;
         }
     }
 
-    private static Hashtable<Player, Integer> nbWolfTame = new Hashtable<>();
+    private static final Hashtable<Player, Integer> nbWolfTame = new Hashtable<>();
 
     @EventHandler
     private void tameMob(EntityTameEvent e) {
@@ -139,8 +151,11 @@ public class ChallengesListener implements Listener {
             case POTION:
                 PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
                 if (potionMeta.getBasePotionData().getType() == PotionType.SPEED && (player.getInventory().getItemInOffHand().getType() == Material.BREAD)) {
-                    valideAndRealizeChallenge(player, "§d§lTu es un sorcier Harry !");
+                    realizeChallenge(player, "§d§lTu es un sorcier Harry !");
                 }
+                break;
+            case COOKIE:
+                realizeChallenge(player, "§d§lCookie Monster");
                 break;
         }
     }
@@ -193,8 +208,14 @@ public class ChallengesListener implements Listener {
             case "nether/return_to_sender":
                 realizeChallenge(player, "§d§lRetour à l'envoyeur");
                 break;
-            case "nether/trade":
+            case "adventure/trade":
                 realizeChallenge(player, "§d§lStonks Industries");
+                break;
+            case "story/cure_zombie_villager":
+                realizeChallenge(player, "§d§lDoctor Strange");
+                break;
+            case "adventure/salvage_sherd":
+                realizeChallenge(player, "§d§lArchéologue");
                 break;
         }
     }
@@ -211,6 +232,10 @@ public class ChallengesListener implements Listener {
                     realizeChallenge((Player) e.getEntity().getShooter(), "§d§lCombat d'anthologie");
                 }
                 break;
+            case FIREWORK:
+                if (e.getHitEntity().getType() == EntityType.PIG && e.getHitEntity().isDead()) {
+                    realizeChallenge((Player) e.getEntity().getShooter(), "§d§lC'est la fête de trop");
+                }
         }
     }
 
@@ -243,10 +268,15 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void breakBlock(BlockBreakEvent e) {
-        Biome biome = e.getBlock().getBiome();
-        if (biome == Biome.ICE_SPIKES || biome == Biome.FROZEN_OCEAN || biome == Biome.DEEP_FROZEN_OCEAN && (e.getBlock().getType() == Material.CHAIN)) {
-            realizeChallenge(e.getPlayer(), "§d§lLibérée, Délivrée");
+        if (e.getBlock().getType() == Material.CHAIN) {
+            Biome biome = e.getBlock().getBiome();
+            if (biome == Biome.ICE_SPIKES || biome == Biome.FROZEN_OCEAN || biome == Biome.DEEP_FROZEN_OCEAN) {
+                realizeChallenge(e.getPlayer(), "§d§lLibérée, Délivrée");
+            }
+        } else if (e.getBlock().getType() == Material.SPAWNER) {
+            realizeChallenge(e.getPlayer(), "§d§lMonster Hunter");
         }
+
     }
 
     @EventHandler
@@ -311,11 +341,58 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void playerInteractMob(PlayerInteractEntityEvent e) {
-        // TODO : FINIR BATMAN
+        if (e.getRightClicked().getType() == EntityType.BAT) {
+            PlayerInventory inv = e.getPlayer().getInventory();
+            ItemStack mainHand = inv.getItemInMainHand();
+            ItemStack offHand = inv.getItemInOffHand();
+            if (mainHand.getType() == Material.NAME_TAG && mainHand.displayName().contains(Component.text("Batman")) ||
+                    offHand.getType() == Material.NAME_TAG && offHand.displayName().contains(Component.text("Batman"))) {
+                realizeChallenge(e.getPlayer(), "§d§lBatman");
+            }
+        }
     }
 
-    public void verifChallenge(Player player, String challengeName) {
+    @EventHandler
+    private void endermanLook(EntityTargetLivingEntityEvent e) {
+        if (e.getEntityType() == EntityType.ENDERMAN &&
+                e.getTarget() instanceof Player &&
+                e.getReason() == EntityTargetEvent.TargetReason.CLOSEST_PLAYER) {
+            realizeChallenge(((Player) e.getTarget()), "§d§lDuel de regard");
+        }
+    }
+
+    @EventHandler
+    private void mobSpawn(CreatureSpawnEvent e) {
+        Entity entity = e.getEntity();
+        if (entity.getType() == EntityType.ENDER_DRAGON) {
+            World end = Bukkit.getWorlds().get(2);
+            Collection<Entity> nears = Objects.requireNonNull(Bukkit.getWorld(end.getName())).getNearbyEntities(new Location(end, 0, 65, 0), 150, 50, 150);
+            for (Entity entityNear : nears) {
+                if (entityNear instanceof Player) {
+                    realizeChallenge(((Player) entityNear), "§d§lViens à moi Shenron");
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    private void blockFormEvent(EntityBlockFormEvent e) {
+        if (e.getBlock().getType() == Material.WATER && e.getEntity() instanceof Player) {
+            realizeChallenge((Player) e.getEntity(), "§d§lAppelle moi Moïse");
+        }
+    }
+
+    @EventHandler
+    private void entityMountEvent(EntityMountEvent e) {
+        if (e.getMount() instanceof Camel && e.getEntity() instanceof Player) {
+            realizeChallenge((Player) e.getEntity(), "§d§lUne ou deux bosses");
+        }
+    }
+
+    public static void verifChallenge(Player player, String challengeName) {
+        Bukkit.getLogger().log(Level.INFO, "test");
         PlayerInventory playerInventory = player.getInventory();
+        Bukkit.getLogger().log(Level.INFO, challengeName);
         switch (challengeName) {
             case "§d§lSuicide Squad":
             case "§d§lAurevoir Sabrina !":
@@ -353,6 +430,18 @@ public class ChallengesListener implements Listener {
             case "§d§lTricot":
             case "§d§lOptimum prime":
             case "§d§lRecyclage":
+            case "§d§lBatman":
+            case "§d§lC'est la fête de trop":
+            case "§d§lTéma la taille du rat":
+            case "§d§lCookie Monster":
+            case "§d§lDuel de regard":
+            case "§d§lMonster Hunter":
+            case "§d§lDoctor Strange":
+            case "§d§lViens à moi Shenron":
+            case "§d§lAppelle moi Moïse":
+            case "§d§lMario contre Bowser":
+            case "§d§lArchéologue":
+            case "§d§lUne ou deux bosses":
                 verifValideChallenge(player, challengeName);
                 break;
             case "§d§lBoulets de canon":
@@ -628,6 +717,95 @@ public class ChallengesListener implements Listener {
                 break;
             case "§d§lSac à dos, sac à dos":
                 if (playerInventory.containsAtLeast(new ItemStack(Material.SHULKER_BOX), 1)) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lRemède magique":
+                PotionEffect effect = player.getPotionEffect(PotionEffectType.REGENERATION);
+                if (effect != null && effect.getAmplifier() == 1) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lArmure étincelante":
+                helmet = playerInventory.getHelmet();
+                chestplate = playerInventory.getChestplate();
+                leggings = playerInventory.getLeggings();
+                boots = playerInventory.getBoots();
+
+                if (helmet != null && helmet.getType() == Material.DIAMOND_HELMET &&
+                        (chestplate != null && chestplate.getType() == Material.DIAMOND_CHESTPLATE &&
+                                (leggings != null && leggings.getType() == Material.DIAMOND_LEGGINGS &&
+                                        (boots != null && boots.getType() == Material.DIAMOND_BOOTS)))) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lJusqu'aux cieux":
+                if (playerInventory.containsAtLeast(new ItemStack(Material.BEACON), 1)) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lRails de coke":
+                if (verifSetOfItems(playerInventory, new ItemStack(Material.RAIL, 32), new ItemStack(Material.SUGAR, 32))) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lDrôle de porte bonheur":
+                if (playerInventory.containsAtLeast(new ItemStack(Material.RABBIT_FOOT), 1)) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lRéparation express !":
+                helmet = playerInventory.getHelmet();
+                if (helmet != null && helmet.getType() == Material.IRON_HELMET &&
+                        helmet.getEnchantments().containsKey(Enchantment.MENDING)) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lFishing Planet":
+                if (verifSetOfItems(playerInventory, new ItemStack(Material.SALMON),
+                        new ItemStack(Material.COD),
+                        new ItemStack(Material.PUFFERFISH),
+                        new ItemStack(Material.TROPICAL_FISH))) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lAffamé":
+                effect = player.getPotionEffect(PotionEffectType.HUNGER);
+                if (effect != null) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lJack je vole !":
+                if (playerInventory.containsAtLeast(new ItemStack(Material.ELYTRA), 1)) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lEcris l’histoire":
+                for (ItemStack item : playerInventory.getContents()) {
+                    if (item != null && item.getType() == Material.WRITTEN_BOOK &&
+                            Objects.equals(((BookMeta) item.getItemMeta()).getAuthor(), player.getName())) {
+                        valideAndRealizeChallenge(player, challengeName);
+                    }
+                }
+                break;
+            case "§d§lBienvenue au Japon":
+                if (playerInventory.containsAtLeast(new ItemStack(Material.CHERRY_SAPLING), 1)) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
+            case "§d§lLa princesse et la grenouille":
+                helmet = playerInventory.getHelmet();
+                if (helmet != null && helmet.getType() == Material.GOLDEN_HELMET) {
+                    Collection<Entity> nears = player.getNearbyEntities(5, 5, 5);
+                    for (Entity entity : nears) {
+                        if (entity instanceof Frog) {
+                            valideAndRealizeChallenge(player, challengeName);
+                        }
+                    }
+                }
+                break;
+            case "§d§lCorne de brume":
+                if (playerInventory.containsAtLeast(new ItemStack(Material.GOAT_HORN), 1)) {
                     valideAndRealizeChallenge(player, challengeName);
                 }
                 break;

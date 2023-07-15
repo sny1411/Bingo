@@ -8,9 +8,33 @@ import fr.sny1411.bingo.utils.Team;
 public class Game {
     public enum ModeAffichage {CHILL, COMPETITION}
 
-    public enum ModeJeu {CLASSIC, DUEL, HANDICAP}
+    public enum ModeJeu {
+        CLASSIC("Classique"), DUEL("Duel"), HANDICAP("Handicap");
 
-    public enum ModeVictoire {BINGO, DEFIS}
+        private final String name;
+
+        ModeJeu(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    public enum ModeVictoire {
+        BINGO("Bingo"), DEFIS("Défis");
+
+        private final String name;
+
+        ModeVictoire(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 
     public enum Etat {SETUP, INGAME, ENDGAME}
 

@@ -13,6 +13,7 @@ public abstract class Items {
     private static ItemStack settings;
     private static ItemStack teamSelector;
     private static ItemStack glassForGui;
+    private static ItemStack glassValidBingo;
 
     public abstract static class Challenge {
         private static ItemStack harming;
@@ -34,6 +35,8 @@ public abstract class Items {
         private static ItemStack silverfish;
         private static ItemStack enderman;
         private static ItemStack bowser;
+        private static ItemStack grenouille;
+        private static ItemStack dromadaire;
 
         private static void init() {
             initHarming();
@@ -55,6 +58,8 @@ public abstract class Items {
             initSilverfish();
             initEnderman();
             initBowser();
+            initGrenouille();
+            initDromadaire();
         }
 
         private static void initHarming() {
@@ -146,6 +151,14 @@ public abstract class Items {
             bowser = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTg2MDYxMGVkMzA3ODVlNjIyOWU4MmUyODk3YjQyZmRhYmIxZGY2Mjk2ZDM3MzFmYWMyNzQ0ZTU2YTllYjkifX19");
         }
 
+        private static void initGrenouille() {
+            grenouille = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2U2MmU4YTA0OGQwNDBlYjA1MzNiYTI2YTg2NmNkOWMyZDA5MjhjOTMxYzUwYjQ0ODJhYzNhMzI2MWZhYjZmMCJ9fX0=");
+        }
+
+        private static void initDromadaire() {
+            dromadaire = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzY0MmM5ZjcxMTMxYjVkZjRhOGMyMWM4YzZmMTA2ODRmMjJhYmFmYjhjZDY4YTFkNTVhYzRiZjI2M2E1M2EzMSJ9fX0=");
+        }
+
         public static ItemStack getHarming() {
             return harming;
         }
@@ -221,12 +234,21 @@ public abstract class Items {
         public static ItemStack getBowser() {
             return bowser;
         }
+
+        public static ItemStack getGrenouille() {
+            return grenouille;
+        }
+
+        public static ItemStack getDromadaire() {
+            return dromadaire;
+        }
     }
 
     public static void init() {
         initSettings();
         initTeamSelector();
         initGlassForGui();
+        initGlassValidBingo();
 
         Challenge.init();
     }
@@ -252,6 +274,13 @@ public abstract class Items {
         teamSelector.setItemMeta(metaTeamsSelector);
     }
 
+    private static void initGlassValidBingo() {
+        glassValidBingo = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
+        ItemMeta metaGlassValidBingo = glassValidBingo.getItemMeta();
+        metaGlassValidBingo.displayName(Component.text(" "));
+        glassValidBingo.setItemMeta(metaGlassValidBingo);
+    }
+
     public static ItemStack getSettings() {
         return settings;
     }
@@ -262,5 +291,9 @@ public abstract class Items {
 
     public static ItemStack getGlassForGui() {
         return glassForGui;
+    }
+
+    public static ItemStack getGlassValidBingo() {
+        return glassValidBingo;
     }
 }

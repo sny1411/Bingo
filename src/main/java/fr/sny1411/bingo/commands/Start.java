@@ -2,9 +2,7 @@ package fr.sny1411.bingo.commands;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
-import fr.sny1411.bingo.utils.Environment;
-import fr.sny1411.bingo.utils.Grid;
-import fr.sny1411.bingo.utils.Spawn;
+import fr.sny1411.bingo.utils.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -57,7 +55,10 @@ public class Start implements CommandExecutor {
             Game game = Bingo.getGame();
             game.setEtat(Game.Etat.INGAME);
             Environment.clearPlayers();
-            Environment.setGamerulesInGame();
+            Bukkit.getScheduler().runTask(bingo, Environment::setGamerulesInGame);
+
+            Timer.start(bingo);
+            ScoreBoard.createScoreBoard(bingo);
 
             try {
                 TimeUnit.SECONDS.sleep(30);
