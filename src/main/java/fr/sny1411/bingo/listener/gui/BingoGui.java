@@ -1,9 +1,12 @@
 package fr.sny1411.bingo.listener.gui;
 
+import fr.sny1411.bingo.listener.ChallengesListener;
+import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Items;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -16,27 +19,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Objects;
+import java.util.logging.Level;
 
 public class BingoGui implements Listener {
-    private static final Inventory gui = Bukkit.createInventory(null, 45, Component.text("§3§lBINGO"));
-
-    public static Inventory getGui() {
-        return gui;
-    }
-
     public static void open(Player player) {
-        gui.clear();
+        Inventory gui = Bukkit.createInventory(null, 45, Component.text("§3§lBINGO"));
         for (int i = 0; i < 45; i++) {
             gui.setItem(i, Items.getGlassForGui());
         }
 
-        placeGrid(player);
-        placeTeams(player);
+        placeGrid(player, gui);
+        placeTeams(player, gui);
 
         player.openInventory(gui);
     }
 
-    private static void placeGrid(Player player) {
+    private static void placeGrid(Player player, Inventory gui) {
         Grid playerGrid = Grid.getTeamsGrid().get(Team.getTeam(player));
         int i = 3;
         int nbItems = 0;
@@ -50,13 +48,20 @@ public class BingoGui implements Listener {
             } else if (i == 35) {
                 i = 39;
             }
-            gui.setItem(i, playerGrid.getGrid()[(nbItems / 5)][nbItems % 5].getItem());
+            Challenge challenge = playerGrid.getGrid()[(nbItems / 5)][nbItems % 5];
+            ItemStack item;
+            if (Boolean.TRUE.equals(challenge.getValidated())) {
+                item = Items.getGlassValidBingo();
+            } else {
+                item = challenge.getItem();
+            }
+            gui.setItem(i, item);
             nbItems++;
             i++;
         }
     }
 
-    private static void placeTeams(Player player) {
+    private static void placeTeams(Player player, Inventory gui) {
         for (Team team : Team.getTeams().values()) {
             Team.Color colorTeam = team.getColor();
             if (colorTeam != Team.Color.SPECTATOR) {
@@ -97,13 +102,21 @@ public class BingoGui implements Listener {
 
     @EventHandler
     private void onClick(InventoryClickEvent e) {
-        if (e.getClickedInventory() == gui) {
+        if (e.getView().title().equals(Component.text("§3§lBINGO")) && e.getCurrentItem() != null) {
+            Bukkit.getLogger().log(Level.INFO, "bingogui2");
             Player player = (Player) e.getWhoClicked();
             if (Objects.requireNonNull(Team.getTeam(player)).getColor() == Team.Color.SPECTATOR) {
                 // TODO : regarde clic pour changer de team
             } else {
-                // TODO : regarde clic dans la grille pour valider
+                PlainTextComponentSerializer plainSerializer = PlainTextComponentSerializer.plainText();
+                String itemName = plainSerializer.serialize(e.getCurrentItem().displayName());
+                itemName = itemName.substring(1, itemName.length() - 1);
+                ChallengesListener.verifChallenge(player, itemName);
             }
+            // TODO : refresh pour tout les joueurs dans le gui
+            open(player);
+            Bukkit.getLogger().log(Level.INFO, "refresh bingoGui");
+            e.setCancelled(true);
         }
     }
 }

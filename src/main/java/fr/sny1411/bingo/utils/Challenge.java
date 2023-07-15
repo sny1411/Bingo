@@ -196,6 +196,12 @@ public class Challenge {
                 case "bowser":
                     item = Items.Challenge.getBowser();
                     break;
+                case "grenouille":
+                    item = Items.Challenge.getGrenouille();
+                    break;
+                case "dromadaire":
+                    item = Items.Challenge.getDromadaire();
+                    break;
             }
         }
         assert item != null;
@@ -208,7 +214,7 @@ public class Challenge {
 
     // Object
     private Difficult difficult;
-    private String name;
+    private final String name;
     private ItemStack item;
     private Boolean realized;
     private Boolean validated;
@@ -239,6 +245,15 @@ public class Challenge {
         }
     }
 
+    public Challenge(Difficult difficult, String name, ItemStack item) {
+        this.difficult = difficult;
+        this.name = name;
+        this.item = item;
+
+        this.realized = false;
+        this.validated = false;
+    }
+
     public Difficult getDifficult() {
         return difficult;
     }
@@ -265,5 +280,14 @@ public class Challenge {
 
     public void setValidated(Boolean validated) {
         this.validated = validated;
+    }
+
+    @Override
+    public Challenge clone() {
+        try {
+            return (Challenge) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return new Challenge(this.getDifficult(), this.getName(), this.getItem());
+        }
     }
 }

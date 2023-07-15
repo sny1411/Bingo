@@ -25,7 +25,14 @@ public class Grid {
     }
 
     private Grid(Grid grid) {
-        this.grid = grid.getGrid();
+        Challenge[][] gridCopy = new Challenge[5][5];
+        for (int x = 0; x < grid.getGrid().length; x++) {
+            for (int y = 0; y < grid.getGrid()[0].length; y++) {
+                gridCopy[x][y] = grid.getGrid()[x][y].clone();
+            }
+        }
+
+        this.grid = gridCopy;
     }
 
     private List<Challenge> getChallenges() {
@@ -85,7 +92,7 @@ public class Grid {
         Challenge[][] challenges = grid.getGrid();
 
         for (Challenge[] value : challenges) {
-            for (int x = 0; x < challenges[x].length; x++) {
+            for (int x = 0; x < challenges[0].length; x++) {
                 Challenge challenge = value[x];
                 if (challenge.getName().equals(challengeName)) {
                     return challenge;
@@ -106,4 +113,5 @@ public class Grid {
     public Challenge[][] getGrid() {
         return grid;
     }
+
 }

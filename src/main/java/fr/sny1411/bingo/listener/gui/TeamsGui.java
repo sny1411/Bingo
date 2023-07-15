@@ -21,11 +21,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class TeamsGui implements Listener {
-    private static final Inventory gui = Bukkit.createInventory(null, 27, Component.text("§3§lSélection des équipes"));
     private static final Set<Player> playersInGui = new HashSet<>();
 
     public static void openGui(Player player) {
-        gui.clear();
+        Inventory gui = Bukkit.createInventory(null, 27, Component.text("§3§lSélection des équipes"));
         Iterator<Team> iteratorTeam = Team.getTeams().values().iterator();
         Bukkit.getConsoleSender().sendMessage(Component.text(Team.getTeams().values().toString()));
         int compteurTeam = 0;
@@ -83,7 +82,7 @@ public class TeamsGui implements Listener {
 
     @EventHandler
     private void clickItemGui(InventoryClickEvent e) {
-        if (Bingo.getGame().getEtat() == Game.Etat.SETUP && (e.getClickedInventory() == gui && e.getCurrentItem() != null)) {
+        if (Bingo.getGame().getEtat() == Game.Etat.SETUP && e.getView().title().equals(Component.text("§3§lSélection des équipes")) && e.getCurrentItem() != null) {
             Player player = (Player) e.getWhoClicked();
             switch (e.getCurrentItem().getType()) {
                 case ORANGE_BANNER:
@@ -112,6 +111,7 @@ public class TeamsGui implements Listener {
             }
             updateGui();
             player.playerListName(Component.text(Objects.requireNonNull(Team.getTeam(player)).getColor().getPrefixe() + player.getName()));
+            e.setCancelled(true);
             // TODO :REGARDER POUR METTRE COULEUR AU DESSUS DU PSEUDO
         }
     }
@@ -124,11 +124,15 @@ public class TeamsGui implements Listener {
 
     @EventHandler
     private void onOpenGui(InventoryOpenEvent e) {
-        playersInGui.add((Player) e.getPlayer());
+        if (e.getView().title().equals(Component.text("§3§lSélection des équipes"))) {
+            playersInGui.add((Player) e.getPlayer());
+        }
     }
 
     @EventHandler
     private void onCloseGui(InventoryCloseEvent e) {
-        playersInGui.remove((Player) e.getPlayer());
+        if (e.getView().title().equals(Component.text("§3§lSélection des équipes"))) {
+            playersInGui.remove((Player) e.getPlayer());
+        }
     }
 }

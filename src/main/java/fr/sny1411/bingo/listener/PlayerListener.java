@@ -28,7 +28,9 @@ public class PlayerListener implements Listener {
     @EventHandler
     private void onPlayerQuit(PlayerQuitEvent e) {
         e.quitMessage(Component.text(String.format("§8[§c-§8]§e %s", e.getPlayer().getName())));
-        Team.removeTeam(e.getPlayer());
+        if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
+            Team.removeTeam(e.getPlayer());
+        }
     }
 
     @EventHandler

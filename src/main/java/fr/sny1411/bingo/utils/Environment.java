@@ -28,6 +28,7 @@ public abstract class Environment {
             world.setGameRule(GameRule.DO_WEATHER_CYCLE, true);
             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
             world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
+            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
         }
     }
 
