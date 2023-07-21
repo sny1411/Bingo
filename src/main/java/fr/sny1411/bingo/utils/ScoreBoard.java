@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.Score;
 
 import java.util.Objects;
 
@@ -27,9 +28,9 @@ public abstract class ScoreBoard {
                 if (Objects.requireNonNull(Team.getTeam(player)).getColor() != Team.Color.SPECTATOR) {
                     Score score1;
                     if (Bingo.getGame().getModeVictoire() == Game.ModeVictoire.BINGO) {
-                        score1 = objective.getScore("  Bingos §7: §e"); // TODO : manque score
+                        score1 = objective.getScore("  Bingos §7: §e" + fr.sny1411.bingo.utils.Score.getTeamsScore().get(Team.getTeam(player)).getNbBingo());
                     } else {
-                        score1 = objective.getScore("  Défis §7: §e"); // TODO : manque score
+                        score1 = objective.getScore("  Défis §7: §e" + fr.sny1411.bingo.utils.Score.getTeamsScore().get(Team.getTeam(player)).getScore());
                     }
                     score1.setScore(5);
                 }

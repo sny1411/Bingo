@@ -54,7 +54,9 @@ public class ChallengesListener implements Listener {
         Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeName);
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
-            Text.validMessage(Team.getTeam(player), challengeName);
+            Team teamPlayer = Team.getTeam(player);
+            Text.validMessage(teamPlayer, challengeName);
+            Score.getTeamsScore().get(teamPlayer).addChallenge(challenge);
         }
     }
 
@@ -69,7 +71,9 @@ public class ChallengesListener implements Listener {
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
             challenge.setRealized(true);
-            Text.validMessage(Team.getTeam(player), challengeName);
+            Team teamPlayer = Team.getTeam(player);
+            Text.validMessage(teamPlayer, challengeName);
+            Score.getTeamsScore().get(teamPlayer).addChallenge(challenge);
         }
     }
 
@@ -130,6 +134,7 @@ public class ChallengesListener implements Listener {
         switch (entityType) {
             case WOLF:
                 if (nbWolfTame.contains(player)) {
+                    Bukkit.getLogger().log(Level.INFO, "test wolf tame");
                     realizeChallenge(player, "§d§lWolf gang");
                 } else {
                     nbWolfTame.put(player, 1);
@@ -234,6 +239,7 @@ public class ChallengesListener implements Listener {
                 break;
             case FIREWORK:
                 if (e.getHitEntity().getType() == EntityType.PIG && e.getHitEntity().isDead()) {
+                    Bukkit.getLogger().log(Level.INFO, "pig1");
                     realizeChallenge((Player) e.getEntity().getShooter(), "§d§lC'est la fête de trop");
                 }
         }
@@ -243,6 +249,7 @@ public class ChallengesListener implements Listener {
     private void rideEvent(EntityMountEvent e) {
         Entity entity = e.getMount();
         if (entity.getType() == EntityType.PIG && (entity.getLocation().getY() >= 320 && e.getEntity() instanceof Player)) {
+            Bukkit.getLogger().log(Level.INFO, "pig1");
             realizeChallenge((Player) e.getEntity(), "§d§lRedBull donne des ailes");
         }
     }
@@ -256,6 +263,7 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void parrotMount(EntityDismountEvent e) {
+        Bukkit.getLogger().log(Level.INFO, "parrot");
         if (e.getEntity() instanceof Parrot && e.getDismounted() instanceof Player) {
             realizeChallenge((Player) e.getDismounted(), "§d§lPirate des Caraïbes");
         }
@@ -384,6 +392,7 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void entityMountEvent(EntityMountEvent e) {
+        Bukkit.getLogger().log(Level.INFO, "mountEvent");
         if (e.getMount() instanceof Camel && e.getEntity() instanceof Player) {
             realizeChallenge((Player) e.getEntity(), "§d§lUne ou deux bosses");
         }
@@ -601,7 +610,7 @@ public class ChallengesListener implements Listener {
                 }
                 break;
             case "§d§lJe veux tes yeux":
-                if (playerInventory.containsAtLeast(new ItemStack(Material.ENDER_EYE), 3)) {
+                if (playerInventory.containsAtLeast(new ItemStack(Material.ENDER_PEARL), 3)) {
                     valideAndRealizeChallenge(player, challengeName);
                 }
                 break;
@@ -805,7 +814,7 @@ public class ChallengesListener implements Listener {
                 }
                 break;
             case "§d§lCorne de brume":
-                if (playerInventory.containsAtLeast(new ItemStack(Material.GOAT_HORN), 1)) {
+                if (verifSetOfItems(playerInventory, new ItemStack(Material.GOAT_HORN))) {
                     valideAndRealizeChallenge(player, challengeName);
                 }
                 break;

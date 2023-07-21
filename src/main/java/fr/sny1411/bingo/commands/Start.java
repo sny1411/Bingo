@@ -30,8 +30,6 @@ public class Start implements CommandExecutor {
         if (sender instanceof Player && (Bingo.getGame().getEtat() == Game.Etat.SETUP)) {
             Grid.createGrids();
             launchGame();
-            // TODO lancement compteur
-
         }
         return false;
     }
@@ -59,6 +57,7 @@ public class Start implements CommandExecutor {
 
             Timer.start(bingo);
             ScoreBoard.createScoreBoard(bingo);
+            Score.init();
 
             try {
                 TimeUnit.SECONDS.sleep(30);

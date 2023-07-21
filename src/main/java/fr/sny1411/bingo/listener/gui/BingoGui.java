@@ -1,10 +1,9 @@
 package fr.sny1411.bingo.listener.gui;
 
+import fr.sny1411.bingo.Bingo;
+import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.listener.ChallengesListener;
-import fr.sny1411.bingo.utils.Challenge;
-import fr.sny1411.bingo.utils.Grid;
-import fr.sny1411.bingo.utils.Items;
-import fr.sny1411.bingo.utils.Team;
+import fr.sny1411.bingo.utils.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
@@ -18,10 +17,12 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Level;
 
 public class BingoGui implements Listener {
+    private static final PlainTextComponentSerializer plainSerializer = PlainTextComponentSerializer.plainText();
     public static void open(Player player) {
         Inventory gui = Bukkit.createInventory(null, 45, Component.text("§3§lBINGO"));
         for (int i = 0; i < 45; i++) {
@@ -72,6 +73,17 @@ public class BingoGui implements Listener {
                     itemMeta.addEnchant(Enchantment.DURABILITY, 5, true);
                     itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
+                ArrayList<Component> loreTeams = new ArrayList<>();
+                if (Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL) {
+                    loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f" + Score.getTeamsScore().get(team).getNbChallenges()));
+                } else {
+                    loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f§k!!"));
+                }
+                for (Player playerTeam : team.getPlayers()) {
+                    String playerName = plainSerializer.serialize(playerTeam.displayName());
+                    loreTeams.add(Component.text("§7§o- " + playerName));
+                }
+                itemMeta.lore(loreTeams);
                 item.setItemMeta(itemMeta);
 
                 switch (team.getColor()) {
@@ -108,7 +120,6 @@ public class BingoGui implements Listener {
             if (Objects.requireNonNull(Team.getTeam(player)).getColor() == Team.Color.SPECTATOR) {
                 // TODO : regarde clic pour changer de team
             } else {
-                PlainTextComponentSerializer plainSerializer = PlainTextComponentSerializer.plainText();
                 String itemName = plainSerializer.serialize(e.getCurrentItem().displayName());
                 itemName = itemName.substring(1, itemName.length() - 1);
                 ChallengesListener.verifChallenge(player, itemName);
