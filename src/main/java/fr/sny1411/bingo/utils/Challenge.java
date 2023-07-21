@@ -17,7 +17,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class Challenge {
-    public enum Difficult {EASY, MEDIUM, HARD, EXTREME}
+    public enum Difficult {
+        EASY(1), MEDIUM(3), HARD(9), EXTREME(27);
+
+        private final int points;
+        Difficult(int points) {
+            this.points = points;
+        }
+
+        public int getPoints() {
+            return points;
+        }
+    }
 
     // Static
 
