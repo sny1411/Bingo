@@ -99,16 +99,15 @@ public class Team {
         players = new HashSet<>();
     }
 
-    public boolean addPlayer(Player player) {
+    public void addPlayer(Player player) {
         if (players.size() != nbPlayerTeams) {
             Team.removeTeam(player);
-            return players.add(player);
+            players.add(player);
         }
-        return false;
     }
 
-    public boolean removePlayer(Player player) {
-        return players.remove(player);
+    public void removePlayer(Player player) {
+        players.remove(player);
     }
 
     public static HashMap<Color, Team> getTeams() {
