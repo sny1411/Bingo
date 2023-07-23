@@ -1,6 +1,7 @@
 package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Bingo;
+import fr.sny1411.bingo.Game;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 
@@ -45,7 +46,7 @@ public class Timer {
             run = true;
             while ((hours < maxHours || minutes < maxMinutes) && run) {
                 try {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.MILLISECONDS.sleep(10); // TODO : REMETTRE CORRECTEMENT
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
@@ -64,24 +65,26 @@ public class Timer {
 
                 timeInsecond = (hours * 3600 + minutes * 60 + seconds);
 
-                if (timeMessageFin.get(compteurMsgFin) == timeInsecond) {
+                if (compteurMsgFin < timeMessageFin.size() && timeMessageFin.get(compteurMsgFin) == timeInsecond) {
                     Bukkit.broadcast(Component.text(messagesFin.get(compteurMsgFin)));
                     compteurMsgFin++;
                 }
 
                 if (timeOrageLaunch * 60 == timeInsecond) {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(bingo, () -> {
+                        Bukkit.getLogger().log(Level.INFO, "ORAGE MAINTENANT");
                         Bukkit.getServer().getWorlds().get(0).setWeatherDuration(8400); // 7 minutes (en ticks)
+                        Bukkit.getServer().getWorlds().get(0).setThundering(true);
                     });
                 }
 
                 // TODO : manque event défi bonus
             }
-        });
-        run = false;
+            run = false;
 
-        // TODO : fin du jeu
-        Bukkit.getLogger().log(Level.INFO, "Fin du jeu !");
+            Bingo.getGame().setEtat(Game.Etat.ENDGAME);
+            Bukkit.getLogger().log(Level.INFO, "Fin du jeu !");
+        });
     }
 
     public static int getMaxMinutes() {
@@ -114,5 +117,10 @@ public class Timer {
 
     public static boolean isRun() {
         return run;
+    }
+    public static void stop() {
+        if (isRun()) {
+            run = false;
+        }
     }
 }

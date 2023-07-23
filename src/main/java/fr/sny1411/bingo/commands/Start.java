@@ -49,11 +49,14 @@ public class Start implements CommandExecutor {
                     Thread.currentThread().interrupt();
                 }
             }
-            Bukkit.getScheduler().runTask(bingo, Spawn::remove);
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.showTitle(Title.title(Component.text("\uE005"), Component.text(""), timesTitle));
+            }
+            Spawn.remove(bingo);
             Game game = Bingo.getGame();
             game.setEtat(Game.Etat.INGAME);
             Environment.clearPlayers();
-            Bukkit.getScheduler().runTask(bingo, Environment::setGamerulesInGame);
+            Environment.setGamerulesInGame(bingo);
 
             Timer.start(bingo);
             ScoreBoard.createScoreBoard(bingo);

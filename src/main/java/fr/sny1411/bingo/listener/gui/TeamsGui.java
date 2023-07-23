@@ -14,11 +14,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class TeamsGui implements Listener {
     private static final Set<Player> playersInGui = new HashSet<>();
@@ -117,7 +119,9 @@ public class TeamsGui implements Listener {
     }
 
     private void updateGui() {
-        for (Player player : playersInGui) {
+        Bukkit.getLogger().log(Level.INFO, Arrays.toString(playersInGui.toArray()));
+        Set<Player> playersGuiCopy = new HashSet<>(playersInGui);
+        for (Player player : playersGuiCopy) {
             openGui(player);
         }
     }
@@ -134,5 +138,10 @@ public class TeamsGui implements Listener {
         if (e.getView().title().equals(Component.text("§3§lSélection des équipes"))) {
             playersInGui.remove((Player) e.getPlayer());
         }
+    }
+
+    @EventHandler
+    private void onPlayerQuit(PlayerQuitEvent e) {
+        playersInGui.remove(e.getPlayer());
     }
 }

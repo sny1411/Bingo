@@ -26,10 +26,14 @@ public class Terracota {
 
     public static int getNbTerracota(Inventory inventory) {
         int nb = 0;
-        for (TerracotaType terracota : TerracotaType.values()) {
-            Material material = Material.valueOf(terracota.name());
-            if (inventory.containsAtLeast(new ItemStack(material), 1)) {
-                nb++;
+        for (ItemStack item : inventory) {
+            if (item != null) {
+                for (TerracotaType terracotaType : TerracotaType.values()) {
+                    Material terracota = Material.valueOf(terracotaType.name());
+                    if (item.getType() == terracota) {
+                        nb++;
+                    }
+                }
             }
         }
         return nb;

@@ -61,12 +61,19 @@ public class Game {
     }
 
     private void setup() {
-        Spawn.create();
-        Environment.setGamerulesSetup();
+        Spawn.create(bingoInstance);
+        Environment.setGamerulesSetup(bingoInstance);
         Spawn.teleportPlayers();
         Spawn.giveItemsPlayers();
         Team.createTeams();
         Challenge.init();
+    }
+
+    public void end() {
+        Spawn.create(bingoInstance);
+        Environment.setGamerulesSetup(bingoInstance);
+        Spawn.teleportPlayers();
+        Environment.clearPlayers();
     }
 
     public static Bingo getBingoInstance() {
@@ -99,6 +106,9 @@ public class Game {
 
     public void setEtat(Etat etat) {
         this.etat = etat;
+        if (etat == Etat.ENDGAME) {
+            end();
+        }
     }
 
     public boolean isDefiBonus() {

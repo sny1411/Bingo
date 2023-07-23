@@ -78,6 +78,6 @@ public abstract class ScoreBoard {
             if (!Timer.isRun()) {
                 Thread.currentThread().interrupt();
             }
-        }, 0L, 20L);
+        }, 0L, 1L); // TODO : REMETTRE CORRECTEMENT
     }
 }

@@ -26,7 +26,6 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.Collection;
@@ -66,7 +65,7 @@ public class ChallengesListener implements Listener {
         }
     }
 
-    private static void valideAndRealizeChallenge(Player player, String challengeName) {
+    public static void valideAndRealizeChallenge(Player player, String challengeName) {
         Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeName);
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
@@ -105,7 +104,7 @@ public class ChallengesListener implements Listener {
             case STRIDER:
                 realizeChallenge(killer, "§d§lDestrier des Enfers");
                 break;
-            case SPIDER:
+            case CAVE_SPIDER:
                 realizeChallenge(killer, "§d§lArachnophobe");
                 break;
             case ELDER_GUARDIAN:
@@ -227,7 +226,7 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void projectileHitMob(ProjectileHitEvent e) {
-        if (e.getHitEntity() == null && e.getHitEntity() instanceof Player) return;
+        if (e.getHitEntity() == null && !(e.getHitEntity() instanceof Player)) return;
         switch (e.getEntity().getType()) {
             case LLAMA_SPIT:
                 realizeChallenge((Player) e.getHitEntity(), "§d§lLa plus grosse racaille");
@@ -249,7 +248,6 @@ public class ChallengesListener implements Listener {
     private void rideEvent(EntityMountEvent e) {
         Entity entity = e.getMount();
         if (entity.getType() == EntityType.PIG && (entity.getLocation().getY() >= 320 && e.getEntity() instanceof Player)) {
-            Bukkit.getLogger().log(Level.INFO, "pig1");
             realizeChallenge((Player) e.getEntity(), "§d§lRedBull donne des ailes");
         }
     }
@@ -258,14 +256,6 @@ public class ChallengesListener implements Listener {
     private void lightningStrike(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.LIGHTNING && e.getEntity() instanceof Player) {
             realizeChallenge((Player) e.getEntity(), "§d§lCoup de foudre");
-        }
-    }
-
-    @EventHandler
-    private void parrotMount(EntityDismountEvent e) {
-        Bukkit.getLogger().log(Level.INFO, "parrot");
-        if (e.getEntity() instanceof Parrot && e.getDismounted() instanceof Player) {
-            realizeChallenge((Player) e.getDismounted(), "§d§lPirate des Caraïbes");
         }
     }
 
@@ -350,6 +340,7 @@ public class ChallengesListener implements Listener {
     @EventHandler
     private void playerInteractMob(PlayerInteractEntityEvent e) {
         if (e.getRightClicked().getType() == EntityType.BAT) {
+            Bukkit.getLogger().log(Level.INFO, "chauve souris");
             PlayerInventory inv = e.getPlayer().getInventory();
             ItemStack mainHand = inv.getItemInMainHand();
             ItemStack offHand = inv.getItemInOffHand();
@@ -371,13 +362,20 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void mobSpawn(CreatureSpawnEvent e) {
-        Entity entity = e.getEntity();
+        LivingEntity entity = e.getEntity();
         if (entity.getType() == EntityType.ENDER_DRAGON) {
             World end = Bukkit.getWorlds().get(2);
             Collection<Entity> nears = Objects.requireNonNull(Bukkit.getWorld(end.getName())).getNearbyEntities(new Location(end, 0, 65, 0), 150, 50, 150);
             for (Entity entityNear : nears) {
                 if (entityNear instanceof Player) {
                     realizeChallenge(((Player) entityNear), "§d§lViens à moi Shenron");
+                }
+            }
+        } else if (entity.getEntitySpawnReason() == CreatureSpawnEvent.SpawnReason.SHOULDER_ENTITY) {
+            List<Entity> proches = e.getEntity().getNearbyEntities(5, 5, 5);
+            for (Entity entityNear : proches) {
+                if (entityNear instanceof Player) {
+                    realizeChallenge((Player) entityNear, "§d§lPirate des Caraïbes");
                 }
             }
         }
@@ -680,7 +678,7 @@ public class ChallengesListener implements Listener {
                 }
                 break;
             case "§d§lCa pique...":
-                if (playerInventory.containsAtLeast(new ItemStack(Material.DRIPSTONE_BLOCK), 20)) {
+                if (playerInventory.containsAtLeast(new ItemStack(Material.POINTED_DRIPSTONE), 20)) {
                     valideAndRealizeChallenge(player, challengeName);
                 }
                 break;
@@ -814,9 +812,11 @@ public class ChallengesListener implements Listener {
                 }
                 break;
             case "§d§lCorne de brume":
-                if (verifSetOfItems(playerInventory, new ItemStack(Material.GOAT_HORN))) {
-                    valideAndRealizeChallenge(player, challengeName);
-                }
+              for (ItemStack item : playerInventory) {
+                  if (item != null && item.getType() == Material.GOAT_HORN) {
+                      valideAndRealizeChallenge(player, challengeName);
+                  }
+              }
                 break;
         }
     }

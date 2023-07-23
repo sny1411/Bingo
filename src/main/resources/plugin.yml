@@ -11,3 +11,12 @@ commands:
     permission: bingo.start
   bingo:
     description: open bingo gui
+  testPack:
+    description: test pack du serveur
+    permission: bingo.testPack
+  valid:
+    description: force la validation d'un défi
+    permission: bingo.valid
+  stopGame:
+    description: end of game
+    permission: bingo.stopGame
