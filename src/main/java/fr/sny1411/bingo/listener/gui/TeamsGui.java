@@ -114,12 +114,10 @@ public class TeamsGui implements Listener {
             updateGui();
             player.playerListName(Component.text(Objects.requireNonNull(Team.getTeam(player)).getColor().getPrefixe() + player.getName()));
             e.setCancelled(true);
-            // TODO :REGARDER POUR METTRE COULEUR AU DESSUS DU PSEUDO
         }
     }
 
     private void updateGui() {
-        Bukkit.getLogger().log(Level.INFO, Arrays.toString(playersInGui.toArray()));
         Set<Player> playersGuiCopy = new HashSet<>(playersInGui);
         for (Player player : playersGuiCopy) {
             openGui(player);
