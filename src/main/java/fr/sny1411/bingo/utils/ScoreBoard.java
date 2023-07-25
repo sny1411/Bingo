@@ -30,7 +30,7 @@ public abstract class ScoreBoard {
                     if (Bingo.getGame().getModeVictoire() == Game.ModeVictoire.BINGO) {
                         score1 = objective.getScore("  Bingos §7: §e" + fr.sny1411.bingo.utils.Score.getTeamsScore().get(Team.getTeam(player)).getNbBingo());
                     } else {
-                        score1 = objective.getScore("  Défis §7: §e" + fr.sny1411.bingo.utils.Score.getTeamsScore().get(Team.getTeam(player)).getScore());
+                        score1 = objective.getScore("  Défis §7: §e" + fr.sny1411.bingo.utils.Score.getTeamsScore().get(Team.getTeam(player)).getNbChallenges());
                     }
                     score1.setScore(5);
                 }
