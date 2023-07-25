@@ -41,7 +41,7 @@ public class Challenge {
     private static int nbHard = 0;
     private static int nbExtreme = 0;
 
-    private static List<Challenge> challenges = new ArrayList<>();
+    private static final List<Challenge> challenges = new ArrayList<>();
 
     public static List<Challenge> getChallenges() {
         return challenges;
@@ -226,7 +226,7 @@ public class Challenge {
     // Object
     private Difficult difficult;
     private final String name;
-    private ItemStack item;
+    private final ItemStack item;
     private Boolean realized;
     private Boolean validated;
 

@@ -34,9 +34,7 @@ public interface Text {
 
     static void validMessage(Team team, String challengeName) {
         if (Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.sendMessage(Component.text("§7[§eBINGO§7] §fL'équipe §l" + team.getColor().getPrefixe() + team.getColor().getNom() + "§r a réalisé le défi §e§l" + challengeName));
-            }
+            broadcastMessage("§7[§eBINGO§7] §fL'équipe §l" + team.getColor().getPrefixe() + team.getColor().getNom() + "§r a réalisé le défi §e§l" + challengeName);
         } else {
             for (Player player : team.getPlayers()) {
                 if (player.isOnline()) {
@@ -45,6 +43,13 @@ public interface Text {
             }
         }
     }
+
+    static void broadcastMessage(String message) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(Component.text(message));
+        }
+    }
+
     /*
     // TODO : revoir quand bonus fait
     static void validBonus(Team team, String bonusName, )*/
