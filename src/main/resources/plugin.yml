@@ -20,3 +20,6 @@ commands:
   stopGame:
     description: end of game
     permission: bingo.stopGame
+  result:
+    description: affiche les résultats
+    permission: bingo.result

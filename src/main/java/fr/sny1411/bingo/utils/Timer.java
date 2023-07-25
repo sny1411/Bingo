@@ -46,7 +46,7 @@ public class Timer {
             run = true;
             while ((hours < maxHours || minutes < maxMinutes) && run) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(10); // TODO : REMETTRE CORRECTEMENT
+                    TimeUnit.MILLISECONDS.sleep(500); // TODO : REMETTRE CORRECTEMENT
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
