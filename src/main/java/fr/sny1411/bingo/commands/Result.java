@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class Result implements CommandExecutor {
@@ -19,8 +20,8 @@ public class Result implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (Bingo.getGame().getEtat() == Game.Etat.ENDGAME) {
-            List<Score> classementPts = (List<Score>) Score.getTeamsScore().values();
-            List<Score> classementBingo = (List<Score>) Score.getTeamsScore().values();
+            List<Score> classementPts = new ArrayList<>(Score.getTeamsScore().values());
+            List<Score> classementBingo = new ArrayList<>(Score.getTeamsScore().values());
 
             sortClassementPts(classementPts);
             sortClassementBingo(classementBingo);
@@ -45,7 +46,7 @@ public class Result implements CommandExecutor {
         for (Score scoreTeam : classementPts) {
             Team team = scoreTeam.getTeam();
             Team.Color colorTeam = team.getColor();
-            Text.broadcastMessage(" " + iconesClassement.get(i) + " §l" + colorTeam.getPrefixe() + colorTeam.getNom() + " §f " + scoreTeam.getScore() + " point(s) (§a" + scoreTeam.getNbEasy() + " §f| §6" + scoreTeam.getNbMedium() + " §f| §c" + scoreTeam.getNbHard() + " §f| §8" + scoreTeam.getNbExtreme());
+            Text.broadcastMessage(" " + iconesClassement.get(i) + " §l" + colorTeam.getPrefixe() + colorTeam.getNom() + " §f " + scoreTeam.getScore() + " point(s) (§a" + scoreTeam.getNbEasy() + " §f| §6" + scoreTeam.getNbMedium() + " §f| §c" + scoreTeam.getNbHard() + " §f| §8" + scoreTeam.getNbExtreme() + "§f)");
             i++;
         }
     }
@@ -62,7 +63,7 @@ public class Result implements CommandExecutor {
 
     private static void sortClassementPts(List<Score> classementPts) {
         classementPts.sort((o1, o2) -> {
-            boolean o1Less = o1.getScore() < o2.getScore();
+            boolean o1Less = o1.getScore() > o2.getScore();
             if (o1Less) {
                 return -1;
             } else if (o1.getScore() == o2.getScore()) {
@@ -75,7 +76,7 @@ public class Result implements CommandExecutor {
 
     private static void sortClassementBingo(List<Score> classementBingo) {
         classementBingo.sort((o1, o2) -> {
-            boolean o1Less = o1.getNbBingo() < o2.getNbBingo();
+            boolean o1Less = o1.getNbBingo() > o2.getNbBingo();
             if (o1Less) {
                 return -1;
             } else if (o1.getNbBingo() == o2.getNbBingo()) {
