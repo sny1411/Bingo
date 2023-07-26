@@ -38,6 +38,7 @@ public class ChallengesListener implements Listener {
     private static boolean verifSetOfItems(Inventory inventory, ItemStack... items) {
         for (ItemStack item : items) {
             if (!inventory.containsAtLeast(new ItemStack(item.getType()), item.getAmount())) return false;
+
         }
         return true;
     }
@@ -220,6 +221,9 @@ public class ChallengesListener implements Listener {
                 break;
             case "adventure/salvage_sherd":
                 realizeChallenge(player, "§d§lArchéologue");
+                break;
+            case "adventure/sleep_in_bed":
+                realizeChallenge(player, "§d§lBonne nuit les petits");
                 break;
         }
     }
@@ -449,6 +453,7 @@ public class ChallengesListener implements Listener {
             case "§d§lMario contre Bowser":
             case "§d§lArchéologue":
             case "§d§lUne ou deux bosses":
+            case "§d§lBonne nuit les petits":
                 verifValideChallenge(player, challengeName);
                 break;
             case "§d§lBoulets de canon":
