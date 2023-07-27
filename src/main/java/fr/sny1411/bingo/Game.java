@@ -38,6 +38,8 @@ public class Game {
 
     public enum Etat {SETUP, INGAME, ENDGAME}
 
+    private int nbreBingoForWin;
+
     private boolean defiBonus;
     private boolean playersDamage;
     private ModeAffichage modeAffichage;
@@ -53,6 +55,7 @@ public class Game {
         this.modeJeu = modeJeu;
         this.modeVictoire = modeVictoire;
         this.etat = etat;
+        this.nbreBingoForWin = 3;
     }
 
     public Game() {
@@ -133,5 +136,13 @@ public class Game {
 
     public Etat getEtat() {
         return etat;
+    }
+
+    public int getNbreBingoForWin() {
+        return nbreBingoForWin;
+    }
+
+    public void setNbreBingoForWin(int nbreBingoForWin) {
+        this.nbreBingoForWin = nbreBingoForWin;
     }
 }
