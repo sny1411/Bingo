@@ -1,6 +1,8 @@
 package fr.sny1411.bingo.listener;
 
 import fr.sny1411.bingo.utils.*;
+import fr.sny1411.bingo.utils.items.collections.Candle;
+import fr.sny1411.bingo.utils.items.collections.Terracota;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
@@ -213,7 +215,7 @@ public class ChallengesListener implements Listener {
             case "nether/return_to_sender":
                 realizeChallenge(player, "§d§lRetour à l'envoyeur");
                 break;
-            case "adventure/trade":
+            case "nether/trade":
                 realizeChallenge(player, "§d§lStonks Industries");
                 break;
             case "story/cure_zombie_villager":
@@ -230,6 +232,7 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void projectileHitMob(ProjectileHitEvent e) {
+        Bukkit.getLogger().log(Level.INFO, e.getEntity().getType().toString());
         if (e.getHitEntity() == null && !(e.getHitEntity() instanceof Player)) return;
         switch (e.getEntity().getType()) {
             case LLAMA_SPIT:
@@ -241,7 +244,7 @@ public class ChallengesListener implements Listener {
                 }
                 break;
             case FIREWORK:
-                if (e.getHitEntity().getType() == EntityType.PIG && e.getHitEntity().isDead()) {
+                if (e.getHitEntity().getType() == EntityType.PIG) {
                     Bukkit.getLogger().log(Level.INFO, "pig1");
                     realizeChallenge((Player) e.getEntity().getShooter(), "§d§lC'est la fête de trop");
                 }
@@ -283,7 +286,7 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void candleIgnite(BlockIgniteEvent e) {
-        if (e.getBlock().getType() == Material.CANDLE) {
+        if (Candle.isCandleItem(e.getBlock().getType())) {
             realizeChallenge(e.getPlayer(), "§d§lT'es pas net Baptiste?");
         }
     }
@@ -454,6 +457,7 @@ public class ChallengesListener implements Listener {
             case "§d§lArchéologue":
             case "§d§lUne ou deux bosses":
             case "§d§lBonne nuit les petits":
+            case "§d§lLe cheval c'est trop génial":
                 verifValideChallenge(player, challengeName);
                 break;
             case "§d§lBoulets de canon":

@@ -1,4 +1,4 @@
-package fr.sny1411.bingo.utils;
+package fr.sny1411.bingo.utils.items.collections;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
