@@ -3,6 +3,7 @@ package fr.sny1411.bingo.utils;
 import fr.sny1411.bingo.Game;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -18,15 +19,22 @@ import java.util.List;
 
 public class Challenge {
     public enum Difficult {
-        EASY(1), MEDIUM(3), HARD(9), EXTREME(27);
+        EASY(1, "§aFacile"), MEDIUM(3, "§6Moyen"), HARD(9, "§cDifficile"), EXTREME(27, "§8Extreme");
 
         private final int points;
-        Difficult(int points) {
+        private final String textDifficult;
+
+        Difficult(int points, String textDifficult) {
             this.points = points;
+            this.textDifficult = textDifficult;
         }
 
         public int getPoints() {
             return points;
+        }
+
+        public String getTextDifficult() {
+            return textDifficult;
         }
     }
 
@@ -123,6 +131,10 @@ public class Challenge {
         createChallenges();
     }
 
+    public static boolean verifSettingsToHigh() {
+        return (maxEasy + maxMedium + maxHard + maxExtreme) < 25;
+    }
+
     private static void createChallenges() {
         try {
             URL resourceURL = Game.getBingoInstance().getClass().getResource("/challenges.csv");
@@ -132,7 +144,7 @@ public class Challenge {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] lineSplit = line.split("\\|");
-                ItemStack item = createItem(lineSplit[0], lineSplit[1], lineSplit[3]);
+                ItemStack item = createItem(lineSplit[0], lineSplit[1], lineSplit[3], lineSplit[2]);
                 challenges.add(new Challenge(lineSplit[2], lineSplit[0], item));
             }
             Collections.shuffle(challenges);
@@ -143,7 +155,7 @@ public class Challenge {
 
     }
 
-    private static ItemStack createItem(String name, String description, String type) {
+    private static ItemStack createItem(String name, String description, String type, String difficult) {
         ItemStack item = null;
         if (Character.isUpperCase(type.charAt(0))) {
             Material material = Material.valueOf(type);
@@ -218,9 +230,16 @@ public class Challenge {
         assert item != null;
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.displayName(Component.text(name));
-        itemMeta.lore(Text.divideString(description));
+        List<Component> lore = Text.divideString(description);
+        lore.add(Component.text("Difficulté : " + loreDifficultBuilder(difficult)));
+        itemMeta.lore(lore);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ITEM_SPECIFICS);
         item.setItemMeta(itemMeta);
         return item;
+    }
+
+    private static String loreDifficultBuilder(String difficult) {
+        return Difficult.valueOf(difficult).getTextDifficult();
     }
 
     // Object
