@@ -234,6 +234,7 @@ public class ChallengesListener implements Listener {
     private void projectileHitMob(ProjectileHitEvent e) {
         Bukkit.getLogger().log(Level.INFO, e.getEntity().getType().toString());
         if (e.getHitEntity() == null && !(e.getHitEntity() instanceof Player)) return;
+        Bukkit.getLogger().log(Level.INFO, String.valueOf(!(e.getHitEntity() instanceof Player))); // TODO : verif
         switch (e.getEntity().getType()) {
             case LLAMA_SPIT:
                 realizeChallenge((Player) e.getHitEntity(), "§d§lLa plus grosse racaille");
@@ -351,8 +352,8 @@ public class ChallengesListener implements Listener {
             PlayerInventory inv = e.getPlayer().getInventory();
             ItemStack mainHand = inv.getItemInMainHand();
             ItemStack offHand = inv.getItemInOffHand();
-            if (mainHand.getType() == Material.NAME_TAG && mainHand.displayName().contains(Component.text("Batman")) ||
-                    offHand.getType() == Material.NAME_TAG && offHand.displayName().contains(Component.text("Batman"))) {
+            if (mainHand.getType() == Material.NAME_TAG && Objects.equals(mainHand.getItemMeta().displayName(), Component.text("Batman")) ||
+                    offHand.getType() == Material.NAME_TAG && Objects.equals(offHand.getItemMeta().displayName(), Component.text("Batman"))) {
                 realizeChallenge(e.getPlayer(), "§d§lBatman");
             }
         }
