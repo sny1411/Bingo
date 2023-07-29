@@ -5,7 +5,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 
 public interface BlocksFill {
-    public static void changeArea(int smallX, int smallY, int smallZ, int bigX, int bigY, int bigZ, Material typeBlock, World world) {
+    static void changeArea(int smallX, int smallY, int smallZ, int bigX, int bigY, int bigZ, Material typeBlock, World world) {
         for (int i = smallX; i <= bigX; i++) {
             for (int j = smallY; j <= bigY; j++) {
                 for (int k = smallZ; k <= bigZ; k++) {
