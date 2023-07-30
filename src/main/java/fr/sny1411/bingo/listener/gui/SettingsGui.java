@@ -363,14 +363,14 @@ public class SettingsGui implements Listener {
                     }
                 } else if (cursor == 5) {
                     if (Challenge.verifSettingsToHigh()) {
-                        if (Challenge.getNbHard() < Challenge.getMaxHard()) {
+                        if (Challenge.getNbHard() > Challenge.getMaxHard()) {
                             Challenge.setMaxHard(Challenge.getMaxHard() + 1);
                             openGuiDifficult(player);
                         }
                     }
                 } else if (cursor == 7) {
                     if (Challenge.verifSettingsToHigh()) {
-                        if (Challenge.getNbExtreme() < Challenge.getMaxExtreme()) {
+                        if (Challenge.getNbExtreme() > Challenge.getMaxExtreme()) {
                             Challenge.setMaxExtreme(Challenge.getMaxExtreme() + 1);
                             openGuiDifficult(player);
                         }

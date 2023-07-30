@@ -135,7 +135,7 @@ public class ChallengesListener implements Listener {
         Player player = (Player) e.getOwner();
         switch (entityType) {
             case WOLF:
-                if (nbWolfTame.contains(player)) {
+                if (nbWolfTame.containsKey(player)) {
                     Bukkit.getLogger().log(Level.INFO, "test wolf tame");
                     realizeChallenge(player, "§d§lWolf gang");
                 } else {
@@ -215,7 +215,7 @@ public class ChallengesListener implements Listener {
             case "nether/return_to_sender":
                 realizeChallenge(player, "§d§lRetour à l'envoyeur");
                 break;
-            case "nether/trade":
+            case "adventure/trade":
                 realizeChallenge(player, "§d§lStonks Industries");
                 break;
             case "story/cure_zombie_villager":
@@ -233,8 +233,7 @@ public class ChallengesListener implements Listener {
     @EventHandler
     private void projectileHitMob(ProjectileHitEvent e) {
         Bukkit.getLogger().log(Level.INFO, e.getEntity().getType().toString());
-        if (e.getHitEntity() == null && !(e.getHitEntity() instanceof Player)) return;
-        Bukkit.getLogger().log(Level.INFO, String.valueOf(!(e.getHitEntity() instanceof Player))); // TODO : verif
+        if (e.getHitEntity() == null) return;
         switch (e.getEntity().getType()) {
             case LLAMA_SPIT:
                 realizeChallenge((Player) e.getHitEntity(), "§d§lLa plus grosse racaille");
@@ -245,7 +244,7 @@ public class ChallengesListener implements Listener {
                 }
                 break;
             case FIREWORK:
-                if (e.getHitEntity().getType() == EntityType.PIG) {
+                if (e.getHitEntity().getType() == EntityType.PIG && e.getEntity().isDead()) {
                     Bukkit.getLogger().log(Level.INFO, "pig1");
                     realizeChallenge((Player) e.getEntity().getShooter(), "§d§lC'est la fête de trop");
                 }
@@ -318,6 +317,7 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void turtleReproduce(EntityBreedEvent e) {
+        Bukkit.getLogger().log(Level.INFO, "TORTUE");
         if (e.getFather().getType() == EntityType.TURTLE) {
             realizeChallenge((Player) e.getEntity(), "§d§lMichelangelo?");
         }
@@ -459,6 +459,7 @@ public class ChallengesListener implements Listener {
             case "§d§lUne ou deux bosses":
             case "§d§lBonne nuit les petits":
             case "§d§lLe cheval c'est trop génial":
+            case "§d§lChargé à bloc":
                 verifValideChallenge(player, challengeName);
                 break;
             case "§d§lBoulets de canon":
