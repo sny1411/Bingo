@@ -1,13 +1,11 @@
 package fr.sny1411.bingo.listener;
 
 import com.destroystokyo.paper.event.entity.TurtleGoHomeEvent;
-import com.destroystokyo.paper.event.entity.TurtleLayEggEvent;
-import com.destroystokyo.paper.event.entity.TurtleStartDiggingEvent;
+import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.utils.*;
 import fr.sny1411.bingo.utils.items.collections.Candle;
 import fr.sny1411.bingo.utils.items.collections.Shulker;
 import fr.sny1411.bingo.utils.items.collections.Terracota;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -357,8 +355,8 @@ public class ChallengesListener implements Listener {
             PlayerInventory inv = e.getPlayer().getInventory();
             ItemStack mainHand = inv.getItemInMainHand();
             ItemStack offHand = inv.getItemInOffHand();
-            if (mainHand.getType() == Material.NAME_TAG && Objects.equals(mainHand.getItemMeta().displayName(), Component.text("Batman")) ||
-                    offHand.getType() == Material.NAME_TAG && Objects.equals(offHand.getItemMeta().displayName(), Component.text("Batman"))) {
+            if ((mainHand.getType() == Material.NAME_TAG && Bingo.getPlainSerializer().serialize(mainHand.displayName()).equals("[Batman]")) ||
+            (offHand.getType() == Material.NAME_TAG && Bingo.getPlainSerializer().serialize(offHand.displayName()).equals("[Batman]"))) {
                 realizeChallenge(e.getPlayer(), "§d§lBatman");
             }
         }
