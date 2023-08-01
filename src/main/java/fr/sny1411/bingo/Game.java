@@ -110,7 +110,10 @@ public class Game {
     public void setEtat(Etat etat) {
         this.etat = etat;
         if (etat == Etat.ENDGAME) {
+            Bingo.setNotListenChallenges();
             end();
+        } else if (etat == Etat.INGAME) {
+            Bingo.setListenChallenges();
         }
     }
 

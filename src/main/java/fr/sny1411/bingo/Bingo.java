@@ -12,6 +12,7 @@ import fr.sny1411.bingo.utils.Items;
 import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,6 +21,9 @@ import java.util.Objects;
 public final class Bingo extends JavaPlugin {
     private static Game game;
     private static final PlainTextComponentSerializer plainSerializer = PlainTextComponentSerializer.plainText();
+    private static final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
+
+    private static final ChallengesListener challengesListener = new ChallengesListener();
 
     @Override
     public void onEnable() {
@@ -27,7 +31,6 @@ public final class Bingo extends JavaPlugin {
         Items.init();
         Game.setBingoInstance(this);
         game = new Game();
-        PluginManager pluginManager = Bukkit.getServer().getPluginManager();
 
         Objects.requireNonNull(getCommand("newGame")).setExecutor(new NewGame());
         Objects.requireNonNull(getCommand("start")).setExecutor(new Start(this));
@@ -43,7 +46,6 @@ public final class Bingo extends JavaPlugin {
         pluginManager.registerEvents(new TeamsGui(), this);
         pluginManager.registerEvents(new SettingsGui(), this);
         pluginManager.registerEvents(new BingoGui(), this);
-        pluginManager.registerEvents(new ChallengesListener(), this);
     }
 
     @Override
@@ -60,5 +62,11 @@ public final class Bingo extends JavaPlugin {
     }
     public static PlainTextComponentSerializer getPlainSerializer() {
         return plainSerializer;
+    }
+    public static void setListenChallenges() {
+        pluginManager.registerEvents(challengesListener, Game.getBingoInstance());
+    }
+    public static void setNotListenChallenges() {
+        HandlerList.unregisterAll(challengesListener);
     }
 }
