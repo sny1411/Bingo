@@ -382,7 +382,7 @@ public class ChallengesListener implements Listener {
                     realizeChallenge(((Player) entityNear), "§d§lViens à moi Shenron");
                 }
             }
-        } else if (entity.getEntitySpawnReason() == CreatureSpawnEvent.SpawnReason.SHOULDER_ENTITY) {
+        } else if (entity.getType() == EntityType.PARROT && e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SHOULDER_ENTITY) {
             List<Entity> proches = e.getEntity().getNearbyEntities(5, 5, 5);
             for (Entity entityNear : proches) {
                 if (entityNear instanceof Player) {
