@@ -2,6 +2,7 @@ package fr.sny1411.bingo.listener;
 
 import fr.sny1411.bingo.utils.*;
 import fr.sny1411.bingo.utils.items.collections.Candle;
+import fr.sny1411.bingo.utils.items.collections.Shulker;
 import fr.sny1411.bingo.utils.items.collections.Terracota;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -733,7 +734,7 @@ public class ChallengesListener implements Listener {
                 }
                 break;
             case "§d§lSac à dos, sac à dos":
-                if (playerInventory.containsAtLeast(new ItemStack(Material.SHULKER_BOX), 1)) {
+                if (Shulker.isInInventory(playerInventory)) {
                     valideAndRealizeChallenge(player, challengeName);
                 }
                 break;
