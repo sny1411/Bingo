@@ -1,5 +1,8 @@
 package fr.sny1411.bingo.listener;
 
+import com.destroystokyo.paper.event.entity.TurtleGoHomeEvent;
+import com.destroystokyo.paper.event.entity.TurtleLayEggEvent;
+import com.destroystokyo.paper.event.entity.TurtleStartDiggingEvent;
 import fr.sny1411.bingo.utils.*;
 import fr.sny1411.bingo.utils.items.collections.Candle;
 import fr.sny1411.bingo.utils.items.collections.Shulker;
@@ -316,10 +319,12 @@ public class ChallengesListener implements Listener {
     }
 
     @EventHandler
-    private void turtleReproduce(EntityBreedEvent e) {
-        Bukkit.getLogger().log(Level.INFO, "TORTUE");
-        if (e.getFather().getType() == EntityType.TURTLE) {
-            realizeChallenge((Player) e.getEntity(), "§d§lMichelangelo?");
+    private void turtleEvent(TurtleGoHomeEvent e) {
+        List<Entity> entities = e.getEntity().getNearbyEntities(10,10,10);
+        for (Entity entity : entities) {
+            if (entity instanceof Player) {
+                realizeChallenge((Player) entity,"§d§lMichelangelo?");
+            }
         }
     }
 
