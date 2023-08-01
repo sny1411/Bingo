@@ -460,6 +460,7 @@ public class ChallengesListener implements Listener {
             case "§d§lBonne nuit les petits":
             case "§d§lLe cheval c'est trop génial":
             case "§d§lChargé à bloc":
+            case "§d§lPirate des Caraïbes":
                 verifValideChallenge(player, challengeName);
                 break;
             case "§d§lBoulets de canon":
