@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 
 public class BingoGui implements Listener {
-    private static final PlainTextComponentSerializer plainSerializer = PlainTextComponentSerializer.plainText();
     public static void open(Player player) {
         Inventory gui = Bukkit.createInventory(null, 45, Component.text("§3§lBINGO"));
         for (int i = 0; i < 45; i++) {
@@ -80,7 +79,7 @@ public class BingoGui implements Listener {
                     loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f§k!!"));
                 }
                 for (Player playerTeam : team.getPlayers()) {
-                    String playerName = plainSerializer.serialize(playerTeam.displayName());
+                    String playerName = Bingo.getPlainSerializer().serialize(playerTeam.displayName());
                     loreTeams.add(Component.text("§7§o- " + playerName));
                 }
                 itemMeta.lore(loreTeams);
@@ -120,7 +119,7 @@ public class BingoGui implements Listener {
             if (Objects.requireNonNull(Team.getTeam(player)).getColor() == Team.Color.SPECTATOR) {
                 // TODO : regarde clic pour changer de team
             } else {
-                String itemName = plainSerializer.serialize(e.getCurrentItem().displayName());
+                String itemName = Bingo.getPlainSerializer().serialize(e.getCurrentItem().displayName());
                 itemName = itemName.substring(1, itemName.length() - 1);
                 ChallengesListener.verifChallenge(player, itemName);
             }
