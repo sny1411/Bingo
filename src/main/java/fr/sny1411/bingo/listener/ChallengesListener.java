@@ -244,8 +244,7 @@ public class ChallengesListener implements Listener {
                 }
                 break;
             case FIREWORK:
-                if (e.getHitEntity().getType() == EntityType.PIG && e.getEntity().isDead()) {
-                    Bukkit.getLogger().log(Level.INFO, "pig1");
+                if (e.getHitEntity().getType() == EntityType.PIG) {
                     realizeChallenge((Player) e.getEntity().getShooter(), "§d§lC'est la fête de trop");
                 }
         }
