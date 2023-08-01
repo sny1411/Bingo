@@ -10,6 +10,7 @@ import fr.sny1411.bingo.listener.gui.SettingsGui;
 import fr.sny1411.bingo.listener.gui.TeamsGui;
 import fr.sny1411.bingo.utils.Items;
 import io.papermc.lib.PaperLib;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,6 +19,7 @@ import java.util.Objects;
 
 public final class Bingo extends JavaPlugin {
     private static Game game;
+    private static final PlainTextComponentSerializer plainSerializer = PlainTextComponentSerializer.plainText();
 
     @Override
     public void onEnable() {
@@ -55,5 +57,8 @@ public final class Bingo extends JavaPlugin {
 
     public static void setGame(Game game) {
         Bingo.game = game;
+    }
+    public static PlainTextComponentSerializer getPlainSerializer() {
+        return plainSerializer;
     }
 }
