@@ -830,6 +830,11 @@ public class ChallengesListener implements Listener {
                   }
               }
                 break;
+            case "§d§lBelle bosse":
+                if (player.getVehicle() instanceof Camel) {
+                    valideAndRealizeChallenge(player, challengeName);
+                }
+                break;
         }
     }
 }
