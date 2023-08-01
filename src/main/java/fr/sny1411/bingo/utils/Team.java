@@ -51,6 +51,19 @@ public class Team {
         }
     }
 
+    public static boolean updatePlayerJoinInGame(Player player) {
+        for (Team team : Team.getTeams().values()) {
+            for (Player playerTeam : team.getPlayers()) {
+                if (playerTeam.getUniqueId().equals(player.getUniqueId())) {
+                    team.removePlayer(playerTeam);
+                    team.addPlayer(player);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public enum Color {
         ORANGE("§6", "Orange", Material.ORANGE_BANNER, Material.ORANGE_CONCRETE),
         ROUGE("§c", "Rouge", Material.RED_BANNER, Material.RED_CONCRETE),

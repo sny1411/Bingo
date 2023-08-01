@@ -21,8 +21,9 @@ public class PlayerListener implements Listener {
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
             Spawn.teleportPlayer(player);
             Spawn.giveItemsPlayer(player);
+        } else if (Bingo.getGame().getEtat() == Game.Etat.INGAME && (!Team.updatePlayerJoinInGame(player))) {
+                Team.getTeams().get(Team.Color.SPECTATOR).addPlayer(player);
         }
-        // TODO : si game lancé et que le joueur n'a pas de team, passe joueur en spectateur
     }
 
     @EventHandler
