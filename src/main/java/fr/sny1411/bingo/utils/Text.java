@@ -47,7 +47,7 @@ public final class Text {
         }
     }
 
-    static void broadcastMessage(String message) {
+    public static void broadcastMessage(String message) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(Component.text(message));
         }

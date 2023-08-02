@@ -3,6 +3,7 @@ package fr.sny1411.bingo.commands;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.*;
+import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
@@ -61,6 +62,10 @@ public class Start implements CommandExecutor {
             Timer.start(bingo);
             ScoreBoard.createScoreBoard(bingo);
             Score.init();
+
+            if (Bingo.getGame().isDefiBonus()) {
+                BonusEvent.init();
+            }
 
             try {
                 TimeUnit.SECONDS.sleep(30);
