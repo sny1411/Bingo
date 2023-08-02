@@ -23,3 +23,5 @@ commands:
   result:
     description: show result
     permission: bingo.result
+  bonus:
+    description: valid bonus command
