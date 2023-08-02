@@ -9,7 +9,10 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface Text {
+public final class Text {
+    private Text() {
+        throw new IllegalStateException("Utility class");
+    }
     static List<Component> divideString(String str) {
         List<Component> dividedStrings = new ArrayList<>();
 

@@ -8,6 +8,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public final class RewardsBonusEvent {
+    private RewardsBonusEvent() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static void setBonus(PotionEffectType potionEffectType, Player player, Challenge.Difficult difficult) {
         switch (difficult) {

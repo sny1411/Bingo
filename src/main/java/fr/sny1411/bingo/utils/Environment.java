@@ -10,7 +10,10 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class Environment {
+public final class Environment {
+    private Environment() {
+        throw new IllegalStateException("Utility class");
+    }
 
     private static final List<World> worlds = Bukkit.getWorlds();
 

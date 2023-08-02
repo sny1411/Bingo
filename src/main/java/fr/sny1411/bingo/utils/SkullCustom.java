@@ -9,7 +9,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.lang.reflect.Field;
 import java.util.UUID;
 
-public interface SkullCustom {
+public final class SkullCustom {
+    private SkullCustom() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static ItemStack getCustomSkull(String url) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();

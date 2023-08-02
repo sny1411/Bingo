@@ -2,7 +2,10 @@ package fr.sny1411.bingo.utils.items.collections;
 
 import org.bukkit.Material;
 
-public class Candle {
+public final class Candle {
+    private Candle() {
+        throw new IllegalStateException("Utility class");
+    }
     private enum CandleType {
         NO_COLOR(Material.CANDLE),
         WHITE_CANDLE(Material.WHITE_CANDLE),
