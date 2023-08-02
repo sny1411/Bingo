@@ -4,6 +4,7 @@ import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +47,7 @@ public class Timer {
             run = true;
             while ((hours < maxHours || minutes < maxMinutes) && run) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(500); // TODO : REMETTRE CORRECTEMENT
+                    TimeUnit.MILLISECONDS.sleep(50); // TODO : REMETTRE CORRECTEMENT
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
@@ -73,8 +74,11 @@ public class Timer {
                 if (timeOrageLaunch * 60 == timeInsecond) {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(bingo, () -> {
                         Bukkit.getLogger().log(Level.INFO, "ORAGE MAINTENANT");
-                        Bukkit.getServer().getWorlds().get(0).setWeatherDuration(8400); // 7 minutes (en ticks)
-                        Bukkit.getServer().getWorlds().get(0).setThundering(true);
+                        World world = Bukkit.getWorlds().get(0);
+                        world.setStorm(true);
+                        world.setThundering(true);
+                        world.setWeatherDuration(8400); // 7 minutes (en ticks)
+
                     });
                 }
 
