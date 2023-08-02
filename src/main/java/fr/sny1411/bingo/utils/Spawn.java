@@ -12,7 +12,11 @@ import org.bukkit.inventory.Inventory;
 import java.util.List;
 import java.util.logging.Level;
 
-public abstract class Spawn {
+public final class Spawn {
+    private Spawn() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final List<World> WORLDS = Bukkit.getWorlds();
     private static final World OVERWORLD = WORLDS.get(0);
     private static final Location SPAWN_LOC = new Location(OVERWORLD, 0, 204, 0);

@@ -5,12 +5,15 @@ import fr.sny1411.bingo.Game;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
 import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.*;
 
 import java.util.Objects;
 
-public abstract class ScoreBoard {
+public final class ScoreBoard {
+    private ScoreBoard() {
+        throw new IllegalStateException("Utility class");
+    }
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
 
     public static void createScoreBoard(Bingo bingo) {

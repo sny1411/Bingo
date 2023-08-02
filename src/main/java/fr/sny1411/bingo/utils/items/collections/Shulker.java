@@ -4,7 +4,10 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class Shulker {
+public final class Shulker {
+    private Shulker() {
+        throw new IllegalStateException("Utility class");
+    }
     private enum ShulkerType {
         SHULKER(Material.SHULKER_BOX),
         WHITE_SHULKER_BOX(Material.WHITE_SHULKER_BOX),

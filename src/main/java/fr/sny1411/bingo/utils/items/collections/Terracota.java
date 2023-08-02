@@ -4,7 +4,10 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class Terracota {
+public final class Terracota {
+    private Terracota() {
+        throw new IllegalStateException("Utility class");
+    }
     private enum TerracotaType {
         WHITE_TERRACOTTA,
         ORANGE_TERRACOTTA,

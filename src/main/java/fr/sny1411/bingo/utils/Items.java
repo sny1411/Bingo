@@ -9,7 +9,10 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
-public abstract class Items {
+public final class Items {
+    private Items() {
+        throw new IllegalStateException("Utility class");
+    }
     private static ItemStack settings;
     private static ItemStack teamSelector;
     private static ItemStack glassForGui;
