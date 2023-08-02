@@ -35,7 +35,7 @@ public final class Text {
         return dividedStrings;
     }
 
-    static void validMessage(Team team, String challengeName) {
+    public static void validMessage(Team team, String challengeName) {
         if (Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL) {
             broadcastMessage("§7[§eBINGO§7] §fL'équipe §l" + team.getColor().getPrefixe() + team.getColor().getNom() + "§r a réalisé le défi §e§l" + challengeName);
         } else {
