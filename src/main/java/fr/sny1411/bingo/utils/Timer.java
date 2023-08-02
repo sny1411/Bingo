@@ -2,6 +2,7 @@ package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -82,7 +83,11 @@ public class Timer {
                     });
                 }
 
-                // TODO : manque event défi bonus
+                for (BonusEvent event : BonusEvent.getEvents()) {
+                    if (!event.isEnable() && event.getTimeLaunch() * 60 == timeInsecond) {
+                        event.setEnable(true);
+                    }
+                }
             }
             run = false;
 
