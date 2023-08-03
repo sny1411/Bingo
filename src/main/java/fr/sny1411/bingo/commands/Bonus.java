@@ -4,7 +4,6 @@ import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.listener.ChallengesListener;
 import fr.sny1411.bingo.utils.bonus.BonusEvent;
-import fr.sny1411.bingo.utils.bonus.RewardsBonusEvent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

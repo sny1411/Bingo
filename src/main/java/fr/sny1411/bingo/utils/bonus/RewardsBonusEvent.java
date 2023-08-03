@@ -1,18 +1,32 @@
 package fr.sny1411.bingo.utils.bonus;
 
 import fr.sny1411.bingo.utils.Challenge;
+import fr.sny1411.bingo.utils.Random;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public final class RewardsBonusEvent {
     private RewardsBonusEvent() {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void setBonus(PotionEffectType potionEffectType, Player player, Challenge.Difficult difficult) {
+    private static List<PotionEffectType> potionEffectTypes = new ArrayList<>(Arrays.asList(PotionEffectType.SPEED,
+                                                                                            PotionEffectType.FAST_DIGGING,
+                                                                                            PotionEffectType.DAMAGE_RESISTANCE));
+    public static void setBonus(Challenge challenge, Player player) {
+        PotionEffectType potionEffect = potionEffectTypes.get(Random.choice(0, potionEffectTypes.size()-1));
+        setBonus(potionEffect, player, challenge.getDifficult());
+    }
+
+    private static void setBonus(PotionEffectType potionEffectType, Player player, Challenge.Difficult difficult) {
         switch (difficult) {
             case EASY:
                 setBonusI(potionEffectType, player);
@@ -25,7 +39,7 @@ public final class RewardsBonusEvent {
                 break;
             default:
                 // TODO AJOUTER UNE ERREUR
-                break;
+                throw new IllegalStateException("Le défis bonus ne peut pas être au dessus de HARD");
         }
     }
 
