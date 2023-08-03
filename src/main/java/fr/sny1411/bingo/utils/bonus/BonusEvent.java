@@ -52,14 +52,15 @@ public class BonusEvent {
             x = Random.choice(0,4);
             y = Random.choice(0,4);
 
-            boolean challengeRealized = false;
+            boolean canAdd = false;
             for (Grid grid : Grid.getTeamsGrid().values()) {
-                if (Boolean.TRUE.equals(grid.getGrid()[x][y].getRealized())) {
-                    challengeRealized = true;
+                Challenge challengeChoice = grid.getGrid()[x][y];
+                if (Boolean.TRUE.equals(challengeChoice.getRealized()) && challengeChoice.getDifficult() == Challenge.Difficult.EXTREME) {
+                    canAdd = true;
                     break;
                 }
             }
-            if (!challengeRealized) {
+            if (!canAdd) {
                 find = true;
             }
         }
