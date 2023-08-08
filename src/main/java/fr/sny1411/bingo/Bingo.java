@@ -51,11 +51,6 @@ public final class Bingo extends JavaPlugin {
         pluginManager.registerEvents(new BingoGui(), this);
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-    }
-
     public static Game getGame() {
         return game;
     }
