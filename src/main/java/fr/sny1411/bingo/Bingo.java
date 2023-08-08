@@ -1,6 +1,7 @@
 package fr.sny1411.bingo;
 
 import fr.sny1411.bingo.commands.*;
+import fr.sny1411.bingo.commands.completer.BonusCompleter;
 import fr.sny1411.bingo.commands.completer.ForceValidCompleter;
 import fr.sny1411.bingo.listener.ChallengesListener;
 import fr.sny1411.bingo.listener.PlayerListener;
@@ -40,6 +41,8 @@ public final class Bingo extends JavaPlugin {
         Objects.requireNonNull(getCommand("valid")).setTabCompleter(new ForceValidCompleter());
         Objects.requireNonNull(getCommand("stopGame")).setExecutor(new EndGame());
         Objects.requireNonNull(getCommand("result")).setExecutor(new Result());
+        Objects.requireNonNull(getCommand("bonus")).setExecutor(new Bonus());
+        Objects.requireNonNull(getCommand("bonus")).setTabCompleter(new BonusCompleter());
 
         pluginManager.registerEvents(new PlayerListener(), this);
         pluginManager.registerEvents(new SetupListener(), this);
