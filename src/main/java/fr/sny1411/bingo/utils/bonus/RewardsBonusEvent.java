@@ -18,7 +18,7 @@ public final class RewardsBonusEvent {
         throw new IllegalStateException("Utility class");
     }
 
-    private static List<PotionEffectType> potionEffectTypes = new ArrayList<>(Arrays.asList(PotionEffectType.SPEED,
+    private static final List<PotionEffectType> potionEffectTypes = new ArrayList<>(Arrays.asList(PotionEffectType.SPEED,
                                                                                             PotionEffectType.FAST_DIGGING,
                                                                                             PotionEffectType.DAMAGE_RESISTANCE));
     public static void setBonus(Challenge challenge, Player player) {
@@ -38,7 +38,6 @@ public final class RewardsBonusEvent {
                 setBonusIII(potionEffectType, player);
                 break;
             default:
-                // TODO AJOUTER UNE ERREUR
                 throw new IllegalStateException("Le défis bonus ne peut pas être au dessus de HARD");
         }
     }
