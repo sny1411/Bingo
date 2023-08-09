@@ -81,6 +81,6 @@ public final class ScoreBoard {
             if (!Timer.isRun()) {
                 Thread.currentThread().interrupt();
             }
-        }, 0L, 1L); // TODO : REMETTRE CORRECTEMENT
+        }, 0L, 20L);
     }
 }
