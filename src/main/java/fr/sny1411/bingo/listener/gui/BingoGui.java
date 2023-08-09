@@ -35,7 +35,19 @@ public class BingoGui implements Listener {
     }
 
     private static void placeGrid(Player player, Inventory gui) {
-        Grid playerGrid = Grid.getTeamsGrid().get(Team.getTeam(player));
+        Team playerTeam = Team.getTeam(player);
+        Grid playerGrid = null;
+        assert playerTeam != null;
+        if (playerTeam.getColor() == Team.Color.SPECTATOR) {
+            if (spectatorMemory.containsKey(player)) {
+                playerGrid = Grid.getTeamsGrid().get(Team.getTeam(spectatorMemory.get(player)));
+            } else {
+                playerGrid = Grid.getGameGrid();
+            }
+        } else {
+            playerGrid = Grid.getTeamsGrid().get(Team.getTeam(player));
+        }
+
         int i = 3;
         int nbItems = 0;
         while (i < 44) {
@@ -68,7 +80,8 @@ public class BingoGui implements Listener {
                 ItemStack item = new ItemStack(colorTeam.getMaterialBingoGui());
                 ItemMeta itemMeta = item.getItemMeta();
                 itemMeta.displayName(Component.text(colorTeam.getPrefixe() + colorTeam.getNom()));
-                if (Team.getTeam(player) == team) {
+                Team playerTeam = Team.getTeam(player);
+                if (playerTeam == team || (Objects.requireNonNull(playerTeam).getColor() == Team.Color.SPECTATOR && spectatorMemory.containsKey(player) && spectatorMemory.get(player) == item.getType())) {
                     itemMeta.addEnchant(Enchantment.DURABILITY, 5, true);
                     itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
@@ -78,8 +91,8 @@ public class BingoGui implements Listener {
                 } else {
                     loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f§k!!"));
                 }
-                for (Player playerTeam : team.getPlayers()) {
-                    String playerName = Bingo.getPlainSerializer().serialize(playerTeam.displayName());
+                for (Player playerInTeam : team.getPlayers()) {
+                    String playerName = Bingo.getPlainSerializer().serialize(playerInTeam.displayName());
                     loreTeams.add(Component.text("§7§o- " + playerName));
                 }
                 itemMeta.lore(loreTeams);
@@ -116,8 +129,11 @@ public class BingoGui implements Listener {
         if (e.getView().title().equals(Component.text("§3§lBINGO")) && e.getCurrentItem() != null) {
             Bukkit.getLogger().log(Level.INFO, "bingogui2");
             Player player = (Player) e.getWhoClicked();
-            if (Objects.requireNonNull(Team.getTeam(player)).getColor() == Team.Color.SPECTATOR) {
-                // TODO : regarde clic pour changer de team
+            if (Objects.requireNonNull(Team.getTeam(player)).getColor() == Team.Color.SPECTATOR && e.getCurrentItem() != null) {
+                Material concrete = e.getCurrentItem().getType();
+                if (Concrete.isConcrete(concrete)) {
+                    spectatorMemory.put(player, concrete);
+                }
             } else {
                 String itemName = Bingo.getPlainSerializer().serialize(e.getCurrentItem().displayName());
                 itemName = itemName.substring(1, itemName.length() - 1);

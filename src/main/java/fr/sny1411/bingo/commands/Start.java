@@ -7,6 +7,7 @@ import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -62,6 +63,12 @@ public class Start implements CommandExecutor {
             Timer.start(bingo);
             ScoreBoard.createScoreBoard(bingo);
             Score.init();
+
+            for (Player player : Team.getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
+                if (player.isOnline()) {
+                    player.setGameMode(GameMode.SPECTATOR);
+                }
+            }
 
             if (Bingo.getGame().isDefiBonus()) {
                 BonusEvent.init();

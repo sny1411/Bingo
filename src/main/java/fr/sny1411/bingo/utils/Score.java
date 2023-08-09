@@ -1,5 +1,8 @@
 package fr.sny1411.bingo.utils;
 
+import fr.sny1411.bingo.Bingo;
+import fr.sny1411.bingo.Game;
+
 import java.util.HashMap;
 
 public class Score {
@@ -89,6 +92,8 @@ public class Score {
         nbChallenges++;
         Challenge[][] challenges = Grid.getTeamsGrid().get(team).getGrid();
         nbBingo = bingoY(challenges) + bingoX(challenges) + bingoDiag(challenges);
+
+        testGameFinish();
     }
 
     private int bingoY(Challenge[][] grid) {
@@ -152,5 +157,16 @@ public class Score {
         }
 
         return nbBingoXY;
+    }
+
+    private void testGameFinish() {
+        Game game = Bingo.getGame();
+        if ((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
+                (game.getModeVictoire() == Game.ModeVictoire.DEFIS && nbChallenges == 25) && !team.isGameFinish()) {
+            team.setGameFinish(true);
+            Text.broadcastMessage("§7[§eBINGO§7] §fL'équipe " + team.getColor().getPrefixe() + team.getColor().getNom() + " §fa fini sa partie");
+            Text.broadcastMessage("Elle peut continuer de jouer ou devenir spectatrice");
+            team.sendMessage("§7§oUtilisez la commande §e§o/spec §7§opour devenir spectateur");
+        }
     }
 }
