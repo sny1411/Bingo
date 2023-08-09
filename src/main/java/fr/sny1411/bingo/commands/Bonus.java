@@ -3,7 +3,6 @@ package fr.sny1411.bingo.commands;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.listener.ChallengesListener;
-import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import fr.sny1411.bingo.utils.bonus.RewardsBonusEvent;
 import org.bukkit.command.Command;
@@ -31,7 +30,7 @@ public class Bonus implements CommandExecutor {
 
     private static boolean isCorrectChallengeNameSyntax(String challengeName) {
         for (BonusEvent event : BonusEvent.getEvents()) {
-            if (event.isEnable() && challengeName.equals(event.getChallenge().getName().substring(4))) {
+            if (event.isEnable() && challengeName.equals(event.getChallenge().getName())) {
                 return true;
             }
         }

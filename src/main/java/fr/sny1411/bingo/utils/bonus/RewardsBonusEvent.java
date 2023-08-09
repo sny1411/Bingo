@@ -32,7 +32,7 @@ public final class RewardsBonusEvent {
                 setBonusI(potionEffectType, player);
                 break;
             case MEDIUM:
-                setBonusII(potionEffectType, player);
+                setBonusII(potionEffectType, player, true);
                 break;
             case HARD:
                 setBonusIII(potionEffectType, player);
@@ -48,19 +48,25 @@ public final class RewardsBonusEvent {
         player.addPotionEffect(potion);
     }
 
-    private static void setBonusII(PotionEffectType potionEffectType, Player player) {
+    private static void setBonusII(PotionEffectType potionEffectType, Player player, boolean setOnPlayerRealized) {
         player.sendMessage(Component.text("§8§l≫ §r§7Votre équipe reçoit le bonus §b" + potionEffectType.getName() + " I"));
         Team team = Team.getTeam(player);
         assert team != null;
         for (Player playerTeam : team.getPlayers()) {
             if (playerTeam.isOnline()) {
-                setBonusI(potionEffectType, playerTeam);
+                if (player.equals(playerTeam)) {
+                    if (setOnPlayerRealized) {
+                        setBonusI(potionEffectType, playerTeam);
+                    }
+                } else {
+                    setBonusI(potionEffectType, playerTeam);
+                }
             }
         }
     }
 
     private static void setBonusIII(PotionEffectType potionEffectType, Player player) {
-        setBonusII(potionEffectType, player);
+        setBonusII(potionEffectType, player, false);
 
         player.sendMessage(Component.text("§8§l≫ §r§7Vous recevez le bonus §b" + potionEffectType.getName() + " II"));
         PotionEffect potion = new PotionEffect(potionEffectType, 144000, 1);
