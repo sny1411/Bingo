@@ -14,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class Timer {
+    private Timer() {
+        throw new IllegalStateException("Utility class");
+    }
     private static final List<Integer> timeMessageFin = new ArrayList<>(Arrays.asList(110 * 60, 115 * 60, 117 * 60, 118 * 60, 119 * 60, 119 * 60 + 30, 119 * 60 + 45, 119 * 60 + 50, 119 * 60 + 55, 119 * 60 + 57, 119 * 60 + 58, 119 * 60 + 59)); // en secondes
     private static final List<String> messagesFin = new ArrayList<>(Arrays.asList("§7[§eBINGO§7] §f10 minutes restantes",
             "§7[§eBINGO§7] §f5 minutes restantes",
@@ -26,7 +29,7 @@ public class Timer {
             "§7[§eBINGO§7] §f5 secondes restantes",
             "§7[§eBINGO§7] §f3 secondes restantes",
             "§7[§eBINGO§7] §f2 secondes restantes",
-            "§7[§eBINGO§7] §f1 secondes restantes"));
+            "§7[§eBINGO§7] §f1 seconde restante"));
 
 
     private static int seconds = 0;
@@ -48,7 +51,7 @@ public class Timer {
             run = true;
             while ((hours < maxHours || minutes < maxMinutes) && run) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(50); // TODO : REMETTRE CORRECTEMENT
+                    TimeUnit.MILLISECONDS.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
