@@ -70,7 +70,7 @@ public class Start implements CommandExecutor {
 
             for (Player player : Team.getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
                 if (player.isOnline()) {
-                    player.setGameMode(GameMode.SPECTATOR);
+                    Bukkit.getScheduler().runTask(bingo, () ->  player.setGameMode(GameMode.SPECTATOR));
                 }
             }
 
