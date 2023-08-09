@@ -43,6 +43,7 @@ public final class Bingo extends JavaPlugin {
         Objects.requireNonNull(getCommand("result")).setExecutor(new Result());
         Objects.requireNonNull(getCommand("bonus")).setExecutor(new Bonus());
         Objects.requireNonNull(getCommand("bonus")).setTabCompleter(new BonusCompleter());
+        Objects.requireNonNull(getCommand("spec")).setExecutor(new Spec());
 
         pluginManager.registerEvents(new PlayerListener(), this);
         pluginManager.registerEvents(new SetupListener(), this);

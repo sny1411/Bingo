@@ -106,14 +106,16 @@ public class Team {
     private static int nbPlayerTeams = 2;
     private final Set<Player> players;
     private final Color color;
+    private boolean gameFinish;
 
     private Team(Color color) {
         this.color = color;
+        gameFinish = false;
         players = new HashSet<>();
     }
 
     public void addPlayer(Player player) {
-        if (players.size() != nbPlayerTeams) {
+        if (color == Color.SPECTATOR || players.size() != nbPlayerTeams) {
             Team.removeTeam(player);
             players.add(player);
         }
@@ -152,4 +154,13 @@ public class Team {
         Team.nbPlayerTeams = nbPlayerTeams;
         createTeams();
     }
+
+    public boolean isGameFinish() {
+        return gameFinish;
+    }
+
+    public void setGameFinish(boolean gameFinish) {
+        this.gameFinish = gameFinish;
+    }
+
 }

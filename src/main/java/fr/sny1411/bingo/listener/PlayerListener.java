@@ -5,6 +5,7 @@ import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,6 +24,7 @@ public class PlayerListener implements Listener {
             Spawn.giveItemsPlayer(player);
         } else if (Bingo.getGame().getEtat() == Game.Etat.INGAME && (!Team.updatePlayerJoinInGame(player))) {
                 Team.getTeams().get(Team.Color.SPECTATOR).addPlayer(player);
+                player.setGameMode(GameMode.SPECTATOR);
         }
     }
 

@@ -25,3 +25,5 @@ commands:
     permission: bingo.result
   bonus:
     description: valid bonus command
+  spec:
+    description: permet de se mettre en spectateur
