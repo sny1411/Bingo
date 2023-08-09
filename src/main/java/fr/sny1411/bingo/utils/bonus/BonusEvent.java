@@ -3,10 +3,13 @@ package fr.sny1411.bingo.utils.bonus;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Random;
+import fr.sny1411.bingo.utils.Text;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.logging.Level;
 
 public class BonusEvent {
     private static final List<BonusEvent> events = new ArrayList<>();
@@ -23,6 +26,9 @@ public class BonusEvent {
         int nbEvents = Random.choice(1,4);
         for (int i = 0; i < nbEvents; i++) {
             events.add(new BonusEvent(Random.choice(15,90)));
+        }
+        for (BonusEvent event : BonusEvent.getEvents()) {
+            Bukkit.getLogger().log(Level.INFO, "event : " + event.getTimeLaunch());
         }
     }
 
@@ -48,7 +54,8 @@ public class BonusEvent {
         boolean find = false;
         int x = -1;
         int y = -1;
-        while (!find) {
+        int nbTest = 0;
+        while (!find && nbTest < 25) {
             x = Random.choice(0,4);
             y = Random.choice(0,4);
 
@@ -63,6 +70,7 @@ public class BonusEvent {
             if (!canAdd) {
                 find = true;
             }
+            nbTest++;
         }
         this.challenge = Grid.getGameGrid().getGrid()[x][y];
     }
@@ -83,6 +91,12 @@ public class BonusEvent {
         this.enable = enable;
         if (enable) {
             setChallenge();
+            annonceLancement();
         }
+    }
+
+    private void annonceLancement() {
+        Text.broadcastMessage("§7[§eBINGO§7] §fBonus: " + challenge.getName());
+        Text.broadcastMessage("§8≫ §7La première équipe à compléter le défi remportera une §9récompense de niveau " + challenge.getDifficult().getTextDifficult());
     }
 }
