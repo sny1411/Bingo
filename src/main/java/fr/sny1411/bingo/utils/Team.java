@@ -1,5 +1,6 @@
 package fr.sny1411.bingo.utils;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -163,4 +164,21 @@ public class Team {
         this.gameFinish = gameFinish;
     }
 
+    public void sendMessage(String message) {
+        Component componentMessage = Component.text(message);
+        for (Player player : this.getPlayers()) {
+            if (player.isOnline()) {
+                player.sendMessage(componentMessage);
+            }
+        }
+    }
+
+    public static Team getTeam(Material materialBingoGui) {
+        for (Team team : teams.values()) {
+            if (team.getColor().getMaterialBingoGui() == materialBingoGui) {
+                return team;
+            }
+        }
+        return null;
+    }
 }
