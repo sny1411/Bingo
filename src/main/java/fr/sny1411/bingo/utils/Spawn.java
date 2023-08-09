@@ -33,9 +33,7 @@ public final class Spawn {
     }
 
     public static void remove(Bingo bingo) {
-        Bukkit.getScheduler().runTask(bingo, () -> {
-            BlocksFill.changeArea(-20, 200, -20, 20, 203, 20, Material.AIR, OVERWORLD);
-        });
+        Bukkit.getScheduler().runTask(bingo, () -> BlocksFill.changeArea(-20, 200, -20, 20, 203, 20, Material.AIR, OVERWORLD));
     }
 
     public static void teleportPlayers() {
