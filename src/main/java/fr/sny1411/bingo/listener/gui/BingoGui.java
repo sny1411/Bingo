@@ -4,24 +4,28 @@ import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.listener.ChallengesListener;
 import fr.sny1411.bingo.utils.*;
+import fr.sny1411.bingo.utils.items.collections.Concrete;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Level;
 
 public class BingoGui implements Listener {
+    private static final Set<Player> playersInGui = new HashSet<>();
+    private static final HashMap<Player, Material> spectatorMemory = new HashMap<>();
     public static void open(Player player) {
         Inventory gui = Bukkit.createInventory(null, 45, Component.text("§3§lBINGO"));
         for (int i = 0; i < 45; i++) {
@@ -139,10 +143,30 @@ public class BingoGui implements Listener {
                 itemName = itemName.substring(1, itemName.length() - 1);
                 ChallengesListener.verifChallenge(player, itemName);
             }
-            // TODO : refresh pour tout les joueurs dans le gui
-            open(player);
+           updateGui();
             Bukkit.getLogger().log(Level.INFO, "refresh bingoGui");
             e.setCancelled(true);
+        }
+    }
+
+    private void updateGui() {
+        Set<Player> playersGuiCopy = new HashSet<>(playersInGui);
+        for (Player player : playersGuiCopy) {
+            open(player);
+        }
+    }
+
+    @EventHandler
+    private void onOpenGui(InventoryOpenEvent e) {
+        if (e.getView().title().equals(Component.text("§3§lBINGO"))) {
+            playersInGui.add((Player) e.getPlayer());
+        }
+    }
+
+    @EventHandler
+    private void onCloseGui(InventoryCloseEvent e) {
+        if (e.getView().title().equals(Component.text("§3§lBINGO"))) {
+            playersInGui.remove((Player) e.getPlayer());
         }
     }
 }
