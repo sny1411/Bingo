@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class Result implements CommandExecutor {
@@ -32,7 +31,7 @@ public class Result implements CommandExecutor {
     }
 
     private static void showClassment(List<Score> classementPts, List<Score> classementBingo) {
-        Text.broadcastMessage("§7=======[§eClassement§7]=======");
+        Text.broadcastMessage("§7==========[§eClassement§7]==========");
         if (Bingo.getGame().getModeVictoire() == Game.ModeVictoire.DEFIS) {
             showClassementPts(classementPts);
         } else {
