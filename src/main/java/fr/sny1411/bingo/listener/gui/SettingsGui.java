@@ -195,7 +195,6 @@ public class SettingsGui implements Listener {
         if (Challenge.getMaxExtreme() > 0) {
             extreme = new ItemStack(Material.NETHERITE_SCRAP, Challenge.getMaxExtreme());
         }
-        // TODO : REFAIRE APRES DEFIS FAIT
 
         ItemMeta easyMeta = easy.getItemMeta();
         easyMeta.displayName(Component.text("§8Défi(s) facile(s)"));
@@ -221,7 +220,6 @@ public class SettingsGui implements Listener {
         extremeLore.add(Component.text("§7[ " + Challenge.getMaxExtreme() + " / " + Challenge.getNbExtreme() + " ]"));
         extremeMeta.lore(extremeLore);
         extreme.setItemMeta(extremeMeta);
-        // TODO : PAREIL
 
         guiDifficult.setItem(10, easy);
         guiDifficult.setItem(12, medium);
@@ -293,7 +291,6 @@ public class SettingsGui implements Listener {
         }
     }
 
-    // TODO : retirer couleur dans le tab quand change nbTeams ou nbJoueurTeam
     @EventHandler
     private void inventoryClick(InventoryClickEvent e) {
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
@@ -397,7 +394,6 @@ public class SettingsGui implements Listener {
                         openGuiDifficult(player);
                     }
                 }
-                // TODO : refaire après défis
 
             } else if (clickedInventory == guiVictoire) {
                 Material currentItem = e.getCurrentItem().getType();
@@ -428,7 +424,6 @@ public class SettingsGui implements Listener {
                         openGuiVictoire(player);
                     }
                 }
-                // TODO : refaire après défis (nbBingos)
 
             } else if (clickedInventory == guiTeams) {
                 Material currentItem = e.getCurrentItem().getType();
