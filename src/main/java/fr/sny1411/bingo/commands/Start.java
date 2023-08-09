@@ -31,7 +31,11 @@ public class Start implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String str, @NotNull String[] args) {
         if (sender instanceof Player && (Bingo.getGame().getEtat() == Game.Etat.SETUP)) {
             Grid.createGrids();
-            launchGame();
+            if (isTeamComplete()) {
+                launchGame();
+            } else {
+                sender.sendMessage(Component.text("§8[§c⚠§8] §fDes joueurs ne possèdent pas d'équipe"));
+            }
         }
         return false;
     }
@@ -83,5 +87,15 @@ public class Start implements CommandExecutor {
 
             game.setPlayersDamage(true);
         });
+    }
+
+    private static boolean isTeamComplete() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (Team.getTeam(player) == null) {
+                player.sendMessage(Component.text("§8[§c⚠§8] §fVeuillez rejoindre une équipe"));
+                return false;
+            }
+        }
+        return true;
     }
 }
