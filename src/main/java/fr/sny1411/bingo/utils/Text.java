@@ -36,14 +36,11 @@ public final class Text {
     }
 
     public static void validMessage(Team team, String challengeName) {
+        String message = "§7[§eBINGO§7] §fL'équipe §l" + team.getColor().getPrefixe() + team.getColor().getNom() + "§r a réalisé le défi §e§l" + challengeName;
         if (Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL) {
-            broadcastMessage("§7[§eBINGO§7] §fL'équipe §l" + team.getColor().getPrefixe() + team.getColor().getNom() + "§r a réalisé le défi §e§l" + challengeName);
+            broadcastMessage(message);
         } else {
-            for (Player player : team.getPlayers()) {
-                if (player.isOnline()) {
-                    player.sendMessage(Component.text("§7[§eBINGO§7] §fL'équipe §l" + team.getColor().getPrefixe() + team.getColor().getNom() + "§r a réalisé le défi §e§l" + challengeName));
-                }
-            }
+            team.sendMessage(message);
         }
     }
 
@@ -52,8 +49,4 @@ public final class Text {
             player.sendMessage(Component.text(message));
         }
     }
-
-    /*
-    // TODO : revoir quand bonus fait
-    static void validBonus(Team team, String bonusName, )*/
 }
