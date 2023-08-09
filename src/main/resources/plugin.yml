@@ -1,29 +1,30 @@
 name: Bingo
 version: '${project.version}'
 main: fr.sny1411.bingo.Bingo
+description: Not approved or affiliated with Mojang or Microsoft
 api-version: '1.20'
 commands:
   newGame:
-    description: create a new game
+    description: Crée une nouvelle partie
     permission: bingo.newGame
   start:
-    description: start game
+    description: Lance la partie
     permission: bingo.start
   bingo:
-    description: open bingo gui
+    description: Affiche votre grille de défis
   testPack:
-    description: test pack du serveur
+    description: Envoie un message aux joueurs pour qu'ils sachent s'ils ont le pack de ressources installé
     permission: bingo.testPack
   valid:
-    description: force la validation d'un défi
+    description: Permet de forcer la validation d'un défi en cas de problème
     permission: bingo.valid
   stopGame:
-    description: end of game
+    description: Stoppe la partie avant la fin
     permission: bingo.stopGame
   result:
     description: show result
     permission: bingo.result
   bonus:
-    description: valid bonus command
+    description: Permet de valider un bonus dans la partie
   spec:
-    description: permet de se mettre en spectateur
+    description: Permet aux joueurs de passer en mode spectateur une fois leur partie terminée
