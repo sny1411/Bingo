@@ -20,6 +20,7 @@
 | valid       | Permet de forcer la validation d'un défi en cas de problème | bingo.valid |
 | stopGame    | Stoppe la partie avant la fin                   | bingo.stopGame   |
 | spec        | Permet aux joueurs de passer en mode spectateur une fois leur partie terminée | Pas de permission |
+| bonus  | Permet de valider un bonus dans la partie | Pas de permissions
 ---
 
 - Pour finir, si vous souhaitez vous assurer que le plugin fonctionnera correctement, je conseille plusieurs réglages: 
