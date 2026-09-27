@@ -1,38 +1,50 @@
-## Description :
+## Description:
 
-<p>Ce projet est une réécriture complète du plugin Bingo. Dans ce jeu, vous avez une grille contenant 25 défis et le but est d'en compléter le plus possible.</p>
+<p>Bingo is a Minecraft plugin for Paper. Each team gets a grid of 25 challenges and the goal is to complete as many of them as possible.</p>
 
-## Plus d'informations :
-<p>Si vous voulez en savoir plus, rendez-vous sur <a href="https://poulmouth.gitbook.io/untitled/">cette page</a> qui détaille tout le fonctionnement du jeu (elle a été réalisée en coopération avec un ami).</p>
+## More information:
+<p>If you want to know more, check out <a href="https://poulmouth.gitbook.io/untitled/">this page</a> (in French), which explains how the whole game works (it was written together with a friend).</p>
 
-## Utilisation et commandes:
+## Requirements:
 
-- Après avoir installé le plugin sur votre serveur, une partie se créera immédiatement et vous serez téléporté au spawn en vous connectant.
+- A Paper 1.20 server (Java 17 or newer)
 
-- Pour pouvoir lancer une partie, afficher les résultats ou modifier des paramètres, il vous faudra soit être opérateur sur le serveur, soit posséder les permissions détaillées ci-dessous  :
+## Usage and commands:
 
-| Commande | Description                                                                                | Permission         |
-|----------|--------------------------------------------------------------------------------------------|--------------------|
-| newGame  | Crée une nouvelle partie                                                                   | bingo.newGame      |
-| start    | Lance la partie                                                                            | bingo.start        |
-| bingo    | Affiche votre grille de défis                                                              | Pas de permission  |
-| testPack | Envoie un message aux joueurs pour qu'ils sachent s'ils ont le pack de ressources installé | bingo.testPack     |
-| valid    | Permet de forcer la validation d'un défi en cas de problème                                | bingo.valid        |
-| stopGame | Stoppe la partie avant la fin                                                              | bingo.stopGame     |
-| spec     | Permet aux joueurs de passer en mode spectateur une fois leur partie terminée              | Pas de permission  |
-| bonus    | Permet de valider un bonus dans la partie                                                  | Pas de permissions |
+- Once the plugin is installed on your server, a game is created right away. Before the game starts, players who join are teleported to the spawn and get the team selector. Players who join a game in progress without a team become spectators.
+
+- The settings item is only given to operators. The other commands require either operator status or the permissions listed below:
+
+| Command                                    | Description                                                                                            | Permission     |
+|--------------------------------------------|--------------------------------------------------------------------------------------------------------|----------------|
+| `/newGame`                                 | Creates a new game (during a game, use `/newGame confirm`)                                             | bingo.newGame  |
+| `/start`                                   | Starts the game (every online player must be in a team)                                                | bingo.start    |
+| `/bingo`                                   | Shows your challenge grid during a game                                                                | No permission  |
+| `/testPack`                                | Shows a title and plays a sound so players can check whether the resource pack is installed            | bingo.testPack |
+| `/valid add <team> <challenge>`            | Forces a challenge to be validated in case of a problem (use `_` instead of spaces in the name)        | bingo.valid    |
+| `/stopGame`                                | Stops the game before the end                                                                          | bingo.stopGame |
+| `/result`                                  | Shows the ranking to everyone once the game is over                                                    | bingo.result   |
+| `/spec`                                    | Lets players switch to spectator mode once their team has finished                                     | No permission  |
+| `/bonus <challenge>`                       | Validates an active bonus challenge                                                                    | No permission  |
 
 ---
 
-- Pour finir, si vous souhaitez vous assurer que le plugin fonctionnera correctement, je conseille plusieurs réglages: 
+- Finally, to make sure the plugin works properly, I recommend these server settings:
     <ul>
-        <li>La difficulté doit être réglée sur difficile et ne pas désactiver le spawn des monstres.</li>
-        <li>Ne pas forcer le mode de jeu et le mettre en mode survie.</li>
-        <li>Ne pas désactiver le Nether ou l'End.</li>
-        <li>S'assurer que les structures sont bien activées.</li>
-        <li>Enfin, la protection du spawn doit être désactivée.</li>
+        <li>Do not disable monster spawning (the plugin sets the difficulty to hard when the game starts).</li>
+        <li>Set the default game mode to survival and do not force it.</li>
+        <li>Do not disable the Nether or the End.</li>
+        <li>Make sure structures are enabled.</li>
+        <li>Disable spawn protection.</li>
     </ul>
 
+## Contributing:
+
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) to get started, and the [`good first issue`](https://github.com/sny1411/Bingo/labels/good%20first%20issue) label for small tasks.
+
+## License:
+
+This project is licensed under the [MIT License](LICENSE).
 
 ---
 this plugin is not approved or affiliated with Mojang or Microsoft.
