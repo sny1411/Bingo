@@ -1,0 +1,40 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. /newGame
+        2. Join a team and /start
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: paper-version
+    attributes:
+      label: Paper version
+      description: Output of the `/version` command
+      placeholder: "git-Paper-196 (MC: 1.20.1)"
+    validations:
+      required: true
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Bingo version or commit
+      placeholder: "1.0"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Server logs
+      description: Errors from the server console, if any.
+      render: text
