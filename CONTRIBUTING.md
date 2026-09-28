@@ -20,7 +20,13 @@ Start a local test server with the plugin:
 ```
 The server lives in `run/` (ignored by git) and listens on `localhost:25566`, in offline mode. Starting it means you accept the [Minecraft EULA](https://aka.ms/MinecraftEULA). Type server commands (`op <name>`, `stop`…) directly in the terminal.
 
-> A command to start several test clients at once is coming (see [#4](https://github.com/sny1411/Bingo/issues/4)).
+Then start test clients, in another terminal:
+```
+./gradlew runClients                      # Player1
+./gradlew runClients -Pplayers=3          # Player1, Player2, Player3
+./gradlew runClients -Pplayers=Alice,Bob
+```
+Each client joins the test server with an offline username (3 to 16 letters, digits or `_`) and has its own folder in `run/clients/<name>/`, with its logs in `logs/`. Closing a client doesn't close the others; Ctrl+C in the terminal closes them all. The first run downloads Minecraft and its assets, which takes a few minutes.
 
 ## Picking an issue
 
