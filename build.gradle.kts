@@ -38,12 +38,13 @@ tasks {
     }
 
     runServer {
-        minecraftVersion("1.20.1")
+        minecraftVersion(libs.versions.minecraft.get())
         // Running the test server means accepting the Minecraft EULA (https://aka.ms/MinecraftEULA).
         systemProperty("com.mojang.eula.agree", "true")
 
         // Spigot ignores --online-mode, so the test server settings are written to server.properties.
         val serverProperties = runDirectory.file("server.properties")
+        val port = providers.gradleProperty("testServerPort")
         doFirst {
             val file = serverProperties.get().asFile
             val properties = Properties()
@@ -52,7 +53,7 @@ tasks {
             }
             properties["online-mode"] = "false"
             properties["server-ip"] = "127.0.0.1"
-            properties["server-port"] = "25566"
+            properties["server-port"] = port.get()
             file.parentFile.mkdirs()
             file.writer().use { properties.store(it, null) }
         }
