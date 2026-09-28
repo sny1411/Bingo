@@ -1,5 +1,5 @@
 name: Bingo
-version: '${project.version}'
+version: '${version}'
 main: fr.sny1411.bingo.Bingo
 description: Not approved or affiliated with Mojang or Microsoft
 api-version: '1.20'

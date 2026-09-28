@@ -5,17 +5,16 @@ Thanks for your interest in Bingo! Bug reports, ideas and pull requests are all 
 ## Getting started
 
 You need:
-- a JDK 17 or newer
-- [Maven](https://maven.apache.org/)
+- a JDK 17 or newer (no need to install Gradle, the wrapper downloads it)
 - a Paper 1.20 server to test the plugin
 
 Build the plugin:
 ```
-mvn package
+./gradlew build
 ```
-The plugin jar is `target/Bingo-1.0.jar`. Copy it into the `plugins/` folder of your test server and restart it.
+On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-1.0.jar`. Copy it into the `plugins/` folder of your test server and restart it.
 
-> The build will move to Gradle, with commands to start a test server and test clients directly from the project (see [#2](https://github.com/sny1411/Bingo/issues/2), [#3](https://github.com/sny1411/Bingo/issues/3) and [#4](https://github.com/sny1411/Bingo/issues/4)).
+> Commands to start a test server and test clients directly from the project are coming (see [#3](https://github.com/sny1411/Bingo/issues/3) and [#4](https://github.com/sny1411/Bingo/issues/4)).
 
 ## Picking an issue
 
