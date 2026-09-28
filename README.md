@@ -16,6 +16,13 @@
 ```
 The plugin jar is `build/libs/Bingo-1.0.jar`. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
+## Development:
+
+```
+./gradlew runServer
+```
+Builds the plugin and starts a local Paper 1.20.1 server with it, in the `run/` folder. Join it with a Minecraft 1.20.1 client at `localhost:25566`. The server runs in offline mode and only listens on `127.0.0.1`. Starting it means you accept the [Minecraft EULA](https://aka.ms/MinecraftEULA).
+
 ## Usage and commands:
 
 - Once the plugin is installed on your server, a game is created right away. Before the game starts, players who join are teleported to the spawn and get the team selector. Players who join a game in progress without a team become spectators.

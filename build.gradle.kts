@@ -1,6 +1,9 @@
+import java.util.Properties
+
 plugins {
     java
     alias(libs.plugins.shadow)
+    alias(libs.plugins.run.paper)
 }
 
 group = "fr.sny1411"
@@ -32,5 +35,26 @@ tasks {
     shadowJar {
         archiveClassifier = ""
         relocate("io.papermc.lib", "fr.sny1411.bingo.paperlib")
+    }
+
+    runServer {
+        minecraftVersion("1.20.1")
+        // Running the test server means accepting the Minecraft EULA (https://aka.ms/MinecraftEULA).
+        systemProperty("com.mojang.eula.agree", "true")
+
+        // Spigot ignores --online-mode, so the test server settings are written to server.properties.
+        val serverProperties = runDirectory.file("server.properties")
+        doFirst {
+            val file = serverProperties.get().asFile
+            val properties = Properties()
+            if (file.exists()) {
+                file.reader().use(properties::load)
+            }
+            properties["online-mode"] = "false"
+            properties["server-ip"] = "127.0.0.1"
+            properties["server-port"] = "25566"
+            file.parentFile.mkdirs()
+            file.writer().use { properties.store(it, null) }
+        }
     }
 }

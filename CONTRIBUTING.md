@@ -6,15 +6,21 @@ Thanks for your interest in Bingo! Bug reports, ideas and pull requests are all 
 
 You need:
 - a JDK 17 or newer (no need to install Gradle, the wrapper downloads it)
-- a Paper 1.20 server to test the plugin
+- a Minecraft 1.20.1 client to test the plugin
 
 Build the plugin:
 ```
 ./gradlew build
 ```
-On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-1.0.jar`. Copy it into the `plugins/` folder of your test server and restart it.
+On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-1.0.jar`.
 
-> Commands to start a test server and test clients directly from the project are coming (see [#3](https://github.com/sny1411/Bingo/issues/3) and [#4](https://github.com/sny1411/Bingo/issues/4)).
+Start a local test server with the plugin:
+```
+./gradlew runServer
+```
+The server lives in `run/` (ignored by git) and listens on `localhost:25566`, in offline mode. Starting it means you accept the [Minecraft EULA](https://aka.ms/MinecraftEULA). Type server commands (`op <name>`, `stop`…) directly in the terminal.
+
+> A command to start several test clients at once is coming (see [#4](https://github.com/sny1411/Bingo/issues/4)).
 
 ## Picking an issue
 
