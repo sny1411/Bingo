@@ -9,6 +9,13 @@
 
 - A Paper 1.20 server (Java 17 or newer)
 
+## Building:
+
+```
+./gradlew build
+```
+The plugin jar is `build/libs/Bingo-1.0.jar`. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+
 ## Usage and commands:
 
 - Once the plugin is installed on your server, a game is created right away. Before the game starts, players who join are teleported to the spawn and get the team selector. Players who join a game in progress without a team become spectators.

@@ -1,0 +1,11 @@
+[versions]
+paper-api = "1.20.1-R0.1-SNAPSHOT"
+paperlib = "1.0.8"
+shadow = "9.6.1"
+
+[libraries]
+paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
+paperlib = { module = "io.papermc:paperlib", version.ref = "paperlib" }
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
