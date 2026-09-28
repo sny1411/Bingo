@@ -1,0 +1,11 @@
+# Build
+target/
+build/
+.gradle/
+
+# Local test server
+run/
+
+# IntelliJ
+.idea/
+*.iml
