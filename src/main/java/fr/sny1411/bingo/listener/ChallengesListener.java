@@ -140,7 +140,6 @@ public class ChallengesListener implements Listener {
         switch (entityType) {
             case WOLF:
                 if (nbWolfTame.containsKey(player)) {
-                    Bukkit.getLogger().log(Level.INFO, "test wolf tame");
                     realizeChallenge(player, "§d§lWolf gang");
                 } else {
                     nbWolfTame.put(player, 1);
