@@ -161,8 +161,8 @@ public class Score {
 
     private void testGameFinish() {
         Game game = Bingo.getGame();
-        if ((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
-                (game.getModeVictoire() == Game.ModeVictoire.DEFIS && nbChallenges == 25) && !team.isGameFinish()) {
+        if (((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
+                (game.getModeVictoire() == Game.ModeVictoire.DEFIS && nbChallenges == 25)) && !team.isGameFinish()) {
             team.setGameFinish(true);
             Text.broadcastMessage("§7[§eBINGO§7] §fL'équipe " + team.getColor().getPrefixe() + team.getColor().getNom() + " §fa fini sa partie");
             Text.broadcastMessage("Elle peut continuer de jouer ou devenir spectatrice");
