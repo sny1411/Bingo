@@ -5,26 +5,26 @@ description: Not approved or affiliated with Mojang or Microsoft
 api-version: '1.20'
 commands:
   newGame:
-    description: Crée une nouvelle partie
+    description: Creates a new game
     permission: bingo.newGame
   start:
-    description: Lance la partie
+    description: Starts the game
     permission: bingo.start
   bingo:
-    description: Affiche votre grille de défis
+    description: Shows your challenge grid during a game
   testPack:
-    description: Envoie un message aux joueurs pour qu'ils sachent s'ils ont le pack de ressources installé
+    description: Shows a title and plays a sound to check whether the resource pack is installed
     permission: bingo.testPack
   valid:
-    description: Permet de forcer la validation d'un défi en cas de problème
+    description: Forces a challenge to be validated in case of a problem
     permission: bingo.valid
   stopGame:
-    description: Stoppe la partie avant la fin
+    description: Stops the game before the end
     permission: bingo.stopGame
   result:
-    description: show result
+    description: Shows the ranking once the game is over
     permission: bingo.result
   bonus:
-    description: Permet de valider un bonus dans la partie
+    description: Validates an active bonus challenge
   spec:
-    description: Permet aux joueurs de passer en mode spectateur une fois leur partie terminée
+    description: Lets players switch to spectator mode once their game is finished
