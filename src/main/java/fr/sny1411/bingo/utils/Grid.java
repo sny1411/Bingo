@@ -87,14 +87,14 @@ public class Grid {
         }
     }
 
-    public static Challenge getChallenge(Team team, String challengeName) {
+    public static Challenge getChallenge(Team team, ChallengeId challengeId) {
         Grid grid = getTeamsGrid().get(team);
         Challenge[][] challenges = grid.getGrid();
 
         for (Challenge[] value : challenges) {
             for (int x = 0; x < challenges[0].length; x++) {
                 Challenge challenge = value[x];
-                if (challenge.getName().equals(challengeName)) {
+                if (challenge.getId() == challengeId) {
                     return challenge;
                 }
             }

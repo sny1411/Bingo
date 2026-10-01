@@ -47,45 +47,45 @@ public class ChallengesListener implements Listener {
         return true;
     }
 
-    private static void realizeChallenge(Player player, String challengeName) {
-        Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeName);
+    private static void realizeChallenge(Player player, ChallengeId challengeId) {
+        Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeId);
         if (challenge != null && !challenge.getRealized()) {
             challenge.setRealized(true);
         }
     }
 
-    private static void valideChallenge(Player player, String challengeName) {
-        Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeName);
+    private static void valideChallenge(Player player, ChallengeId challengeId) {
+        Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeId);
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
             Team teamPlayer = Team.getTeam(player);
-            Text.validMessage(teamPlayer, challengeName);
+            Text.validMessage(teamPlayer, challenge.getName());
             Score.getTeamsScore().get(teamPlayer).addChallenge(challenge);
         }
     }
 
-    private static boolean verifValideChallenge(Player player, String challengeName) {
-        if (Boolean.TRUE.equals(Objects.requireNonNull(Grid.getChallenge(Team.getTeam(player), challengeName)).getRealized())) {
-            valideChallenge(player, challengeName);
+    private static boolean verifValideChallenge(Player player, ChallengeId challengeId) {
+        if (Boolean.TRUE.equals(Objects.requireNonNull(Grid.getChallenge(Team.getTeam(player), challengeId)).getRealized())) {
+            valideChallenge(player, challengeId);
             return true;
         }
         return false;
     }
 
-    public static void valideAndRealizeChallenge(Player player, String challengeName) {
-        Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeName);
+    public static void valideAndRealizeChallenge(Player player, ChallengeId challengeId) {
+        Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeId);
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
             challenge.setRealized(true);
             Team teamPlayer = Team.getTeam(player);
-            Text.validMessage(teamPlayer, challengeName);
+            Text.validMessage(teamPlayer, challenge.getName());
             Score.getTeamsScore().get(teamPlayer).addChallenge(challenge);
         }
     }
 
     @EventHandler
     private void onPlayerDeath(PlayerDeathEvent e) {
-        realizeChallenge(e.getPlayer(), "§d§lSuicide Squad");
+        realizeChallenge(e.getPlayer(), ChallengeId.SUICIDE_SQUAD);
     }
 
     @EventHandler
@@ -97,35 +97,35 @@ public class ChallengesListener implements Listener {
         EntityType entityType = entity.getType();
         switch (entityType) {
             case WITCH:
-                realizeChallenge(killer, "§d§lAurevoir Sabrina !");
+                realizeChallenge(killer, ChallengeId.AUREVOIR_SABRINA);
                 break;
             case SLIME:
-                realizeChallenge(killer, "§d§lSlime Rancher");
+                realizeChallenge(killer, ChallengeId.SLIME_RANCHER);
                 break;
             case DOLPHIN:
-                realizeChallenge(killer, "§d§lFaut pas Flipper");
+                realizeChallenge(killer, ChallengeId.FAUT_PAS_FLIPPER);
                 break;
             case FOX:
-                realizeChallenge(killer, "§d§lWhat does the fox say?");
+                realizeChallenge(killer, ChallengeId.WHAT_DOES_THE_FOX_SAY);
                 break;
             case STRIDER:
-                realizeChallenge(killer, "§d§lDestrier des Enfers");
+                realizeChallenge(killer, ChallengeId.DESTRIER_DES_ENFERS);
                 break;
             case CAVE_SPIDER:
-                realizeChallenge(killer, "§d§lArachnophobe");
+                realizeChallenge(killer, ChallengeId.ARACHNOPHOBE);
                 break;
             case ELDER_GUARDIAN:
-                realizeChallenge(killer, "§d§lIl est bon mon poisson");
+                realizeChallenge(killer, ChallengeId.IL_EST_BON_MON_POISSON);
                 break;
             case IRON_GOLEM:
-                realizeChallenge(killer, "§d§lOptimum prime");
+                realizeChallenge(killer, ChallengeId.OPTIMUM_PRIME);
                 break;
             case SILVERFISH:
-                realizeChallenge(killer, "§d§lTéma la taille du rat");
+                realizeChallenge(killer, ChallengeId.TEMA_LA_TAILLE_DU_RAT);
                 break;
             case TURTLE:
                 if (e.getEntity().getWorld() == Bukkit.getWorlds().get(1)) {
-                    realizeChallenge(killer, "§d§lMario contre Bowser");
+                    realizeChallenge(killer, ChallengeId.MARIO_CONTRE_BOWSER);
                 }
                 break;
         }
@@ -140,16 +140,16 @@ public class ChallengesListener implements Listener {
         switch (entityType) {
             case WOLF:
                 if (nbWolfTame.containsKey(player)) {
-                    realizeChallenge(player, "§d§lWolf gang");
+                    realizeChallenge(player, ChallengeId.WOLF_GANG);
                 } else {
                     nbWolfTame.put(player, 1);
                 }
                 break;
             case CAT:
-                realizeChallenge(player, "§d§lNyan Cat");
+                realizeChallenge(player, ChallengeId.NYAN_CAT);
                 break;
             case HORSE:
-                realizeChallenge(player, "§d§lLe cheval c'est trop génial");
+                realizeChallenge(player, ChallengeId.LE_CHEVAL_C_EST_TROP_GENIAL);
         }
     }
 
@@ -161,11 +161,11 @@ public class ChallengesListener implements Listener {
             case POTION:
                 PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
                 if (potionMeta.getBasePotionData().getType() == PotionType.SPEED && (player.getInventory().getItemInOffHand().getType() == Material.BREAD)) {
-                    realizeChallenge(player, "§d§lTu es un sorcier Harry !");
+                    realizeChallenge(player, ChallengeId.TU_ES_UN_SORCIER_HARRY);
                 }
                 break;
             case COOKIE:
-                realizeChallenge(player, "§d§lCookie Monster");
+                realizeChallenge(player, ChallengeId.COOKIE_MONSTER);
                 break;
         }
     }
@@ -177,7 +177,7 @@ public class ChallengesListener implements Listener {
                 List<Entity> nears = e.getEntity().getNearbyEntities(50, 50, 50);
                 for (Entity entity : nears) {
                     if (entity instanceof Player) {
-                        realizeChallenge(((Player) entity).getPlayer(), "§d§lOh no, my table is broken!");
+                        realizeChallenge(((Player) entity).getPlayer(), ChallengeId.OH_NO_MY_TABLE_IS_BROKEN);
                     }
                 }
             }
@@ -189,46 +189,46 @@ public class ChallengesListener implements Listener {
         Player player = e.getPlayer();
         switch (e.getAdvancement().getKey().getKey()) {
             case "story/enter_the_nether":
-                realizeChallenge(player, "§d§lBienvenue en Enfer");
+                realizeChallenge(player, ChallengeId.BIENVENUE_EN_ENFER);
                 break;
             case "nether/explore_nether":
-                realizeChallenge(player, "§d§lVoyage au bout de l'Enfer");
+                realizeChallenge(player, ChallengeId.VOYAGE_AU_BOUT_DE_L_ENFER);
                 break;
             case "nether/obtain_ancient_debris":
-                realizeChallenge(player, "§d§lAu fond des profondeurs");
+                realizeChallenge(player, ChallengeId.AU_FOND_DES_PROFONDEURS);
                 break;
             case "story/follow_ender_eye":
-                realizeChallenge(player, "§d§lEn suivant les yeux...");
+                realizeChallenge(player, ChallengeId.EN_SUIVANT_LES_YEUX);
                 break;
             case "end/root":
-                realizeChallenge(player, "§d§lC'est la fin?");
+                realizeChallenge(player, ChallengeId.C_EST_LA_FIN);
                 break;
             case "nether/find_bastion":
-                realizeChallenge(player, "§d§lLes mystérieuses cités d'or");
+                realizeChallenge(player, ChallengeId.LES_MYSTERIEUSES_CITES_D_OR);
                 break;
             case "adventure/bullseye":
-                realizeChallenge(player, "§d§lDans le mille");
+                realizeChallenge(player, ChallengeId.DANS_LE_MILLE);
                 break;
             case "adventure/walk_on_powder_snow_with_leather_boots":
-                realizeChallenge(player, "§d§lJésus des neiges");
+                realizeChallenge(player, ChallengeId.JESUS_DES_NEIGES);
                 break;
             case "nether/charge_respawn_anchor":
-                realizeChallenge(player, "§d§lChargé à bloc");
+                realizeChallenge(player, ChallengeId.CHARGE_A_BLOC);
                 break;
             case "nether/return_to_sender":
-                realizeChallenge(player, "§d§lRetour à l'envoyeur");
+                realizeChallenge(player, ChallengeId.RETOUR_A_L_ENVOYEUR);
                 break;
             case "adventure/trade":
-                realizeChallenge(player, "§d§lStonks Industries");
+                realizeChallenge(player, ChallengeId.STONKS_INDUSTRIES);
                 break;
             case "story/cure_zombie_villager":
-                realizeChallenge(player, "§d§lDoctor Strange");
+                realizeChallenge(player, ChallengeId.DOCTOR_STRANGE);
                 break;
             case "adventure/salvage_sherd":
-                realizeChallenge(player, "§d§lArchéologue");
+                realizeChallenge(player, ChallengeId.ARCHEOLOGUE);
                 break;
             case "adventure/sleep_in_bed":
-                realizeChallenge(player, "§d§lBonne nuit les petits");
+                realizeChallenge(player, ChallengeId.BONNE_NUIT_LES_PETITS);
                 break;
         }
     }
@@ -239,16 +239,16 @@ public class ChallengesListener implements Listener {
         if (e.getHitEntity() == null) return;
         switch (e.getEntity().getType()) {
             case LLAMA_SPIT:
-                realizeChallenge((Player) e.getHitEntity(), "§d§lLa plus grosse racaille");
+                realizeChallenge((Player) e.getHitEntity(), ChallengeId.LA_PLUS_GROSSE_RACAILLE);
                 break;
             case SNOWBALL:
                 if (e.getHitEntity().getType() == EntityType.SNOWMAN) {
-                    realizeChallenge((Player) e.getEntity().getShooter(), "§d§lCombat d'anthologie");
+                    realizeChallenge((Player) e.getEntity().getShooter(), ChallengeId.COMBAT_D_ANTHOLOGIE);
                 }
                 break;
             case FIREWORK:
                 if (e.getHitEntity().getType() == EntityType.PIG) {
-                    realizeChallenge((Player) e.getEntity().getShooter(), "§d§lC'est la fête de trop");
+                    realizeChallenge((Player) e.getEntity().getShooter(), ChallengeId.C_EST_LA_FETE_DE_TROP);
                 }
         }
     }
@@ -257,20 +257,20 @@ public class ChallengesListener implements Listener {
     private void rideEvent(EntityMountEvent e) {
         Entity entity = e.getMount();
         if (entity.getType() == EntityType.PIG && (entity.getLocation().getY() >= 320 && e.getEntity() instanceof Player)) {
-            realizeChallenge((Player) e.getEntity(), "§d§lRedBull donne des ailes");
+            realizeChallenge((Player) e.getEntity(), ChallengeId.REDBULL_DONNE_DES_AILES);
         }
     }
 
     @EventHandler
     private void lightningStrike(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.LIGHTNING && e.getEntity() instanceof Player) {
-            realizeChallenge((Player) e.getEntity(), "§d§lCoup de foudre");
+            realizeChallenge((Player) e.getEntity(), ChallengeId.COUP_DE_FOUDRE);
         }
     }
 
     @EventHandler
     private void raidTrigger(RaidTriggerEvent e) {
-        realizeChallenge(e.getPlayer(), "§d§lNous sommes en guerre");
+        realizeChallenge(e.getPlayer(), ChallengeId.NOUS_SOMMES_EN_GUERRE);
     }
 
     @EventHandler
@@ -278,10 +278,10 @@ public class ChallengesListener implements Listener {
         if (e.getBlock().getType() == Material.CHAIN) {
             Biome biome = e.getBlock().getBiome();
             if (biome == Biome.ICE_SPIKES || biome == Biome.FROZEN_OCEAN || biome == Biome.DEEP_FROZEN_OCEAN) {
-                realizeChallenge(e.getPlayer(), "§d§lLibérée, Délivrée");
+                realizeChallenge(e.getPlayer(), ChallengeId.LIBEREE_DELIVREE);
             }
         } else if (e.getBlock().getType() == Material.SPAWNER) {
-            realizeChallenge(e.getPlayer(), "§d§lMonster Hunter");
+            realizeChallenge(e.getPlayer(), ChallengeId.MONSTER_HUNTER);
         }
 
     }
@@ -289,7 +289,7 @@ public class ChallengesListener implements Listener {
     @EventHandler
     private void candleIgnite(BlockIgniteEvent e) {
         if (Candle.isCandleItem(e.getBlock().getType())) {
-            realizeChallenge(e.getPlayer(), "§d§lT'es pas net Baptiste?");
+            realizeChallenge(e.getPlayer(), ChallengeId.T_ES_PAS_NET_BAPTISTE);
         }
     }
 
@@ -298,7 +298,7 @@ public class ChallengesListener implements Listener {
         List<Entity> nears = e.getEntity().getNearbyEntities(50, 50, 50);
         for (Entity entity : nears) {
             if (entity instanceof Player) {
-                realizeChallenge((Player) entity, "§d§lUne affaire en or");
+                realizeChallenge((Player) entity, ChallengeId.UNE_AFFAIRE_EN_OR);
             }
         }
     }
@@ -306,14 +306,14 @@ public class ChallengesListener implements Listener {
     @EventHandler
     private void cauldronExtinguish(CauldronLevelChangeEvent e) {
         if (e.getReason() == CauldronLevelChangeEvent.ChangeReason.EXTINGUISH && Objects.requireNonNull(e.getEntity()).getWorld() == Bukkit.getWorlds().get(1)) {
-            realizeChallenge((Player) e.getEntity(), "§d§lSéance jacuzzi");
+            realizeChallenge((Player) e.getEntity(), ChallengeId.SEANCE_JACUZZI);
         }
     }
 
     @EventHandler
     private void exChange(PlayerLevelChangeEvent e) {
         if (e.getPlayer().getLevel() >= 30) {
-            realizeChallenge(e.getPlayer(), "§d§lExpérimenté");
+            realizeChallenge(e.getPlayer(), ChallengeId.EXPERIMENTE);
         }
     }
 
@@ -322,7 +322,7 @@ public class ChallengesListener implements Listener {
         List<Entity> entities = e.getEntity().getNearbyEntities(10,10,10);
         for (Entity entity : entities) {
             if (entity instanceof Player) {
-                realizeChallenge((Player) entity,"§d§lMichelangelo?");
+                realizeChallenge((Player) entity,ChallengeId.MICHELANGELO);
             }
         }
     }
@@ -332,7 +332,7 @@ public class ChallengesListener implements Listener {
         if (e.getEntity() instanceof Sheep) {
             Sheep sheep = (Sheep) e.getEntity();
             if (sheep.getColor() == DyeColor.PURPLE) {
-                realizeChallenge(e.getPlayer(), "§d§lTricot");
+                realizeChallenge(e.getPlayer(), ChallengeId.TRICOT);
             }
         }
     }
@@ -344,7 +344,7 @@ public class ChallengesListener implements Listener {
             BlockData blockData = block.getBlockData();
             Levelled level = (Levelled) blockData;
             if (level.getLevel() == level.getMaximumLevel()) {
-                realizeChallenge(e.getPlayer(), "§d§lRecyclage");
+                realizeChallenge(e.getPlayer(), ChallengeId.RECYCLAGE);
             }
         }
     }
@@ -358,7 +358,7 @@ public class ChallengesListener implements Listener {
             ItemStack offHand = inv.getItemInOffHand();
             if ((mainHand.getType() == Material.NAME_TAG && Bingo.getPlainSerializer().serialize(mainHand.displayName()).equals("[Batman]")) ||
             (offHand.getType() == Material.NAME_TAG && Bingo.getPlainSerializer().serialize(offHand.displayName()).equals("[Batman]"))) {
-                realizeChallenge(e.getPlayer(), "§d§lBatman");
+                realizeChallenge(e.getPlayer(), ChallengeId.BATMAN);
             }
         }
     }
@@ -368,7 +368,7 @@ public class ChallengesListener implements Listener {
         if (e.getEntityType() == EntityType.ENDERMAN &&
                 e.getTarget() instanceof Player &&
                 e.getReason() == EntityTargetEvent.TargetReason.CLOSEST_PLAYER) {
-            realizeChallenge(((Player) e.getTarget()), "§d§lDuel de regard");
+            realizeChallenge(((Player) e.getTarget()), ChallengeId.DUEL_DE_REGARD);
         }
     }
 
@@ -380,14 +380,14 @@ public class ChallengesListener implements Listener {
             Collection<Entity> nears = Objects.requireNonNull(Bukkit.getWorld(end.getName())).getNearbyEntities(new Location(end, 0, 65, 0), 150, 50, 150);
             for (Entity entityNear : nears) {
                 if (entityNear instanceof Player) {
-                    realizeChallenge(((Player) entityNear), "§d§lViens à moi Shenron");
+                    realizeChallenge(((Player) entityNear), ChallengeId.VIENS_A_MOI_SHENRON);
                 }
             }
         } else if (entity.getType() == EntityType.PARROT && e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SHOULDER_ENTITY) {
             List<Entity> proches = e.getEntity().getNearbyEntities(5, 5, 5);
             for (Entity entityNear : proches) {
                 if (entityNear instanceof Player) {
-                    realizeChallenge((Player) entityNear, "§d§lPirate des Caraïbes");
+                    realizeChallenge((Player) entityNear, ChallengeId.PIRATE_DES_CARAIBES);
                 }
             }
         }
@@ -396,199 +396,190 @@ public class ChallengesListener implements Listener {
     @EventHandler
     private void blockFormEvent(EntityBlockFormEvent e) {
         if (e.getBlock().getType() == Material.WATER && e.getEntity() instanceof Player) {
-            realizeChallenge((Player) e.getEntity(), "§d§lAppelle moi Moïse");
+            realizeChallenge((Player) e.getEntity(), ChallengeId.APPELLE_MOI_MOISE);
         }
     }
 
-    @EventHandler
-    private void entityMountEvent(EntityMountEvent e) {
-        Bukkit.getLogger().log(Level.INFO, "mountEvent");
-        if (e.getMount() instanceof Camel && e.getEntity() instanceof Player) {
-            realizeChallenge((Player) e.getEntity(), "§d§lUne ou deux bosses");
-        }
-    }
-
-    public static boolean verifChallenge(Player player, String challengeName) {
+    public static boolean verifChallenge(Player player, ChallengeId challengeId) {
         Bukkit.getLogger().log(Level.INFO, "test");
         PlayerInventory playerInventory = player.getInventory();
-        Bukkit.getLogger().log(Level.INFO, challengeName);
-        switch (challengeName) {
-            case "§d§lSuicide Squad":
-            case "§d§lAurevoir Sabrina !":
-            case "§d§lSlime Rancher":
-            case "§d§lFaut pas Flipper":
-            case "§d§lWolf gang":
-            case "§d§lNyan Cat":
-            case "§d§lWhat does the fox say?":
-            case "§d§lDestrier des Enfers":
-            case "§d§lTu es un sorcier Harry !":
-            case "§d§lBienvenue en Enfer":
-            case "§d§lArachnophobe":
-            case "§d§lVoyage au bout de l'Enfer":
-            case "§d§lAu fond des profondeurs":
-            case "§d§lEn suivant les yeux...":
-            case "§d§lC'est la fin?":
-            case "§d§lLa plus grosse racaille":
-            case "§d§lRedBull donne des ailes":
-            case "§d§lLes mystérieuses cités d'or":
-            case "§d§lDans le mille":
-            case "§d§lCoup de foudre":
-            case "§d§lNous sommes en guerre":
-            case "§d§lLibérée, Délivrée":
-            case "§d§lCombat d'anthologie":
-            case "§d§lT'es pas net Baptiste?":
-            case "§d§lJésus des neiges":
-            case "§d§lUne affaire en or":
-            case "§d§lSéance jacuzzi":
-            case "§d§lOh no, my table is broken!":
-            case "§d§lRetour à l'envoyeur":
-            case "§d§lExpérimenté":
-            case "§d§lMichelangelo?":
-            case "§d§lStonks Industries":
-            case "§d§lIl est bon mon poisson":
-            case "§d§lTricot":
-            case "§d§lOptimum prime":
-            case "§d§lRecyclage":
-            case "§d§lBatman":
-            case "§d§lC'est la fête de trop":
-            case "§d§lTéma la taille du rat":
-            case "§d§lCookie Monster":
-            case "§d§lDuel de regard":
-            case "§d§lMonster Hunter":
-            case "§d§lDoctor Strange":
-            case "§d§lViens à moi Shenron":
-            case "§d§lAppelle moi Moïse":
-            case "§d§lMario contre Bowser":
-            case "§d§lArchéologue":
-            case "§d§lUne ou deux bosses":
-            case "§d§lBonne nuit les petits":
-            case "§d§lLe cheval c'est trop génial":
-            case "§d§lChargé à bloc":
-            case "§d§lPirate des Caraïbes":
-                return verifValideChallenge(player, challengeName);
-            case "§d§lBoulets de canon":
+        Bukkit.getLogger().log(Level.INFO, challengeId.name());
+        switch (challengeId) {
+            case SUICIDE_SQUAD:
+            case AUREVOIR_SABRINA:
+            case SLIME_RANCHER:
+            case FAUT_PAS_FLIPPER:
+            case WOLF_GANG:
+            case NYAN_CAT:
+            case WHAT_DOES_THE_FOX_SAY:
+            case DESTRIER_DES_ENFERS:
+            case TU_ES_UN_SORCIER_HARRY:
+            case BIENVENUE_EN_ENFER:
+            case ARACHNOPHOBE:
+            case VOYAGE_AU_BOUT_DE_L_ENFER:
+            case AU_FOND_DES_PROFONDEURS:
+            case EN_SUIVANT_LES_YEUX:
+            case C_EST_LA_FIN:
+            case LA_PLUS_GROSSE_RACAILLE:
+            case REDBULL_DONNE_DES_AILES:
+            case LES_MYSTERIEUSES_CITES_D_OR:
+            case DANS_LE_MILLE:
+            case COUP_DE_FOUDRE:
+            case NOUS_SOMMES_EN_GUERRE:
+            case LIBEREE_DELIVREE:
+            case COMBAT_D_ANTHOLOGIE:
+            case T_ES_PAS_NET_BAPTISTE:
+            case JESUS_DES_NEIGES:
+            case UNE_AFFAIRE_EN_OR:
+            case SEANCE_JACUZZI:
+            case OH_NO_MY_TABLE_IS_BROKEN:
+            case RETOUR_A_L_ENVOYEUR:
+            case EXPERIMENTE:
+            case MICHELANGELO:
+            case STONKS_INDUSTRIES:
+            case IL_EST_BON_MON_POISSON:
+            case TRICOT:
+            case OPTIMUM_PRIME:
+            case RECYCLAGE:
+            case BATMAN:
+            case C_EST_LA_FETE_DE_TROP:
+            case TEMA_LA_TAILLE_DU_RAT:
+            case COOKIE_MONSTER:
+            case DUEL_DE_REGARD:
+            case MONSTER_HUNTER:
+            case DOCTOR_STRANGE:
+            case VIENS_A_MOI_SHENRON:
+            case APPELLE_MOI_MOISE:
+            case MARIO_CONTRE_BOWSER:
+            case ARCHEOLOGUE:
+            case BONNE_NUIT_LES_PETITS:
+            case LE_CHEVAL_C_EST_TROP_GENIAL:
+            case CHARGE_A_BLOC:
+            case PIRATE_DES_CARAIBES:
+                return verifValideChallenge(player, challengeId);
+            case BOULETS_DE_CANON:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.FIRE_CHARGE), 6)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lDéforestation":
+            case DEFORESTATION:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.ACACIA_LOG), 64)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lEt ça fait bim bam boom":
+            case ET_CA_FAIT_BIM_BAM_BOOM:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.TNT), 5)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lTop Chef":
+            case TOP_CHEF:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.CAKE), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lForgeron":
+            case FORGERON:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.ANVIL), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lLa dame du CDI":
+            case LA_DAME_DU_CDI:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.BOOK), 16)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lVers l'infini et au-delà":
+            case VERS_L_INFINI_ET_AU_DELA:
                 if (player.getLocation().getY() >= 320) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lIngénieur informaticien":
+            case INGENIEUR_INFORMATICIEN:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.REDSTONE_BLOCK), 16)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lAlgoculteur":
+            case ALGOCULTEUR:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.DRIED_KELP_BLOCK), 16)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lHalloween":
+            case HALLOWEEN:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.JACK_O_LANTERN), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lCa colle...":
+            case CA_COLLE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.HONEY_BOTTLE), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lEtrange pomme d'amour":
+            case ETRANGE_POMME_D_AMOUR:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.GOLDEN_APPLE), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lMcDonald's":
+            case MCDONALDS:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.POISONOUS_POTATO), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lFarming Simulator":
+            case FARMING_SIMULATOR:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.HAY_BLOCK), 32)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lCauchemar en cuisine":
+            case CAUCHEMAR_EN_CUISINE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.SUSPICIOUS_STEW), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lFée clocharde":
+            case FEE_CLOCHARDE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.FEATHER), 31)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lAddict des seaux":
+            case ADDICT_DES_SEAUX:
                 if (verifSetOfItems(playerInventory, new ItemStack(Material.LAVA_BUCKET),
                         new ItemStack(Material.WATER_BUCKET),
                         new ItemStack(Material.MILK_BUCKET))) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lTout est bon dans le cochon":
+            case TOUT_EST_BON_DANS_LE_COCHON:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.PORKCHOP), 22)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lTu es grosse Mélissandre":
+            case TU_ES_GROSSE_MELISSANDRE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.PUMPKIN_PIE), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lY'a du bambou là !":
+            case Y_A_DU_BAMBOU_LA:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.BAMBOO), 64)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lCollectionneur":
+            case COLLECTIONNEUR:
                 if (verifSetOfItems(playerInventory, new ItemStack(Material.COAL_BLOCK),
                         new ItemStack(Material.REDSTONE_BLOCK),
                         new ItemStack(Material.LAPIS_BLOCK),
@@ -598,180 +589,180 @@ public class ChallengesListener implements Listener {
                         new ItemStack(Material.COPPER_BLOCK),
                         new ItemStack(Material.EMERALD_BLOCK),
                         new ItemStack(Material.QUARTZ_BLOCK))) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lCoffre du néant":
+            case COFFRE_DU_NEANT:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.ENDER_CHEST), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lTrésor enfoui":
+            case TRESOR_ENFOUI:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.HEART_OF_THE_SEA), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lIndiana Jones":
+            case INDIANA_JONES:
                 Biome biome = player.getLocation().getBlock().getBiome();
                 if (biome == Biome.JUNGLE || biome == Biome.BAMBOO_JUNGLE || biome == Biome.SPARSE_JUNGLE) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lMerlin l'enchanteur":
+            case MERLIN_L_ENCHANTEUR:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.ENCHANTING_TABLE), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lJ'ai le bâton en feu !":
+            case J_AI_LE_BATON_EN_FEU:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.BLAZE_ROD), 2)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lSortez les mouchoirs":
+            case SORTEZ_LES_MOUCHOIRS:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.CRYING_OBSIDIAN), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lThe Walking Dead":
+            case THE_WALKING_DEAD:
                 if (player.getStatistic(Statistic.KILL_ENTITY, EntityType.ZOMBIE) >= 29) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lSOS Fantômes":
+            case SOS_FANTOMES:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.PHANTOM_MEMBRANE), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lJe veux tes yeux":
+            case JE_VEUX_TES_YEUX:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.ENDER_PEARL), 3)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lChâteau rouge":
+            case CHATEAU_ROUGE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.RED_NETHER_BRICKS), 17)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lOld Town Road":
+            case OLD_TOWN_ROAD:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.SADDLE), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lTerre colorée":
+            case TERRE_COLOREE:
                 if (Terracota.getNbTerracota(playerInventory) >= 8) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lBob l'éponge cubique":
+            case BOB_L_EPONGE_CUBIQUE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.SPONGE), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lMayo l'abeille":
+            case MAYO_L_ABEILLE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.HONEY_BLOCK), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lSous l'océan":
+            case SOUS_L_OCEAN:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.TROPICAL_FISH_BUCKET), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lAssurance vie":
+            case ASSURANCE_VIE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.TOTEM_OF_UNDYING), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lBienvenue au pays des Schtroumpfs":
+            case BIENVENUE_AU_PAYS_DES_SCHTROUMPFS:
                 if (player.getLocation().getBlock().getBiome() == Biome.MUSHROOM_FIELDS) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lQui dit mieux?":
+            case QUI_DIT_MIEUX:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.NETHERITE_INGOT), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lMon précieux":
+            case MON_PRECIEUX:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.AMETHYST_BLOCK), 16)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lUn bout de Cerbère":
+            case UN_BOUT_DE_CERBERE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.WITHER_SKELETON_SKULL), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lDes paillettes dans ma vie Kévin":
+            case DES_PAILLETTES_DANS_MA_VIE_KEVIN:
                 if (player.getStatistic(Statistic.KILL_ENTITY, EntityType.GLOW_SQUID) >= 3) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lBoules scintillantes":
+            case BOULES_SCINTILLANTES:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.GLOW_BERRIES), 5)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lCa pique...":
+            case CA_PIQUE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.POINTED_DRIPSTONE), 20)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lPoséidon":
+            case POSEIDON:
                 for (ItemStack item : playerInventory.getStorageContents()) {
                     if (item != null && item.getType() == Material.TRIDENT) {
-                        valideAndRealizeChallenge(player, challengeName);
+                        valideAndRealizeChallenge(player, challengeId);
                         return true;
                     }
                 }
                 break;
-            case "§d§lPlutôt Krokmou ou Spyro?":
+            case PLUTOT_KROKMOU_OU_SPYRO:
                 ItemStack helmet = playerInventory.getHelmet();
                 if (helmet != null && helmet.getType() == Material.DRAGON_HEAD) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lHallucinogènes":
+            case HALLUCINOGENES:
                 if (verifSetOfItems((playerInventory), new ItemStack(Material.BROWN_MUSHROOM),
                         new ItemStack(Material.RED_MUSHROOM),
                         new ItemStack(Material.CRIMSON_FUNGUS),
                         new ItemStack(Material.WARPED_FUNGUS))) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lNouvelle énergie":
+            case NOUVELLE_ENERGIE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.DAYLIGHT_DETECTOR), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lLady Gaga":
+            case LADY_GAGA:
                 helmet = playerInventory.getHelmet();
                 ItemStack chestplate = playerInventory.getChestplate();
                 ItemStack leggings = playerInventory.getLeggings();
@@ -781,24 +772,24 @@ public class ChallengesListener implements Listener {
                         (chestplate != null && chestplate.getType() == Material.GOLDEN_CHESTPLATE &&
                                 (leggings != null && leggings.getType() == Material.GOLDEN_LEGGINGS &&
                                         (boots != null && boots.getType() == Material.GOLDEN_BOOTS)))) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lSac à dos, sac à dos":
+            case SAC_A_DOS_SAC_A_DOS:
                 if (Shulker.isInInventory(playerInventory)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lRemède magique":
+            case REMEDE_MAGIQUE:
                 PotionEffect effect = player.getPotionEffect(PotionEffectType.REGENERATION);
                 if (effect != null && effect.getAmplifier() == 1) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lArmure étincelante":
+            case ARMURE_ETINCELANTE:
                 helmet = playerInventory.getHelmet();
                 chestplate = playerInventory.getChestplate();
                 leggings = playerInventory.getLeggings();
@@ -808,96 +799,96 @@ public class ChallengesListener implements Listener {
                         (chestplate != null && chestplate.getType() == Material.DIAMOND_CHESTPLATE &&
                                 (leggings != null && leggings.getType() == Material.DIAMOND_LEGGINGS &&
                                         (boots != null && boots.getType() == Material.DIAMOND_BOOTS)))) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lJusqu'aux cieux":
+            case JUSQU_AUX_CIEUX:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.BEACON), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lRails de coke":
+            case RAILS_DE_COKE:
                 if (verifSetOfItems(playerInventory, new ItemStack(Material.RAIL, 32), new ItemStack(Material.SUGAR, 32))) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lDrôle de porte bonheur":
+            case DROLE_DE_PORTE_BONHEUR:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.RABBIT_FOOT), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lRéparation express !":
+            case REPARATION_EXPRESS:
                 helmet = playerInventory.getHelmet();
                 if (helmet != null && helmet.getType() == Material.IRON_HELMET &&
                         helmet.getEnchantments().containsKey(Enchantment.MENDING)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lFishing Planet":
+            case FISHING_PLANET:
                 if (verifSetOfItems(playerInventory, new ItemStack(Material.SALMON),
                         new ItemStack(Material.COD),
                         new ItemStack(Material.PUFFERFISH),
                         new ItemStack(Material.TROPICAL_FISH))) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lAffamé":
+            case AFFAME:
                 effect = player.getPotionEffect(PotionEffectType.HUNGER);
                 if (effect != null) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lJack je vole !":
+            case JACK_JE_VOLE:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.ELYTRA), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lEcris l’histoire":
+            case ECRIS_L_HISTOIRE:
                 for (ItemStack item : playerInventory.getContents()) {
                     if (item != null && item.getType() == Material.WRITTEN_BOOK &&
                             Objects.equals(((BookMeta) item.getItemMeta()).getAuthor(), player.getName())) {
-                        valideAndRealizeChallenge(player, challengeName);
+                        valideAndRealizeChallenge(player, challengeId);
                         return true;
                     }
                 }
                 break;
-            case "§d§lBienvenue au Japon":
+            case BIENVENUE_AU_JAPON:
                 if (playerInventory.containsAtLeast(new ItemStack(Material.CHERRY_SAPLING), 1)) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;
-            case "§d§lLa princesse et la grenouille":
+            case LA_PRINCESSE_ET_LA_GRENOUILLE:
                 helmet = playerInventory.getHelmet();
                 if (helmet != null && helmet.getType() == Material.GOLDEN_HELMET) {
                     Collection<Entity> nears = player.getNearbyEntities(5, 5, 5);
                     for (Entity entity : nears) {
                         if (entity instanceof Frog) {
-                            valideAndRealizeChallenge(player, challengeName);
+                            valideAndRealizeChallenge(player, challengeId);
                             return true;
                         }
                     }
                 }
                 break;
-            case "§d§lCorne de brume":
+            case CORNE_DE_BRUME:
               for (ItemStack item : playerInventory) {
                   if (item != null && item.getType() == Material.GOAT_HORN) {
-                      valideAndRealizeChallenge(player, challengeName);
+                      valideAndRealizeChallenge(player, challengeId);
                       return true;
                   }
               }
                 break;
-            case "§d§lBelle bosse":
+            case BELLE_BOSSE:
                 if (player.getVehicle() instanceof Camel) {
-                    valideAndRealizeChallenge(player, challengeName);
+                    valideAndRealizeChallenge(player, challengeId);
                     return true;
                 }
                 break;

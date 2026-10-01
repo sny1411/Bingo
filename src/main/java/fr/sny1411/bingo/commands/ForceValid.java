@@ -1,5 +1,6 @@
 package fr.sny1411.bingo.commands;
 
+import fr.sny1411.bingo.utils.ChallengeId;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.Team;
@@ -19,7 +20,7 @@ public class ForceValid implements CommandExecutor {
         if (sender instanceof Player) {
             String mode = args[0];
             String teamStr = args[1];
-            String challengeName = args[2].replace("_"," ");
+            ChallengeId challengeId = ChallengeId.fromString(args[2]);
 
             Boolean modeAdd = null;
             if (mode.equals("add")) {
@@ -32,9 +33,8 @@ public class ForceValid implements CommandExecutor {
 
             if (modeAdd != null) {
                 Team team = Team.getTeams().get(Team.Color.valueOf(teamStr));
-                challengeName = "§d§l" + challengeName;
-                Score.getTeamsScore().get(team).addChallenge(Objects.requireNonNull(Grid.getChallenge(team, challengeName)));
-                Objects.requireNonNull(Grid.getChallenge(team, challengeName)).setValidated(true);
+                Score.getTeamsScore().get(team).addChallenge(Objects.requireNonNull(Grid.getChallenge(team, challengeId)));
+                Objects.requireNonNull(Grid.getChallenge(team, challengeId)).setValidated(true);
             }
         }
         return false;

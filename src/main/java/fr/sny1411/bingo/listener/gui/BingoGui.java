@@ -139,9 +139,10 @@ public class BingoGui implements Listener {
                     spectatorMemory.put(player, concrete);
                 }
             } else {
-                String itemName = Bingo.getPlainSerializer().serialize(e.getCurrentItem().displayName());
-                itemName = itemName.substring(1, itemName.length() - 1);
-                ChallengesListener.verifChallenge(player, itemName);
+                ChallengeId challengeId = Challenge.getId(e.getCurrentItem());
+                if (challengeId != null) {
+                    ChallengesListener.verifChallenge(player, challengeId);
+                }
             }
            updateGui();
             Bukkit.getLogger().log(Level.INFO, "refresh bingoGui");
