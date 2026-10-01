@@ -27,7 +27,7 @@ public class ForceValidCompleter implements TabCompleter {
         } else if (args.length == 3) {
             for (Challenge[] challengeList : Grid.getGameGrid().getGrid()) {
                 for (Challenge challenge : challengeList) {
-                    list.add(challenge.getName().replace(" ", "_").substring(4));
+                    list.add(challenge.getId().name());
                 }
             }
         }

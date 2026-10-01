@@ -2,10 +2,13 @@ package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Game;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +18,10 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
 
 public class Challenge {
     public enum Difficult {
@@ -141,11 +147,24 @@ public class Challenge {
             assert resourceURL != null;
             URLConnection connection = resourceURL.openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+            Set<ChallengeId> loadedIds = EnumSet.noneOf(ChallengeId.class);
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] lineSplit = line.split("\\|");
-                ItemStack item = createItem(lineSplit[0], lineSplit[1], lineSplit[3], lineSplit[2]);
-                challenges.add(new Challenge(lineSplit[2], lineSplit[0], item));
+                ChallengeId id = ChallengeId.fromString(lineSplit[0]);
+                if (id == null) {
+                    Bukkit.getLogger().log(Level.SEVERE, String.format("challenges.csv: unknown challenge id %s, add it to ChallengeId", lineSplit[0]));
+                } else if (!loadedIds.add(id)) {
+                    Bukkit.getLogger().log(Level.SEVERE, String.format("challenges.csv: duplicate challenge id %s", id));
+                } else {
+                    ItemStack item = createItem(id, lineSplit[1], lineSplit[2], lineSplit[4], lineSplit[3]);
+                    challenges.add(new Challenge(id, lineSplit[3], lineSplit[1], item));
+                }
+            }
+            for (ChallengeId id : ChallengeId.values()) {
+                if (!loadedIds.contains(id)) {
+                    Bukkit.getLogger().log(Level.SEVERE, String.format("challenges.csv: missing challenge id %s", id));
+                }
             }
             Collections.shuffle(challenges);
 
@@ -155,7 +174,7 @@ public class Challenge {
 
     }
 
-    private static ItemStack createItem(String name, String description, String type, String difficult) {
+    private static ItemStack createItem(ChallengeId id, String name, String description, String type, String difficult) {
         ItemStack item = null;
         if (Character.isUpperCase(type.charAt(0))) {
             Material material = Material.valueOf(type);
@@ -234,6 +253,7 @@ public class Challenge {
         lore.add(Component.text("Difficulté : " + loreDifficultBuilder(difficult)));
         itemMeta.lore(lore);
         itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ITEM_SPECIFICS);
+        itemMeta.getPersistentDataContainer().set(idKey(), PersistentDataType.STRING, id.name());
         item.setItemMeta(itemMeta);
         return item;
     }
@@ -242,14 +262,30 @@ public class Challenge {
         return Difficult.valueOf(difficult).getTextDifficult();
     }
 
+    private static NamespacedKey idKey() {
+        return new NamespacedKey(Game.getBingoInstance(), "challenge_id");
+    }
+
+    /**
+     * @return the id of the challenge shown by this item, or null if it is not a challenge item
+     */
+    public static ChallengeId getId(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) {
+            return null;
+        }
+        return ChallengeId.fromString(item.getItemMeta().getPersistentDataContainer().get(idKey(), PersistentDataType.STRING));
+    }
+
     // Object
+    private final ChallengeId id;
     private Difficult difficult;
     private final String name;
     private final ItemStack item;
     private Boolean realized;
     private Boolean validated;
 
-    private Challenge(String difficult, String name, ItemStack item) {
+    private Challenge(ChallengeId id, String difficult, String name, ItemStack item) {
+        this.id = id;
         this.name = name;
         this.item = item;
         this.realized = false;
@@ -275,13 +311,18 @@ public class Challenge {
         }
     }
 
-    public Challenge(Difficult difficult, String name, ItemStack item) {
+    public Challenge(ChallengeId id, Difficult difficult, String name, ItemStack item) {
+        this.id = id;
         this.difficult = difficult;
         this.name = name;
         this.item = item;
 
         this.realized = false;
         this.validated = false;
+    }
+
+    public ChallengeId getId() {
+        return id;
     }
 
     public Difficult getDifficult() {
@@ -317,7 +358,7 @@ public class Challenge {
         try {
             return (Challenge) super.clone();
         } catch (CloneNotSupportedException e) {
-            return new Challenge(this.getDifficult(), this.getName(), this.getItem());
+            return new Challenge(this.getId(), this.getDifficult(), this.getName(), this.getItem());
         }
     }
 }

@@ -18,7 +18,7 @@ public class BonusCompleter implements TabCompleter {
             List<String> listBonusEnable = new ArrayList<>();
             for (BonusEvent event : BonusEvent.getEvents()) {
                 if (event.isEnable()) {
-                    listBonusEnable.add(event.getChallenge().getName().substring(4).replace(" ", "_"));
+                    listBonusEnable.add(event.getChallenge().getId().name());
                 }
             }
             return listBonusEnable;

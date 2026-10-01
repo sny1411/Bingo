@@ -47,12 +47,13 @@ Each client joins the test server with an offline username (3 to 16 letters, dig
 
 Challenges are listed in `src/main/resources/challenges.csv`, one per line:
 ```
-name|description|difficulty|icon
+id|name|description|difficulty|icon
 ```
+- `id`: a unique identifier in uppercase (e.g. `SUICIDE_SQUAD`), also added to the `ChallengeId` enum. The plugin logs an error on startup if an id is in the CSV but not in the enum, or the other way around
 - `difficulty`: `EASY`, `MEDIUM`, `HARD` or `EXTREME`
 - `icon`: a Bukkit `Material` name in uppercase (e.g. `FIRE_CHARGE`), or a lowercase key for a custom icon defined in `Challenge.createItem()` (e.g. `dolphin`)
 
-The detection of the challenge goes in `listener/ChallengesListener.java`, using the exact same name as in the CSV.
+The detection of the challenge goes in `listener/ChallengesListener.java`, using its id (`ChallengeId.SUICIDE_SQUAD`).
 
 ## Opening a pull request
 
