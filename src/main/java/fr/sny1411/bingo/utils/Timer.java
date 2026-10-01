@@ -42,6 +42,9 @@ public class Timer {
     private static boolean run;
 
     public static void start(Bingo bingo) {
+        seconds = 0;
+        minutes = 0;
+        hours = 0;
         Bukkit.getScheduler().runTaskAsynchronously(bingo, () -> {
             int timeOrageLaunch = Random.choice(60,105);
             Bukkit.getLogger().log(Level.INFO, String.format("orage : %d", timeOrageLaunch));
