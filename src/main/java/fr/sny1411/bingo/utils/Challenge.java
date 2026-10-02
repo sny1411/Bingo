@@ -142,6 +142,11 @@ public class Challenge {
     }
 
     private static void createChallenges() {
+        challenges.clear();
+        nbEasy = 0;
+        nbMedium = 0;
+        nbHard = 0;
+        nbExtreme = 0;
         try {
             URL resourceURL = Game.getBingoInstance().getClass().getResource("/challenges.csv");
             assert resourceURL != null;
