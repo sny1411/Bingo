@@ -9,6 +9,7 @@ public class Score {
     private static final HashMap<Team, Score> teamsScore = new HashMap<>();
 
     public static void init() {
+        teamsScore.clear();
         for (Team team : Team.getTeams().values()) {
             if (team.getColor() != Team.Color.SPECTATOR) {
                 teamsScore.put(team, new Score(team));
