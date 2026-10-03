@@ -19,11 +19,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import java.util.logging.Level;
 
 public class SetupListener implements Listener {
-    private final Game game = Bingo.getGame();
-
     @EventHandler
     private void onInventoryMove(InventoryClickEvent e) {
-        if (game.getEtat().isBeforeGame()) {
+        if (Bingo.getGame().getEtat().isBeforeGame()) {
             Bukkit.getLogger().log(Level.INFO, "click1");
             e.setCancelled(true);
         }
@@ -31,28 +29,28 @@ public class SetupListener implements Listener {
 
     @EventHandler
     private void onPlayerDrop(PlayerDropItemEvent e) {
-        if (game.getEtat().isBeforeGame()) {
+        if (Bingo.getGame().getEtat().isBeforeGame()) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     private void onBlockPlace(BlockPlaceEvent e) {
-        if (game.getEtat() != Game.Etat.INGAME) {
+        if (Bingo.getGame().getEtat() != Game.Etat.INGAME) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     private void onBlockBreak(BlockBreakEvent e) {
-        if (game.getEtat() != Game.Etat.INGAME) {
+        if (Bingo.getGame().getEtat() != Game.Etat.INGAME) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent e) {
-        if (game.getEtat().isBeforeGame()) {
+        if (Bingo.getGame().getEtat().isBeforeGame()) {
             Player player = e.getPlayer();
             Team team = Team.getTeam(player);
             if (team != null) {
