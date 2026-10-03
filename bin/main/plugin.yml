@@ -1,0 +1,30 @@
+name: Bingo
+version: '${version}'
+main: fr.sny1411.bingo.Bingo
+description: Not approved or affiliated with Mojang or Microsoft
+api-version: '1.20'
+commands:
+  newGame:
+    description: Creates a new game
+    permission: bingo.newGame
+  start:
+    description: Starts the game
+    permission: bingo.start
+  bingo:
+    description: Shows your challenge grid during a game
+  testPack:
+    description: Shows a title and plays a sound to check whether the resource pack is installed
+    permission: bingo.testPack
+  valid:
+    description: Forces a challenge to be validated in case of a problem
+    permission: bingo.valid
+  stopGame:
+    description: Stops the game before the end
+    permission: bingo.stopGame
+  result:
+    description: Shows the ranking once the game is over
+    permission: bingo.result
+  bonus:
+    description: Validates an active bonus challenge
+  spec:
+    description: Lets players switch to spectator mode once their game is finished
