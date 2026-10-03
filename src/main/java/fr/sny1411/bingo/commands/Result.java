@@ -79,7 +79,7 @@ public class Result implements CommandExecutor {
             if (o1Less) {
                 return -1;
             } else if (o1.getNbBingo() == o2.getNbBingo()) {
-                return Integer.compare(o1.getScore(), o2.getScore());
+                return Integer.compare(o2.getScore(), o1.getScore());
             } else {
                 return 1;
             }
