@@ -36,7 +36,13 @@ public class Game {
         }
     }
 
-    public enum Etat {SETUP, INGAME, ENDGAME}
+    public enum Etat {
+        SETUP, STARTING, INGAME, ENDGAME;
+
+        public boolean isBeforeGame() {
+            return this == SETUP || this == STARTING;
+        }
+    }
 
     private int nbreBingoForWin;
 

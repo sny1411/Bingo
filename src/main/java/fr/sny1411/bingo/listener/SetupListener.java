@@ -23,7 +23,7 @@ public class SetupListener implements Listener {
 
     @EventHandler
     private void onInventoryMove(InventoryClickEvent e) {
-        if (game.getEtat() == Game.Etat.SETUP) {
+        if (game.getEtat().isBeforeGame()) {
             Bukkit.getLogger().log(Level.INFO, "click1");
             e.setCancelled(true);
         }
@@ -31,7 +31,7 @@ public class SetupListener implements Listener {
 
     @EventHandler
     private void onPlayerDrop(PlayerDropItemEvent e) {
-        if (game.getEtat() == Game.Etat.SETUP) {
+        if (game.getEtat().isBeforeGame()) {
             e.setCancelled(true);
         }
     }
@@ -52,7 +52,7 @@ public class SetupListener implements Listener {
 
     @EventHandler
     private void onPlayerMove(PlayerMoveEvent e) {
-        if (game.getEtat() == Game.Etat.SETUP) {
+        if (game.getEtat().isBeforeGame()) {
             Player player = e.getPlayer();
             Team team = Team.getTeam(player);
             if (team != null) {
