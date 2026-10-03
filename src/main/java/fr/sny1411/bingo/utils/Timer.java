@@ -6,6 +6,7 @@ import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,75 +32,71 @@ public class Timer {
             "§7[§eBINGO§7] §f2 secondes restantes",
             "§7[§eBINGO§7] §f1 seconde restante"));
 
-
-    private static int seconds = 0;
-    private static int minutes = 0;
-    private static int hours = 0;
+    // Elapsed time is read from the clock, not counted in ticks, so the game lasts its real duration even if the server lags
+    private static long startNanos;
+    private static int elapsedSeconds = 0;
 
     private static int maxMinutes = 0;
     private static int maxHours = 2;
 
-    private static boolean run;
+    private static int timeOrageLaunch; // en secondes
+    private static boolean orageLaunched;
+    private static int compteurMsgFin;
+
+    private static BukkitTask task;
 
     public static void start(Bingo bingo) {
-        seconds = 0;
-        minutes = 0;
-        hours = 0;
-        Bukkit.getScheduler().runTaskAsynchronously(bingo, () -> {
-            int timeOrageLaunch = Random.choice(60,105);
-            Bukkit.getLogger().log(Level.INFO, String.format("orage : %d", timeOrageLaunch));
+        if (task != null) {
+            task.cancel();
+        }
+        startNanos = System.nanoTime();
+        elapsedSeconds = 0;
+        compteurMsgFin = 0;
+        orageLaunched = false;
+        timeOrageLaunch = Random.choice(60, 105) * 60;
+        Bukkit.getLogger().log(Level.INFO, String.format("orage : %d", timeOrageLaunch / 60));
 
-            int timeInsecond;
-            int compteurMsgFin = 0;
-            run = true;
-            while ((hours < maxHours || minutes < maxMinutes) && run) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
-                }
-                if (seconds < 59) {
-                    seconds++;
-                } else {
-                    seconds = 0;
-                    if (minutes < 59) {
-                        minutes++;
-                    } else {
-                        minutes = 0;
-                        hours++;
-                    }
-                }
+        task = Bukkit.getScheduler().runTaskTimer(bingo, Timer::tick, 1L, 1L);
+    }
 
-                timeInsecond = (hours * 3600 + minutes * 60 + seconds);
+    private static void tick() {
+        int timeInsecond = (int) TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - startNanos);
+        if (timeInsecond == elapsedSeconds) {
+            return;
+        }
+        elapsedSeconds = timeInsecond;
 
-                if (compteurMsgFin < timeMessageFin.size() && timeMessageFin.get(compteurMsgFin) == timeInsecond) {
-                    Bukkit.broadcast(Component.text(messagesFin.get(compteurMsgFin)));
-                    compteurMsgFin++;
-                }
+        // >= rather than ==: a lag spike can skip a second
+        while (compteurMsgFin < timeMessageFin.size() && timeMessageFin.get(compteurMsgFin) <= timeInsecond) {
+            Bukkit.broadcast(Component.text(messagesFin.get(compteurMsgFin)));
+            compteurMsgFin++;
+        }
 
-                if (timeOrageLaunch * 60 == timeInsecond) {
-                    Bukkit.getScheduler().scheduleSyncDelayedTask(bingo, () -> {
-                        Bukkit.getLogger().log(Level.INFO, "ORAGE MAINTENANT");
-                        World world = Bukkit.getWorlds().get(0);
-                        world.setStorm(true);
-                        world.setThundering(true);
-                        world.setWeatherDuration(8400); // 7 minutes (en ticks)
+        if (!orageLaunched && timeOrageLaunch <= timeInsecond) {
+            orageLaunched = true;
+            Bukkit.getLogger().log(Level.INFO, "ORAGE MAINTENANT");
+            World world = Bukkit.getWorlds().get(0);
+            world.setStorm(true);
+            world.setThundering(true);
+            world.setWeatherDuration(8400); // 7 minutes (en ticks)
+        }
 
-                    });
-                }
-
-                for (BonusEvent event : BonusEvent.getEvents()) {
-                    if (!event.isEnable() && event.getTimeLaunch() * 60 == timeInsecond) {
-                        event.setEnable(true);
-                    }
-                }
+        for (BonusEvent event : BonusEvent.getEvents()) {
+            if (!event.isEnable() && event.getTimeLaunch() * 60 <= timeInsecond) {
+                event.setEnable(true);
             }
-            run = false;
+        }
 
-            Bingo.getGame().setEtat(Game.Etat.ENDGAME);
-            Bukkit.getLogger().log(Level.INFO, "Fin du jeu !");
-        });
+        if (timeInsecond >= maxHours * 3600 + maxMinutes * 60) {
+            end();
+        }
+    }
+
+    private static void end() {
+        task.cancel();
+        task = null;
+        Bingo.getGame().setEtat(Game.Etat.ENDGAME);
+        Bukkit.getLogger().log(Level.INFO, "Fin du jeu !");
     }
 
     public static int getMaxMinutes() {
@@ -119,23 +116,23 @@ public class Timer {
     }
 
     public static int getSeconds() {
-        return seconds;
+        return elapsedSeconds % 60;
     }
 
     public static int getMinutes() {
-        return minutes;
+        return elapsedSeconds / 60 % 60;
     }
 
     public static int getHours() {
-        return hours;
+        return elapsedSeconds / 3600;
     }
 
     public static boolean isRun() {
-        return run;
+        return task != null;
     }
     public static void stop() {
         if (isRun()) {
-            run = false;
+            end();
         }
     }
 }

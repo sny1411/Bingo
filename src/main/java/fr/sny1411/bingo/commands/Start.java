@@ -12,15 +12,18 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Start implements CommandExecutor {
+    private static final List<String> colorStart = new ArrayList<>(Arrays.asList("§b", "§9", "§1"));
+    private static final Title.Times timesTitle = Title.Times.times(Duration.ZERO, Duration.ofSeconds(1), Duration.ZERO);
+
     private final Bingo bingo;
 
     public Start(Bingo bingo) {
@@ -41,52 +44,43 @@ public class Start implements CommandExecutor {
     }
 
     private void launchGame() {
-        Bukkit.getScheduler().runTaskAsynchronously(bingo, () -> {
-            List<String> colorStart = new ArrayList<>(Arrays.asList("§b", "§9", "§1"));
-            Title.Times timesTitle = Title.Times.times(Duration.ZERO, Duration.ofSeconds((long) 1.0), Duration.ZERO);
-            for (int i = 3; i > 0; i--) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.showTitle(Title.title(Component.text(colorStart.get(3 - i) + i), Component.text(""), timesTitle));
-                }
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
-                }
-            }
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.showTitle(Title.title(Component.text("\uE005"), Component.text(""), timesTitle));
-            }
-            Spawn.remove(bingo);
-            Game game = Bingo.getGame();
-            game.setEtat(Game.Etat.INGAME);
-            Environment.clearPlayers();
-            Environment.setGamerulesInGame(bingo);
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        for (int i = 3; i > 0; i--) {
+            Title title = Title.title(Component.text(colorStart.get(3 - i) + i), Component.text(""), timesTitle);
+            scheduler.runTaskLater(bingo, () -> showTitle(title), (3L - i) * 20L);
+        }
+        scheduler.runTaskLater(bingo, this::startGame, 60L);
+    }
 
-            Timer.start(bingo);
-            ScoreBoard.createScoreBoard(bingo);
-            Score.init();
+    private void startGame() {
+        showTitle(Title.title(Component.text("\uE005"), Component.text(""), timesTitle));
+        Spawn.remove();
+        Game game = Bingo.getGame();
+        game.setEtat(Game.Etat.INGAME);
+        Environment.clearPlayers();
+        Environment.setGamerulesInGame();
 
-            for (Player player : Team.getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
-                if (player.isOnline()) {
-                    Bukkit.getScheduler().runTask(bingo, () ->  player.setGameMode(GameMode.SPECTATOR));
-                }
+        Timer.start(bingo);
+        ScoreBoard.createScoreBoard(bingo);
+        Score.init();
+
+        for (Player player : Team.getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
+            if (player.isOnline()) {
+                player.setGameMode(GameMode.SPECTATOR);
             }
+        }
 
-            if (Bingo.getGame().isDefiBonus()) {
-                BonusEvent.init();
-            }
+        if (Bingo.getGame().isDefiBonus()) {
+            BonusEvent.init();
+        }
 
-            try {
-                TimeUnit.SECONDS.sleep(30);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
+        Bukkit.getScheduler().runTaskLater(bingo, () -> game.setPlayersDamage(true), 30 * 20L);
+    }
 
-            game.setPlayersDamage(true);
-        });
+    private static void showTitle(Title title) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.showTitle(title);
+        }
     }
 
     private static boolean isTeamComplete() {

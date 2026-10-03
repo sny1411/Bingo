@@ -64,8 +64,8 @@ public class Game {
     }
 
     private void setup() {
-        Spawn.create(bingoInstance);
-        Environment.setGamerulesSetup(bingoInstance);
+        Spawn.create();
+        Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
         Spawn.giveItemsPlayers();
         Team.createTeams();
@@ -73,8 +73,8 @@ public class Game {
     }
 
     public void end() {
-        Spawn.create(bingoInstance);
-        Environment.setGamerulesSetup(bingoInstance);
+        Spawn.create();
+        Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
         Environment.clearPlayers();
     }
