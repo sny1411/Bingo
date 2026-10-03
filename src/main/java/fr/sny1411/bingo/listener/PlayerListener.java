@@ -19,10 +19,11 @@ public class PlayerListener implements Listener {
     private void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         e.joinMessage(Component.text(String.format("§8[§a+§8]§e %s", player.getName())));
-        if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
+        Game.Etat etat = Bingo.getGame().getEtat();
+        if (etat == Game.Etat.SETUP) {
             Spawn.teleportPlayer(player);
             Spawn.giveItemsPlayer(player);
-        } else if (Bingo.getGame().getEtat() == Game.Etat.INGAME && (!Team.updatePlayerJoinInGame(player))) {
+        } else if ((etat == Game.Etat.STARTING || etat == Game.Etat.INGAME) && (!Team.updatePlayerJoinInGame(player))) {
                 Team.getTeams().get(Team.Color.SPECTATOR).addPlayer(player);
                 player.setGameMode(GameMode.SPECTATOR);
         }

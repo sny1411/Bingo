@@ -36,7 +36,13 @@ public class Game {
         }
     }
 
-    public enum Etat {SETUP, INGAME, ENDGAME}
+    public enum Etat {
+        SETUP, STARTING, INGAME, ENDGAME;
+
+        public boolean isBeforeGame() {
+            return this == SETUP || this == STARTING;
+        }
+    }
 
     private int nbreBingoForWin;
 
@@ -64,8 +70,8 @@ public class Game {
     }
 
     private void setup() {
-        Spawn.create(bingoInstance);
-        Environment.setGamerulesSetup(bingoInstance);
+        Spawn.create();
+        Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
         Spawn.giveItemsPlayers();
         Team.createTeams();
@@ -73,8 +79,8 @@ public class Game {
     }
 
     public void end() {
-        Spawn.create(bingoInstance);
-        Environment.setGamerulesSetup(bingoInstance);
+        Spawn.create();
+        Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
         Environment.clearPlayers();
     }
