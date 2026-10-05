@@ -11,8 +11,8 @@ dependencies {
     modImplementation(libs.fabric.loader)
 }
 
-// There is no mod to package.
-tasks.withType<Jar>().configureEach {
+// There is no mod to package. AbstractArchiveTask also covers Loom's remap tasks, which don't extend the Jar of the Kotlin DSL.
+tasks.withType<AbstractArchiveTask>().configureEach {
     enabled = false
 }
 

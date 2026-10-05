@@ -23,4 +23,8 @@ dependencyResolutionManagement {
     }
 }
 
-include("client")
+// Loom downloads Minecraft as soon as client/ is configured, so it's only included for runClients:
+// building or running the server doesn't need the Minecraft client.
+if (gradle.startParameter.taskNames.any { it.endsWith("runClients") }) {
+    include("client")
+}
