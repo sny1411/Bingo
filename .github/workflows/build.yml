@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-java@v6
         with:
           distribution: temurin
-          # Loom runs on Java 25; the plugin itself is still compiled for Java 17.
           java-version: 25
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6

@@ -5,8 +5,8 @@ Thanks for your interest in Bingo! Bug reports, ideas and pull requests are all 
 ## Getting started
 
 You need:
-- a JDK 17 or newer (no need to install Gradle, the wrapper downloads it)
-- a Minecraft 1.20.1 client to test the plugin
+- a JDK 25 or newer (no need to install Gradle, the wrapper downloads it)
+- a Minecraft 26.2 client to test the plugin
 
 Build the plugin:
 ```
@@ -41,7 +41,7 @@ Each client joins the test server with an offline username (3 to 16 letters, dig
 3. Match the style of the surrounding code (4-space indentation, same naming).
 4. For new messages, use Adventure components (`Component.text("Text", NamedTextColor.GREEN)`) instead of `§` color codes (see [#18](https://github.com/sny1411/Bingo/issues/18)).
 5. Refactoring pull requests must not change the gameplay.
-6. Test your change on a Paper 1.20 server: start a game, and check the server console for errors.
+6. Test your change on a Paper 26.2 server: start a game, and check the server console for errors.
 
 ## Adding a challenge
 

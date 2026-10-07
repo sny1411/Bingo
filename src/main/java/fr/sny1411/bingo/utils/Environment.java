@@ -2,7 +2,7 @@ package fr.sny1411.bingo.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Difficulty;
-import org.bukkit.GameRule;
+import org.bukkit.GameRules;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -19,19 +19,22 @@ public final class Environment {
     public static void setGamerulesSetup() {
         for (World world : worlds) {
             Objects.requireNonNull(Bukkit.getWorld(world.getName())).setDifficulty(Difficulty.PEACEFUL);
-            world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
-            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-            world.setTime(1500);
+            world.setGameRule(GameRules.ADVANCE_WEATHER, false);
+            world.setGameRule(GameRules.ADVANCE_TIME, false);
+            // Only the overworld has a clock: setting the time of the Nether or the End throws
+            if (world.getEnvironment() == World.Environment.NORMAL) {
+                world.setTime(1500);
+            }
         }
     }
 
     public static void setGamerulesInGame() {
         for (World world : worlds) {
             Objects.requireNonNull(Bukkit.getWorld(world.getName())).setDifficulty(Difficulty.HARD);
-            world.setGameRule(GameRule.DO_WEATHER_CYCLE, true);
-            world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
-            world.setGameRule(GameRule.SPECTATORS_GENERATE_CHUNKS, false);
-            world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+            world.setGameRule(GameRules.ADVANCE_WEATHER, true);
+            world.setGameRule(GameRules.ADVANCE_TIME, true);
+            world.setGameRule(GameRules.SPECTATORS_GENERATE_CHUNKS, false);
+            world.setGameRule(GameRules.SHOW_ADVANCEMENT_MESSAGES, false);
         }
     }
 

@@ -24,7 +24,7 @@ body:
     attributes:
       label: Paper version
       description: Output of the `/version` command
-      placeholder: "git-Paper-196 (MC: 1.20.1)"
+      placeholder: "26.2-132-ver/26.2@19ebc4a"
     validations:
       required: true
   - type: input

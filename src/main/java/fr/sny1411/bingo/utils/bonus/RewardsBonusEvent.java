@@ -4,6 +4,8 @@ import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Random;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -19,8 +21,8 @@ public final class RewardsBonusEvent {
     }
 
     private static final List<PotionEffectType> potionEffectTypes = new ArrayList<>(Arrays.asList(PotionEffectType.SPEED,
-                                                                                            PotionEffectType.FAST_DIGGING,
-                                                                                            PotionEffectType.DAMAGE_RESISTANCE));
+                                                                                            PotionEffectType.HASTE,
+                                                                                            PotionEffectType.RESISTANCE));
     public static void setBonus(Challenge challenge, Player player) {
         PotionEffectType potionEffect = potionEffectTypes.get(Random.choice(0, potionEffectTypes.size()-1));
         setBonus(potionEffect, player, challenge.getDifficult());
@@ -43,13 +45,13 @@ public final class RewardsBonusEvent {
     }
 
     private static void setBonusI(PotionEffectType potionEffectType, Player player) {
-        player.sendMessage(Component.text("§8§l≫ §r§7Vous recevez le bonus §b" + potionEffectType.getName() + " I"));
+        player.sendMessage(bonusMessage("Vous recevez le bonus ", potionEffectType, "I"));
         PotionEffect potion = new PotionEffect(potionEffectType, 144000, 0);
         player.addPotionEffect(potion);
     }
 
     private static void setBonusII(PotionEffectType potionEffectType, Player player, boolean setOnPlayerRealized) {
-        player.sendMessage(Component.text("§8§l≫ §r§7Votre équipe reçoit le bonus §b" + potionEffectType.getName() + " I"));
+        player.sendMessage(bonusMessage("Votre équipe reçoit le bonus ", potionEffectType, "I"));
         Team team = Team.getTeam(player);
         assert team != null;
         for (Player playerTeam : team.getPlayers()) {
@@ -68,8 +70,17 @@ public final class RewardsBonusEvent {
     private static void setBonusIII(PotionEffectType potionEffectType, Player player) {
         setBonusII(potionEffectType, player, false);
 
-        player.sendMessage(Component.text("§8§l≫ §r§7Vous recevez le bonus §b" + potionEffectType.getName() + " II"));
+        player.sendMessage(bonusMessage("Vous recevez le bonus ", potionEffectType, "II"));
         PotionEffect potion = new PotionEffect(potionEffectType, 144000, 1);
         player.addPotionEffect(potion);
+    }
+
+    // The effect name is translated by the client, in the player's language
+    private static Component bonusMessage(String text, PotionEffectType potionEffectType, String level) {
+        return Component.textOfChildren(
+                Component.text("≫ ", NamedTextColor.DARK_GRAY, TextDecoration.BOLD),
+                Component.text(text, NamedTextColor.GRAY),
+                Component.translatable(potionEffectType, NamedTextColor.AQUA),
+                Component.text(" " + level, NamedTextColor.AQUA));
     }
 }

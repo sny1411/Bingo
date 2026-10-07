@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 public final class Items {
@@ -68,7 +67,7 @@ public final class Items {
         private static void initHarming() {
             harming = new ItemStack(Material.POTION);
             PotionMeta harmingMeta = (PotionMeta) harming.getItemMeta();
-            harmingMeta.setBasePotionData(new PotionData(PotionType.INSTANT_DAMAGE, false, false));
+            harmingMeta.setBasePotionType(PotionType.HARMING);
             harming.setItemMeta(harmingMeta);
         }
 
@@ -131,7 +130,7 @@ public final class Items {
             regen = new ItemStack(Material.POTION);
             PotionMeta regenMeta = (PotionMeta) regen.getItemMeta();
             ;
-            regenMeta.setBasePotionData(new PotionData(PotionType.REGEN, false, true));
+            regenMeta.setBasePotionType(PotionType.STRONG_REGENERATION);
             regen.setItemMeta(regenMeta);
         }
 

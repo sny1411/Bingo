@@ -7,7 +7,7 @@
 
 ## Requirements:
 
-- A Paper 1.20 server (Java 17 or newer)
+- A Paper 26.2 server (Java 25 or newer)
 
 ## Building:
 
@@ -21,7 +21,7 @@ The plugin jar is `build/libs/Bingo-1.0.jar`. See [CONTRIBUTING.md](CONTRIBUTING
 ```
 ./gradlew runServer
 ```
-Builds the plugin and starts a local Paper 1.20.1 server with it, in the `run/` folder. Join it with a Minecraft 1.20.1 client at `localhost:25566`. The server runs in offline mode and only listens on `127.0.0.1`. Starting it means you accept the [Minecraft EULA](https://aka.ms/MinecraftEULA).
+Builds the plugin and starts a local Paper 26.2 server with it, in the `run/` folder. Join it with a Minecraft 26.2 client at `localhost:25566`. The server runs in offline mode and only listens on `127.0.0.1`. Starting it means you accept the [Minecraft EULA](https://aka.ms/MinecraftEULA).
 
 Then, in another terminal:
 ```

@@ -10,5 +10,5 @@ Fixes #
 
 ## Checklist
 - [ ] `./gradlew build` builds without errors
-- [ ] Tested on a Paper 1.20 server, with no new errors in the console
+- [ ] Tested on a Paper 26.2 server, with no new errors in the console
 - [ ] This pull request only addresses one issue

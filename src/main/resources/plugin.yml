@@ -2,7 +2,7 @@ name: Bingo
 version: '${version}'
 main: fr.sny1411.bingo.Bingo
 description: Not approved or affiliated with Mojang or Microsoft
-api-version: '1.20'
+api-version: '26.2'
 commands:
   newGame:
     description: Creates a new game
