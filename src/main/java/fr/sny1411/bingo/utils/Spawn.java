@@ -1,6 +1,5 @@
 package fr.sny1411.bingo.utils;
 
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,7 +39,7 @@ public final class Spawn {
     }
 
     public static void teleportPlayer(Player player) {
-        PaperLib.teleportAsync(player, SPAWN_LOC).thenAccept(result -> {
+        player.teleportAsync(SPAWN_LOC).thenAccept(result -> {
             if (Boolean.TRUE.equals(result)) {
                 Bukkit.getLogger().log(Level.INFO, String.format("%s teleport to spawn", player.getName()));
             } else {

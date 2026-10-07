@@ -1,17 +1,13 @@
 [versions]
 minecraft = "26.2"
 paper-api = "26.2.build.132-stable"
-paperlib = "1.0.8"
-shadow = "9.6.1"
 run-paper = "3.1.0"
 fabric-loader = "0.19.5"
 
 [libraries]
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
-paperlib = { module = "io.papermc:paperlib", version.ref = "paperlib" }
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-loader" }
 
 [plugins]
-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
 run-paper = { id = "xyz.jpenilla.run-paper", version.ref = "run-paper" }

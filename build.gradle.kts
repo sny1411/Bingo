@@ -2,7 +2,6 @@ import java.util.Properties
 
 plugins {
     java
-    alias(libs.plugins.shadow)
     alias(libs.plugins.run.paper)
 }
 
@@ -11,7 +10,6 @@ version = "1.0"
 
 dependencies {
     compileOnly(libs.paper.api)
-    implementation(libs.paperlib)
 }
 
 tasks {
@@ -26,15 +24,6 @@ tasks {
         filesMatching("plugin.yml") {
             expand("version" to version)
         }
-    }
-
-    jar {
-        enabled = false
-    }
-
-    shadowJar {
-        archiveClassifier = ""
-        relocate("io.papermc.lib", "fr.sny1411.bingo.paperlib")
     }
 
     runServer {
