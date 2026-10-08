@@ -5,7 +5,7 @@ Thanks for your interest in Bingo! Bug reports, ideas and pull requests are all 
 ## Getting started
 
 You need:
-- a JDK 25 or newer (no need to install Gradle, the wrapper downloads it)
+- Java 17 or newer to start Gradle. The build runs on JDK 25: Gradle uses it if it is installed and downloads it otherwise (no need to install Gradle either, the wrapper downloads it)
 - a Minecraft 26.2 client to test the plugin
 
 Build the plugin:
