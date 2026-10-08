@@ -30,9 +30,9 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
@@ -160,7 +160,7 @@ public class ChallengesListener implements Listener {
         switch (e.getItem().getType()) {
             case POTION:
                 PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
-                if (potionMeta.getBasePotionData().getType() == PotionType.SPEED && (player.getInventory().getItemInOffHand().getType() == Material.BREAD)) {
+                if (EnumSet.of(PotionType.SWIFTNESS, PotionType.LONG_SWIFTNESS, PotionType.STRONG_SWIFTNESS).contains(potionMeta.getBasePotionType()) && (player.getInventory().getItemInOffHand().getType() == Material.BREAD)) {
                     realizeChallenge(player, ChallengeId.TU_ES_UN_SORCIER_HARRY);
                 }
                 break;
@@ -242,11 +242,11 @@ public class ChallengesListener implements Listener {
                 realizeChallenge((Player) e.getHitEntity(), ChallengeId.LA_PLUS_GROSSE_RACAILLE);
                 break;
             case SNOWBALL:
-                if (e.getHitEntity().getType() == EntityType.SNOWMAN) {
+                if (e.getHitEntity().getType() == EntityType.SNOW_GOLEM) {
                     realizeChallenge((Player) e.getEntity().getShooter(), ChallengeId.COMBAT_D_ANTHOLOGIE);
                 }
                 break;
-            case FIREWORK:
+            case FIREWORK_ROCKET:
                 if (e.getHitEntity().getType() == EntityType.PIG) {
                     realizeChallenge((Player) e.getEntity().getShooter(), ChallengeId.C_EST_LA_FETE_DE_TROP);
                 }
@@ -275,7 +275,7 @@ public class ChallengesListener implements Listener {
 
     @EventHandler
     private void breakBlock(BlockBreakEvent e) {
-        if (e.getBlock().getType() == Material.CHAIN) {
+        if (e.getBlock().getType() == Material.IRON_CHAIN) {
             Biome biome = e.getBlock().getBiome();
             if (biome == Biome.ICE_SPIKES || biome == Biome.FROZEN_OCEAN || biome == Biome.DEEP_FROZEN_OCEAN) {
                 realizeChallenge(e.getPlayer(), ChallengeId.LIBEREE_DELIVREE);

@@ -67,7 +67,7 @@ COUP_DE_FOUDRE|§d§lCoup de foudre|§e§oSe faire frapper par la foudre|MEDIUM|
 PIRATE_DES_CARAIBES|§d§lPirate des Caraïbes|§e§oFaire monter et descendre un perroquet de son épaule|MEDIUM|parrot
 POSEIDON|§d§lPoséidon|§e§oPosséder un trident|HARD|TRIDENT
 NOUS_SOMMES_EN_GUERRE|§d§lNous sommes en guerre|§e§oDémarrer un raid dans un village|MEDIUM|pillager
-LIBEREE_DELIVREE|§d§lLibérée, Délivrée|§e§oPoser puis casser une chaîne dans un biome Ice Spikes ou (Deep) Frozen Ocean|MEDIUM|CHAIN
+LIBEREE_DELIVREE|§d§lLibérée, Délivrée|§e§oPoser puis casser une chaîne dans un biome Ice Spikes ou (Deep) Frozen Ocean|MEDIUM|IRON_CHAIN
 COMBAT_D_ANTHOLOGIE|§d§lCombat d'anthologie|§e§oTirer une boule de neige sur un bonhomme de neige|EASY|SNOWBALL
 T_ES_PAS_NET_BAPTISTE|§d§lT'es pas net Baptiste?|§e§oAllumer une bougie|EASY|CANDLE
 JESUS_DES_NEIGES|§d§lJésus des neiges|§e§oMarcher sur de la poudreuse avec des bottes en cuir|EASY|leatherBoots

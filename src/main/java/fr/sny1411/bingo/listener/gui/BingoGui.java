@@ -86,7 +86,7 @@ public class BingoGui implements Listener {
                 itemMeta.displayName(Component.text(colorTeam.getPrefixe() + colorTeam.getNom()));
                 Team playerTeam = Team.getTeam(player);
                 if (playerTeam == team || (Objects.requireNonNull(playerTeam).getColor() == Team.Color.SPECTATOR && spectatorMemory.containsKey(player) && spectatorMemory.get(player) == item.getType())) {
-                    itemMeta.addEnchant(Enchantment.DURABILITY, 5, true);
+                    itemMeta.addEnchant(Enchantment.UNBREAKING, 5, true);
                     itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 }
                 ArrayList<Component> loreTeams = new ArrayList<>();

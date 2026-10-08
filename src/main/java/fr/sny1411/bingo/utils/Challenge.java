@@ -1,11 +1,13 @@
 package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Game;
+import io.papermc.paper.datacomponent.DataComponentType;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -19,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -257,9 +260,13 @@ public class Challenge {
         List<Component> lore = Text.divideString(description);
         lore.add(Component.text("Difficulté : " + loreDifficultBuilder(difficult)));
         itemMeta.lore(lore);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_ITEM_SPECIFICS);
         itemMeta.getPersistentDataContainer().set(idKey(), PersistentDataType.STRING, id.name());
         item.setItemMeta(itemMeta);
+        // The icon only shows its name and lore, not the attributes, enchantments or effects of the item
+        Set<DataComponentType> hiddenComponents = new HashSet<>(item.getDataTypes());
+        hiddenComponents.remove(DataComponentTypes.CUSTOM_NAME);
+        hiddenComponents.remove(DataComponentTypes.LORE);
+        item.setData(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().hiddenComponents(hiddenComponents));
         return item;
     }
 

@@ -10,7 +10,6 @@ import fr.sny1411.bingo.listener.gui.BingoGui;
 import fr.sny1411.bingo.listener.gui.SettingsGui;
 import fr.sny1411.bingo.listener.gui.TeamsGui;
 import fr.sny1411.bingo.utils.Items;
-import io.papermc.lib.PaperLib;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -28,7 +27,6 @@ public final class Bingo extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        PaperLib.suggestPaper(this);
         Items.init();
         Game.setBingoInstance(this);
         game = new Game();
