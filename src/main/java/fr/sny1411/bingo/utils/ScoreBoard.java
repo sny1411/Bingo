@@ -5,6 +5,7 @@ import fr.sny1411.bingo.Game;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.*;
 
@@ -15,9 +16,12 @@ public final class ScoreBoard {
         throw new IllegalStateException("Utility class");
     }
     private static final ScoreboardManager manager = Bukkit.getScoreboardManager();
+    private static BukkitTask task;
 
     public static void createScoreBoard(Bingo bingo) {
-        Bukkit.getScheduler().runTaskTimer(bingo, () -> {
+        // A game can start without the previous one having ended (/newGame confirm): it must not add a second task
+        stop();
+        task = Bukkit.getScheduler().runTaskTimer(bingo, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 Scoreboard board = manager.getNewScoreboard();
                 Objective objective = board.registerNewObjective("scoreBoardInfo", Criteria.DUMMY, Component.text("\uE005"));
@@ -77,10 +81,13 @@ public final class ScoreBoard {
                 score8.setScore(0);
                 player.setScoreboard(board);
             }
-
-            if (!Timer.isRun()) {
-                Thread.currentThread().interrupt();
-            }
         }, 0L, 20L);
+    }
+
+    public static void stop() {
+        if (task != null) {
+            task.cancel();
+            task = null;
+        }
     }
 }
