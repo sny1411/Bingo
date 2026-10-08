@@ -10,6 +10,8 @@ plugins {
     // Declares Loom's repositories here, with the other repositories of the build.
     // It also puts Loom on the build classpath: client/ applies it without a version.
     id("net.fabricmc.fabric-loom-repositories") version "1.18.2"
+    // Lets updateDaemonJvm write the JDK download URLs of gradle/gradle-daemon-jvm.properties (./gradlew updateDaemonJvm --jvm-version=25).
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
 rootProject.name = "Bingo"
