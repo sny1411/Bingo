@@ -28,7 +28,7 @@ Then, in another terminal:
 ./gradlew runClients -Pplayers=3          # Player1, Player2, Player3
 ./gradlew runClients -Pplayers=Alice,Bob
 ```
-Starts one Minecraft 1.20.1 client per player, each joining the test server with an offline username. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+Starts one Minecraft 26.2 client per player, each joining the test server with an offline username. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 ## Usage and commands:
 

@@ -3,7 +3,7 @@
 //   ./gradlew runClients -Pplayers=3       -> Player1, Player2, Player3
 //   ./gradlew runClients -Pplayers=Alice,Bob
 
-pluginManager.withPlugin("net.fabricmc.fabric-loom-remap") {
+pluginManager.withPlugin("net.fabricmc.fabric-loom") {
     val runClient = tasks.named<JavaExec>("runClient")
 
     tasks.register<RunClients>("runClients") {
