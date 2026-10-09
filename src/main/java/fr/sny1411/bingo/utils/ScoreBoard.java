@@ -19,7 +19,6 @@ public final class ScoreBoard {
     private static BukkitTask task;
 
     public static void createScoreBoard(Bingo bingo) {
-        // A game can start without the previous one having ended (/newGame confirm): it must not add a second task
         stop();
         task = Bukkit.getScheduler().runTaskTimer(bingo, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -89,7 +88,6 @@ public final class ScoreBoard {
             task.cancel();
             task = null;
         }
-        // The main scoreboard has no sidebar: the game's sidebar disappears
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.setScoreboard(manager.getMainScoreboard());
         }
