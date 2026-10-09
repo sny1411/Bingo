@@ -2,6 +2,7 @@ package fr.sny1411.bingo;
 
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Environment;
+import fr.sny1411.bingo.utils.ScoreBoard;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
 
@@ -79,6 +80,7 @@ public class Game {
     }
 
     public void end() {
+        ScoreBoard.stop();
         Spawn.create();
         Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
