@@ -89,5 +89,9 @@ public final class ScoreBoard {
             task.cancel();
             task = null;
         }
+        // The main scoreboard has no sidebar: the game's sidebar disappears
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.setScoreboard(manager.getMainScoreboard());
+        }
     }
 }
