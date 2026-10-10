@@ -2,13 +2,13 @@ package fr.sny1411.bingo.listener.gui;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.Settings;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Items;
 import fr.sny1411.bingo.utils.SkullCustom;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
-import fr.sny1411.bingo.utils.Timer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -240,8 +240,8 @@ public class SettingsGui implements Listener {
     }
 
     private static ItemStack getDurationItem() {
-        int duration = Timer.getDurationMinutes();
-        ItemStack item = new ItemStack(Material.CLOCK, duration / Timer.DURATION_STEP_MINUTES);
+        int duration = Bingo.getGame().getSettings().getDurationMinutes();
+        ItemStack item = new ItemStack(Material.CLOCK, duration / Settings.DURATION_STEP_MINUTES);
         ItemMeta meta = item.getItemMeta();
         meta.itemName(Component.text("Durée de la partie", NamedTextColor.AQUA, TextDecoration.BOLD));
         meta.lore(List.of(Component.text(String.format("%d h %02d", duration / 60, duration % 60), NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)));
@@ -464,13 +464,13 @@ public class SettingsGui implements Listener {
                         openGuiVictoire(player);
                     }
                 } else if (cursor == 7) {
-                    if (Timer.getDurationMinutes() < Timer.MAX_DURATION_MINUTES) {
-                        Timer.setDurationMinutes(Timer.getDurationMinutes() + Timer.DURATION_STEP_MINUTES);
+                    if (Bingo.getGame().getSettings().getDurationMinutes() < Settings.MAX_DURATION_MINUTES) {
+                        Bingo.getGame().getSettings().setDurationMinutes(Bingo.getGame().getSettings().getDurationMinutes() + Settings.DURATION_STEP_MINUTES);
                         openGuiVictoire(player);
                     }
                 } else if (cursor == 25) {
-                    if (Timer.getDurationMinutes() > Timer.MIN_DURATION_MINUTES) {
-                        Timer.setDurationMinutes(Timer.getDurationMinutes() - Timer.DURATION_STEP_MINUTES);
+                    if (Bingo.getGame().getSettings().getDurationMinutes() > Settings.MIN_DURATION_MINUTES) {
+                        Bingo.getGame().getSettings().setDurationMinutes(Bingo.getGame().getSettings().getDurationMinutes() - Settings.DURATION_STEP_MINUTES);
                         openGuiVictoire(player);
                     }
                 }

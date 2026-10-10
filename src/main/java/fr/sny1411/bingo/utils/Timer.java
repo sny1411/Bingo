@@ -13,27 +13,24 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class Timer {
-    private Timer() {
-        throw new IllegalStateException("Utility class");
-    }
     private static final List<Integer> END_WARNING_TIMES = List.of(10 * 60, 5 * 60, 3 * 60, 2 * 60, 60, 30, 15, 10, 5, 3, 2, 1); // remaining seconds
 
     // Real time rather than ticks, so the game lasts its real duration even if the server lags
-    private static final Stopwatch stopwatch = new Stopwatch();
-    private static int elapsedSeconds = 0;
+    private final Stopwatch stopwatch = new Stopwatch();
+    private int elapsedSeconds = 0;
 
-    public static final int MIN_DURATION_MINUTES = 30;
-    public static final int MAX_DURATION_MINUTES = 4 * 60;
-    public static final int DURATION_STEP_MINUTES = 15;
-    private static int durationMinutes = 2 * 60;
+    private final Game game;
+    private int stormTime; // in seconds
+    private boolean stormStarted;
+    private int nextEndWarning;
 
-    private static int stormTime; // in seconds
-    private static boolean stormStarted;
-    private static int nextEndWarning;
+    private BukkitTask task;
 
-    private static BukkitTask task;
+    public Timer(Game game) {
+        this.game = game;
+    }
 
-    public static void start(Bingo bingo) {
+    public void start(Bingo bingo) {
         stopwatch.start();
         elapsedSeconds = 0;
         nextEndWarning = 0;
@@ -43,10 +40,10 @@ public class Timer {
         stormTime = Random.choice(getDurationSeconds() / 2, getDurationSeconds() * 7 / 8);
         Bukkit.getLogger().log(Level.INFO, String.format("Storm planned at minute %d", stormTime / 60));
 
-        task = Bukkit.getScheduler().runTaskTimer(bingo, Timer::tick, 1L, 1L);
+        task = Bukkit.getScheduler().runTaskTimer(bingo, this::tick, 1L, 1L);
     }
 
-    private static void tick() {
+    private void tick() {
         int elapsed = stopwatch.elapsedSeconds();
         if (elapsed == elapsedSeconds) {
             return;
@@ -80,31 +77,31 @@ public class Timer {
         }
     }
 
-    private static void skipEndWarnings(int remainingSeconds) {
+    private void skipEndWarnings(int remainingSeconds) {
         while (nextEndWarning < END_WARNING_TIMES.size() && END_WARNING_TIMES.get(nextEndWarning) > remainingSeconds) {
             nextEndWarning++;
         }
     }
 
-    public static void setElapsedSeconds(int seconds) {
+    public void setElapsedSeconds(int seconds) {
         stopwatch.setElapsedSeconds(seconds);
         skipEndWarnings(getDurationSeconds() - seconds);
     }
 
-    public static int getElapsedSeconds() {
+    public int getElapsedSeconds() {
         return elapsedSeconds;
     }
 
-    public static int getSpeed() {
+    public int getSpeed() {
         return stopwatch.getSpeed();
     }
 
-    public static void setSpeed(int speed) {
+    public void setSpeed(int speed) {
         stopwatch.setSpeed(speed);
     }
 
-    public static int getDurationSeconds() {
-        return durationMinutes * 60;
+    public int getDurationSeconds() {
+        return game.getSettings().getDurationMinutes() * 60;
     }
 
     private static Component endWarningMessage(int remainingSeconds) {
@@ -122,37 +119,29 @@ public class Timer {
                 Component.text(remaining, NamedTextColor.WHITE));
     }
 
-    private static void end() {
+    private void end() {
         task.cancel();
         task = null;
-        Bingo.getGame().setEtat(Game.Etat.ENDGAME);
+        game.setEtat(Game.Etat.ENDGAME);
         Bukkit.getLogger().log(Level.INFO, "Game over");
     }
 
-    public static int getDurationMinutes() {
-        return durationMinutes;
-    }
-
-    public static void setDurationMinutes(int durationMinutes) {
-        Timer.durationMinutes = durationMinutes;
-    }
-
-    public static int getSeconds() {
+    public int getSeconds() {
         return elapsedSeconds % 60;
     }
 
-    public static int getMinutes() {
+    public int getMinutes() {
         return elapsedSeconds / 60 % 60;
     }
 
-    public static int getHours() {
+    public int getHours() {
         return elapsedSeconds / 3600;
     }
 
-    public static boolean isRun() {
+    public boolean isRun() {
         return task != null;
     }
-    public static void stop() {
+    public void stop() {
         if (isRun()) {
             end();
         }

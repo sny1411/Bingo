@@ -45,9 +45,9 @@ public final class ScoreBoard {
                 Score score6 = objective.getScore("   ");
                 score6.setScore(3);
                 String temps = "";
-                int seconds = Timer.getSeconds();
-                int minutes = Timer.getMinutes();
-                if (Timer.getHours() == 0) {
+                int seconds = Bingo.getGame().getTimer().getSeconds();
+                int minutes = Bingo.getGame().getTimer().getMinutes();
+                if (Bingo.getGame().getTimer().getHours() == 0) {
                     if (minutes < 10) {
                         temps += ("0" + minutes);
                     } else {
@@ -71,7 +71,7 @@ public final class ScoreBoard {
                     } else {
                         temps += (":" + seconds);
                     }
-                    Score score3 = objective.getScore("  Durée §7: §e0" + Timer.getHours() + temps);
+                    Score score3 = objective.getScore("  Durée §7: §e0" + Bingo.getGame().getTimer().getHours() + temps);
                     score3.setScore(2);
                 }
                 Score score7 = objective.getScore(" ");
