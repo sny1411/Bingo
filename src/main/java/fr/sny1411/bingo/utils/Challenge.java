@@ -1,13 +1,18 @@
 package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.i18n.Translations;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -23,27 +28,28 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 
 public class Challenge {
     public enum Difficult {
-        EASY(1, "§aFacile"), MEDIUM(3, "§6Moyen"), HARD(9, "§cDifficile"), EXTREME(27, "§8Extreme");
+        EASY(1, NamedTextColor.GREEN), MEDIUM(3, NamedTextColor.GOLD), HARD(9, NamedTextColor.RED), EXTREME(27, NamedTextColor.DARK_GRAY);
 
         private final int points;
-        private final String textDifficult;
+        private final NamedTextColor color;
 
-        Difficult(int points, String textDifficult) {
+        Difficult(int points, NamedTextColor color) {
             this.points = points;
-            this.textDifficult = textDifficult;
+            this.color = color;
         }
 
         public int getPoints() {
             return points;
         }
 
-        public String getTextDifficult() {
-            return textDifficult;
+        public Component label() {
+            return Component.translatable("bingo.difficulty." + name().toLowerCase(Locale.ROOT), color);
         }
     }
 
@@ -64,8 +70,7 @@ public class Challenge {
                 } else if (!loadedIds.add(id)) {
                     Bukkit.getLogger().log(Level.SEVERE, String.format("challenges.csv: duplicate challenge id %s", id));
                 } else {
-                    ItemStack item = createItem(id, lineSplit[1], lineSplit[2], lineSplit[4], lineSplit[3]);
-                    challenges.add(new Challenge(id, lineSplit[3], lineSplit[1], item));
+                    challenges.add(new Challenge(id, Difficult.valueOf(lineSplit[1]), createItem(id, lineSplit[2])));
                 }
             }
             for (ChallengeId id : ChallengeId.values()) {
@@ -81,7 +86,7 @@ public class Challenge {
         return challenges;
     }
 
-    private static ItemStack createItem(ChallengeId id, String name, String description, String type, String difficult) {
+    private static ItemStack createItem(ChallengeId id, String type) {
         ItemStack item = null;
         if (Character.isUpperCase(type.charAt(0))) {
             Material material = Material.valueOf(type);
@@ -155,10 +160,6 @@ public class Challenge {
         }
         assert item != null;
         ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.displayName(Component.text(name));
-        List<Component> lore = Text.divideString(description);
-        lore.add(Component.text("Difficulté : " + loreDifficultBuilder(difficult)));
-        itemMeta.lore(lore);
         itemMeta.getPersistentDataContainer().set(idKey(), PersistentDataType.STRING, id.name());
         item.setItemMeta(itemMeta);
         // The icon only shows its name and lore, not the attributes, enchantments or effects of the item
@@ -167,10 +168,6 @@ public class Challenge {
         hiddenComponents.remove(DataComponentTypes.LORE);
         item.setData(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay().hiddenComponents(hiddenComponents));
         return item;
-    }
-
-    private static String loreDifficultBuilder(String difficult) {
-        return Difficult.valueOf(difficult).getTextDifficult();
     }
 
     private static NamespacedKey idKey() {
@@ -190,25 +187,13 @@ public class Challenge {
     // Object
     private final ChallengeId id;
     private Difficult difficult;
-    private final String name;
     private final ItemStack item;
     private Boolean realized;
     private Boolean validated;
 
-    private Challenge(ChallengeId id, String difficult, String name, ItemStack item) {
-        this.id = id;
-        this.name = name;
-        this.item = item;
-        this.realized = false;
-        this.validated = false;
-
-        this.difficult = Difficult.valueOf(difficult);
-    }
-
-    public Challenge(ChallengeId id, Difficult difficult, String name, ItemStack item) {
+    public Challenge(ChallengeId id, Difficult difficult, ItemStack item) {
         this.id = id;
         this.difficult = difficult;
-        this.name = name;
         this.item = item;
 
         this.realized = false;
@@ -223,12 +208,28 @@ public class Challenge {
         return difficult;
     }
 
-    public String getName() {
-        return name;
+    private String translationKey() {
+        return "bingo.challenge." + id.name().toLowerCase(Locale.ROOT);
     }
 
-    public ItemStack getItem() {
-        return item;
+    public Component getName() {
+        return Component.translatable(translationKey() + ".name");
+    }
+
+    // The icon of the challenge, with its name and description in the player's language
+    public ItemStack getItem(Player player) {
+        ItemStack playerItem = item.clone();
+        ItemMeta meta = playerItem.getItemMeta();
+        meta.customName(Translations.render(getName(), player).color(NamedTextColor.LIGHT_PURPLE).decorate(TextDecoration.BOLD).decoration(TextDecoration.ITALIC, false));
+        String description = PlainTextComponentSerializer.plainText().serialize(Translations.render(Component.translatable(translationKey() + ".description"), player));
+        List<Component> lore = new ArrayList<>();
+        for (String line : Text.divideString(description)) {
+            lore.add(Component.text(line, NamedTextColor.YELLOW, TextDecoration.ITALIC));
+        }
+        lore.add(Translations.render(Component.translatable("bingo.challenge.lore.difficulty", difficult.label().decoration(TextDecoration.ITALIC, false)), player));
+        meta.lore(lore);
+        playerItem.setItemMeta(meta);
+        return playerItem;
     }
 
     public Boolean getRealized() {
@@ -252,7 +253,7 @@ public class Challenge {
         try {
             return (Challenge) super.clone();
         } catch (CloneNotSupportedException e) {
-            return new Challenge(this.getId(), this.getDifficult(), this.getName(), this.getItem());
+            return new Challenge(this.getId(), this.getDifficult(), this.item);
         }
     }
 }

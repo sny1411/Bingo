@@ -51,11 +51,17 @@ Each client joins the test server with an offline username (3 to 16 letters, dig
 
 Challenges are listed in `src/main/resources/challenges.csv`, one per line:
 ```
-id|name|description|difficulty|icon
+id|difficulty|icon
 ```
 - `id`: a unique identifier in uppercase (e.g. `SUICIDE_SQUAD`), also added to the `ChallengeId` enum. The plugin logs an error on startup if an id is in the CSV but not in the enum, or the other way around
 - `difficulty`: `EASY`, `MEDIUM`, `HARD` or `EXTREME`
 - `icon`: a Bukkit `Material` name in uppercase (e.g. `FIRE_CHARGE`), or a lowercase key for a custom icon defined in `Challenge.createItem()` (e.g. `dolphin`)
+
+Its name and description go in the language files (see [Texts and translations](#texts-and-translations)), with keys made of its id in lowercase:
+```
+bingo.challenge.suicide_squad.name=Suicide Squad
+bingo.challenge.suicide_squad.description=Die.
+```
 
 The detection of the challenge goes in `listener/challenges/`, using its id (`ChallengeId.SUICIDE_SQUAD`): in the listener of its theme (mobs, player, advancements, world) when an event realizes it, or in `ChallengeVerifier.verifChallenge()` when it is checked by clicking it in the grid.
 

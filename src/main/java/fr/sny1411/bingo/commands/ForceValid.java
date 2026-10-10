@@ -6,6 +6,7 @@ import fr.sny1411.bingo.listener.challenges.ChallengeProgress;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.ChallengeId;
 import fr.sny1411.bingo.utils.Team;
+import fr.sny1411.bingo.utils.Text;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -46,18 +47,18 @@ public class ForceValid implements CommandExecutor {
 
         if (args[0].equalsIgnoreCase("add")) {
             if (challenge.getValidated()) {
-                sender.sendMessage(warning("Le défi " + challenge.getName() + " est déjà validé"));
+                sender.sendMessage(Text.warning(Component.translatable("bingo.valid.already_validated", challenge.getName())));
             } else {
                 ChallengeProgress.valideAndRealizeChallenge(team, challengeId);
             }
         } else {
             if (!challenge.getValidated()) {
-                sender.sendMessage(warning("Le défi " + challenge.getName() + " n'est pas validé"));
+                sender.sendMessage(Text.warning(Component.translatable("bingo.valid.not_validated", challenge.getName())));
             } else {
                 challenge.setValidated(false);
                 challenge.setRealized(false);
                 Bingo.getGame().getTeamsScore().get(team).removeChallenge(challenge);
-                sender.sendMessage(Component.text("Le défi " + challenge.getName() + " n'est plus validé pour l'équipe " + team.getColor().getNom(), NamedTextColor.WHITE));
+                sender.sendMessage(Component.translatable("bingo.valid.removed", NamedTextColor.WHITE, challenge.getName(), team.getColor().displayName()));
             }
         }
         return false;
