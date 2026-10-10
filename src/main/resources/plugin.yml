@@ -28,7 +28,13 @@ commands:
     description: Validates an active bonus challenge
   spec:
     description: Lets players switch to spectator mode once their game is finished
+  timer:
+    description: Moves the game timer forward or speeds it up, to test or fix a game
+    permission: bingo.timer
 permissions:
+  bingo.timer:
+    description: Allows moving the game timer forward or speeding it up
+    default: op
   bingo.settings:
     description: Allows changing the game settings during setup
     default: op

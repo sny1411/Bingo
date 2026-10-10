@@ -44,6 +44,7 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 | `/testPack`                                | Shows a title and plays a sound so players can check whether the resource pack is installed            | bingo.testPack |
 | `/valid <add\|remove> <team> <challenge>`  | Forces a challenge to be validated, or un-validated, during or after a game (ids are suggested)        | bingo.valid    |
 | `/stopGame`                                | Stops the game before the end                                                                          | bingo.stopGame |
+| `/timer <set\|add\|speed> <value>`         | Moves the game timer forward (`set 59:59`, `add 10:00`) or speeds it up (`speed 60`)                   | bingo.timer    |
 | `/result`                                  | Shows the ranking to everyone once the game is over                                                    | bingo.result   |
 | `/spec`                                    | Lets players switch to spectator mode once their team has finished                                     | No permission  |
 | `/bonus <challenge>`                       | Validates an active bonus challenge                                                                    | No permission  |
