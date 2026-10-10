@@ -3,7 +3,6 @@ package fr.sny1411.bingo.commands;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.*;
-import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -59,7 +58,7 @@ public class Start implements CommandExecutor {
         }
 
         if (Bingo.getGame().isDefiBonus()) {
-            BonusEvent.init();
+            game.initBonusEvents();
         }
 
         Bukkit.getScheduler().runTaskLater(bingo, () -> game.setPlayersDamage(true), 30 * 20L);

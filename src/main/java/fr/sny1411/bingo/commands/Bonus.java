@@ -30,7 +30,7 @@ public class Bonus implements CommandExecutor {
     }
 
     private static boolean isEnabledBonus(ChallengeId challengeId) {
-        for (BonusEvent event : BonusEvent.getEvents()) {
+        for (BonusEvent event : Bingo.getGame().getBonusEvents()) {
             if (event.isEnable() && event.getChallenge().getId() == challengeId) {
                 return true;
             }
@@ -39,7 +39,7 @@ public class Bonus implements CommandExecutor {
     }
 
     private static BonusEvent findBonus(ChallengeId challengeId) {
-        for (BonusEvent bonusEvent : BonusEvent.getEvents()) {
+        for (BonusEvent bonusEvent : Bingo.getGame().getBonusEvents()) {
             if (bonusEvent.getChallenge().getId() == challengeId) {
                 return bonusEvent;
             }

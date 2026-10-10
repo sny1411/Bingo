@@ -66,7 +66,7 @@ public class Timer {
             world.setWeatherDuration(8400); // 7 minutes (in ticks)
         }
 
-        for (BonusEvent event : BonusEvent.getEvents()) {
+        for (BonusEvent event : game.getBonusEvents()) {
             if (!event.isEnable() && event.getTimeLaunch() * 60 <= elapsed) {
                 event.setEnable(true);
             }

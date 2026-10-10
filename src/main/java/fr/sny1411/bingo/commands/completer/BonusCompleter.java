@@ -16,7 +16,7 @@ public class BonusCompleter implements TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (Bingo.getGame().isDefiBonus()) {
             List<String> listBonusEnable = new ArrayList<>();
-            for (BonusEvent event : BonusEvent.getEvents()) {
+            for (BonusEvent event : Bingo.getGame().getBonusEvents()) {
                 if (event.isEnable()) {
                     listBonusEnable.add(event.getChallenge().getId().name());
                 }
