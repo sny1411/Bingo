@@ -50,13 +50,13 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 
 ---
 
-- Finally, to make sure the plugin works properly, I recommend these server settings:
+- Finally, to make sure the plugin works properly, I recommend these server settings (the test server started by `./gradlew runServer` applies them):
     <ul>
-        <li>Do not disable monster spawning (the plugin sets the difficulty to hard when the game starts).</li>
-        <li>Set the default game mode to survival and do not force it.</li>
-        <li>Do not disable the Nether or the End.</li>
-        <li>Make sure structures are enabled.</li>
-        <li>Disable spawn protection.</li>
+        <li>Do not disable monster spawning, with the <code>spawn_monsters</code> game rule (the plugin sets the difficulty to hard when the game starts).</li>
+        <li>Set the default game mode to survival and do not force it: <code>gamemode=survival</code> and <code>force-gamemode=false</code> in <code>server.properties</code>.</li>
+        <li>Do not disable the Nether or the End: <code>enable-nether</code> in <code>config/paper-global.yml</code> and <code>allow-end</code> in <code>bukkit.yml</code>.</li>
+        <li>Make sure structures are enabled: <code>generate-structures=true</code> in <code>server.properties</code>.</li>
+        <li>Disable spawn protection: <code>spawn-protection=0</code> in <code>server.properties</code>.</li>
     </ul>
 
 ## Contributing:

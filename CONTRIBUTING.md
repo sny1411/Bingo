@@ -20,6 +20,8 @@ Start a local test server with the plugin:
 ```
 The server lives in `run/` (ignored by git) and listens on `localhost:25566`, in offline mode. Starting it means you accept the [Minecraft EULA](https://aka.ms/MinecraftEULA). Type server commands (`op <name>`, `stop`…) directly in the terminal.
 
+Each start applies the server settings recommended in the [README](README.md#usage-and-commands), even if you changed them by hand. Structures only appear in newly generated chunks: if your test world was created without them, delete `run/world*` to generate a new one. If you change these recommendations, update both the README and the `runServer` task in `build.gradle.kts`.
+
 Then start test clients, in another terminal:
 ```
 ./gradlew runClients                      # Player1
