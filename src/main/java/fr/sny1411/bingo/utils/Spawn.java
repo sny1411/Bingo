@@ -9,8 +9,10 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 
 public final class Spawn {
@@ -60,12 +62,17 @@ public final class Spawn {
     }
 
     public static void giveItemsPlayer(Player player) {
+        giveItemsPlayer(player, player.locale());
+    }
+
+    // The locale is given when it changes, since the player's locale is only updated after the event
+    public static void giveItemsPlayer(Player player, Locale locale) {
         Inventory playerInventory = player.getInventory();
         playerInventory.clear();
         if (player.hasPermission(SETTINGS_PERMISSION)) {
-            playerInventory.setItem(0, Items.getSettings());
+            playerInventory.setItem(0, Items.getSettings(locale));
         }
-        playerInventory.setItem(4, Items.getTeamSelector());
+        playerInventory.setItem(4, Items.getTeamSelector(locale));
     }
 
     public static void updateSettingsItems() {
@@ -73,15 +80,20 @@ public final class Spawn {
             return;
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Inventory playerInventory = player.getInventory();
-            boolean hasItem = playerInventory.containsAtLeast(Items.getSettings(), 1);
+            PlayerInventory playerInventory = player.getInventory();
+            int settingsSlot = -1;
+            for (int slot = 0; slot < playerInventory.getSize(); slot++) {
+                if (Items.isSettings(playerInventory.getItem(slot))) {
+                    settingsSlot = slot;
+                }
+            }
             if (player.hasPermission(SETTINGS_PERMISSION)) {
-                if (!hasItem) {
-                    playerInventory.setItem(0, Items.getSettings());
+                if (settingsSlot == -1) {
+                    playerInventory.setItem(0, Items.getSettings(player.locale()));
                 }
             } else {
-                if (hasItem) {
-                    playerInventory.removeItem(Items.getSettings());
+                if (settingsSlot != -1) {
+                    playerInventory.setItem(settingsSlot, null);
                 }
                 if (SettingsGui.isSettingsGui(player.getOpenInventory().getTopInventory())) {
                     player.closeInventory();

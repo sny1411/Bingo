@@ -1,19 +1,25 @@
 package fr.sny1411.bingo.utils;
 
+import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.i18n.Translations;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionType;
+
+import java.util.Locale;
 
 public final class Items {
     private Items() {
         throw new IllegalStateException("Utility class");
     }
-    private static ItemStack settings;
-    private static ItemStack teamSelector;
     private static ItemStack glassForGui;
     private static ItemStack glassValidBingo;
 
@@ -247,8 +253,6 @@ public final class Items {
     }
 
     public static void init() {
-        initSettings();
-        initTeamSelector();
         initGlassForGui();
         initGlassValidBingo();
 
@@ -262,18 +266,41 @@ public final class Items {
         glassForGui.setItemMeta(metaGlassGui);
     }
 
-    private static void initSettings() {
-        settings = new ItemStack(Material.COMPARATOR);
-        ItemMeta metaSettings = settings.getItemMeta();
-        metaSettings.displayName(Component.text("§2◈ §a§lParamètres §r§2◈"));
-        settings.setItemMeta(metaSettings);
+    // The settings and team selector items are named in the player's language, and recognized by a tag
+    private static ItemStack setupItem(Material material, String id, Locale locale) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        meta.displayName(Translations.render(Component.textOfChildren(
+                Component.text("◈ ", NamedTextColor.DARK_GREEN),
+                Component.translatable("bingo.item." + id, NamedTextColor.GREEN, TextDecoration.BOLD),
+                Component.text(" ◈", NamedTextColor.DARK_GREEN)), locale).decoration(TextDecoration.ITALIC, false));
+        meta.getPersistentDataContainer().set(setupItemKey(), PersistentDataType.STRING, id);
+        item.setItemMeta(meta);
+        return item;
     }
 
-    private static void initTeamSelector() {
-        teamSelector = new ItemStack(Material.COMPASS);
-        ItemMeta metaTeamsSelector = teamSelector.getItemMeta();
-        metaTeamsSelector.displayName(Component.text("§2◈ §a§lTeams §r§2◈"));
-        teamSelector.setItemMeta(metaTeamsSelector);
+    private static boolean isSetupItem(ItemStack item, String id) {
+        return item != null && item.hasItemMeta() && id.equals(item.getItemMeta().getPersistentDataContainer().get(setupItemKey(), PersistentDataType.STRING));
+    }
+
+    private static NamespacedKey setupItemKey() {
+        return new NamespacedKey(Game.getBingoInstance(), "setup_item");
+    }
+
+    public static ItemStack getSettings(Locale locale) {
+        return setupItem(Material.COMPARATOR, "settings", locale);
+    }
+
+    public static boolean isSettings(ItemStack item) {
+        return isSetupItem(item, "settings");
+    }
+
+    public static ItemStack getTeamSelector(Locale locale) {
+        return setupItem(Material.COMPASS, "teams", locale);
+    }
+
+    public static boolean isTeamSelector(ItemStack item) {
+        return isSetupItem(item, "teams");
     }
 
     private static void initGlassValidBingo() {
@@ -281,14 +308,6 @@ public final class Items {
         ItemMeta metaGlassValidBingo = glassValidBingo.getItemMeta();
         metaGlassValidBingo.displayName(Component.text(" "));
         glassValidBingo.setItemMeta(metaGlassValidBingo);
-    }
-
-    public static ItemStack getSettings() {
-        return settings;
-    }
-
-    public static ItemStack getTeamSelector() {
-        return teamSelector;
     }
 
     public static ItemStack getGlassForGui() {

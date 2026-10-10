@@ -11,10 +11,12 @@ import fr.sny1411.bingo.utils.Team;
 import fr.sny1411.bingo.utils.Teams;
 import fr.sny1411.bingo.utils.Timer;
 import fr.sny1411.bingo.utils.bonus.BonusEvent;
+import net.kyori.adventure.text.Component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class Game {
@@ -32,19 +34,29 @@ public class Game {
         public String getName() {
             return name;
         }
+
+        public Component label() {
+            return Component.translatable("bingo.game_mode." + name().toLowerCase(Locale.ROOT));
+        }
     }
 
     public enum ModeVictoire {
-        BINGO("Bingo"), DEFIS("Défis");
+        BINGO("Bingo", "bingo"), DEFIS("Défis", "challenges");
 
         private final String name;
+        private final String key;
 
-        ModeVictoire(String name) {
+        ModeVictoire(String name, String key) {
             this.name = name;
+            this.key = key;
         }
 
         public String getName() {
             return name;
+        }
+
+        public Component label() {
+            return Component.translatable("bingo.victory_mode." + key);
         }
     }
 
