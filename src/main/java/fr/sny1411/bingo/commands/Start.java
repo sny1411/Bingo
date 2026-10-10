@@ -51,10 +51,8 @@ public class Start implements CommandExecutor {
         ScoreBoard.createScoreBoard(bingo);
         game.initScores();
 
-        for (Player player : Bingo.getGame().getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
-            if (player.isOnline()) {
-                player.setGameMode(GameMode.SPECTATOR);
-            }
+        for (Player player : Bingo.getGame().getTeams().get(Team.Color.SPECTATOR).getOnlinePlayers()) {
+            player.setGameMode(GameMode.SPECTATOR);
         }
 
         if (Bingo.getGame().isDefiBonus()) {

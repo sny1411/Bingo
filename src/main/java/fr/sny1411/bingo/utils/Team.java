@@ -1,11 +1,16 @@
 package fr.sny1411.bingo.utils;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public class Team {
     public enum Color {
@@ -46,29 +51,53 @@ public class Team {
         }
     }
 
-    private final Set<Player> players;
+    // UUIDs rather than Player objects, which are replaced when a player reconnects
+    private final Set<UUID> playerIds;
     private final Color color;
     private boolean gameFinish;
 
     Team(Color color) {
         this.color = color;
         gameFinish = false;
-        players = new HashSet<>();
+        playerIds = new LinkedHashSet<>();
     }
 
     void addPlayer(Player player) {
-        players.add(player);
+        playerIds.add(player.getUniqueId());
     }
 
     void removePlayer(Player player) {
-        players.remove(player);
+        playerIds.remove(player.getUniqueId());
+    }
+
+    public boolean contains(Player player) {
+        return playerIds.contains(player.getUniqueId());
+    }
+
+    public int size() {
+        return playerIds.size();
     }
 
     public Color getColor() {
         return color;
     }
 
-    public Set<Player> getPlayers() {
+    public List<OfflinePlayer> getPlayers() {
+        List<OfflinePlayer> players = new ArrayList<>();
+        for (UUID playerId : playerIds) {
+            players.add(Bukkit.getOfflinePlayer(playerId));
+        }
+        return players;
+    }
+
+    public List<Player> getOnlinePlayers() {
+        List<Player> players = new ArrayList<>();
+        for (UUID playerId : playerIds) {
+            Player player = Bukkit.getPlayer(playerId);
+            if (player != null) {
+                players.add(player);
+            }
+        }
         return players;
     }
 
@@ -82,10 +111,8 @@ public class Team {
 
     public void sendMessage(String message) {
         Component componentMessage = Component.text(message);
-        for (Player player : this.getPlayers()) {
-            if (player.isOnline()) {
-                player.sendMessage(componentMessage);
-            }
+        for (Player player : getOnlinePlayers()) {
+            player.sendMessage(componentMessage);
         }
     }
 }
