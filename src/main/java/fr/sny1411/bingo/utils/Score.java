@@ -2,6 +2,8 @@ package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 
 public class Score {
     private final Team team;
@@ -112,9 +114,9 @@ public class Score {
         if (game.getEtat() == Game.Etat.INGAME && ((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
                 (game.getModeVictoire() == Game.ModeVictoire.DEFIS && nbChallenges == 25)) && !team.isGameFinish()) {
             team.setGameFinish(true);
-            Text.broadcastMessage("§7[§eBINGO§7] §fL'équipe " + team.getColor().getPrefixe() + team.getColor().getNom() + " §fa fini sa partie");
-            Text.broadcastMessage("Elle peut continuer de jouer ou devenir spectatrice");
-            team.sendMessage("§7§oUtilisez la commande §e§o/spec §7§opour devenir spectateur");
+            Bukkit.broadcast(Text.info(Component.translatable("bingo.team.finished", team.getColor().displayName())));
+            Bukkit.broadcast(Component.translatable("bingo.team.finished.continue"));
+            team.sendMessage(Component.translatable("bingo.team.finished.spec"));
         }
     }
 }
