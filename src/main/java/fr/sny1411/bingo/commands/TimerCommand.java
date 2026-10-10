@@ -2,6 +2,7 @@ package fr.sny1411.bingo.commands;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.utils.Text;
 import fr.sny1411.bingo.utils.Timer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -12,16 +13,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class TimerCommand implements CommandExecutor {
     private static final int MAX_SPEED = 600;
-    private static final String USAGE = "Utilisation : /timer set <[hh:]mm:ss> | /timer add <[hh:]mm:ss> | /timer speed <1-" + MAX_SPEED + ">";
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (Bingo.getGame().getEtat() != Game.Etat.INGAME) {
-            sender.sendMessage(warning("Aucune partie en cours"));
+            sender.sendMessage(Text.warning(Component.translatable("bingo.command.no_game")));
             return false;
         }
         if (args.length != 2) {
-            sender.sendMessage(warning(USAGE));
+            sender.sendMessage(usage());
             return false;
         }
 
@@ -30,27 +30,27 @@ public class TimerCommand implements CommandExecutor {
             case "set", "add" -> {
                 int seconds = parseTime(args[1]);
                 if (seconds < 0) {
-                    sender.sendMessage(warning(USAGE));
+                    sender.sendMessage(usage());
                     return false;
                 }
                 int elapsed = args[0].equalsIgnoreCase("set") ? seconds : timer.getElapsedSeconds() + seconds;
                 if (elapsed < timer.getElapsedSeconds()) {
-                    sender.sendMessage(warning("Le chrono ne peut pas revenir en arrière"));
+                    sender.sendMessage(Text.warning(Component.translatable("bingo.timer.cannot_go_back")));
                     return false;
                 }
                 timer.setElapsedSeconds(elapsed);
-                sender.sendMessage(info("Chrono : " + formatTime(elapsed) + " / " + formatTime(timer.getDurationSeconds())));
+                sender.sendMessage(Text.info(Component.translatable("bingo.timer.elapsed", Component.text(formatTime(elapsed)), Component.text(formatTime(timer.getDurationSeconds())))));
             }
             case "speed" -> {
                 int speed = parseSpeed(args[1]);
                 if (speed < 1) {
-                    sender.sendMessage(warning(USAGE));
+                    sender.sendMessage(usage());
                     return false;
                 }
                 timer.setSpeed(speed);
-                sender.sendMessage(info("Vitesse du chrono : ×" + speed));
+                sender.sendMessage(Text.info(Component.translatable("bingo.timer.speed", Component.text(speed))));
             }
-            default -> sender.sendMessage(warning(USAGE));
+            default -> sender.sendMessage(usage());
         }
         return false;
     }
@@ -83,23 +83,11 @@ public class TimerCommand implements CommandExecutor {
         return value <= MAX_SPEED ? value : -1;
     }
 
+    private static Component usage() {
+        return Text.warning(Component.translatable("bingo.timer.usage", Component.text("/timer set <[hh:]mm:ss> | /timer add <[hh:]mm:ss> | /timer speed <1-" + MAX_SPEED + ">")));
+    }
+
     private static String formatTime(int seconds) {
         return String.format("%d:%02d:%02d", seconds / 3600, seconds / 60 % 60, seconds % 60);
-    }
-
-    private static Component info(String message) {
-        return Component.textOfChildren(
-                Component.text("[", NamedTextColor.GRAY),
-                Component.text("BINGO", NamedTextColor.YELLOW),
-                Component.text("] ", NamedTextColor.GRAY),
-                Component.text(message, NamedTextColor.WHITE));
-    }
-
-    private static Component warning(String message) {
-        return Component.textOfChildren(
-                Component.text("[", NamedTextColor.DARK_GRAY),
-                Component.text("⚠", NamedTextColor.RED),
-                Component.text("] ", NamedTextColor.DARK_GRAY),
-                Component.text(message, NamedTextColor.WHITE));
     }
 }

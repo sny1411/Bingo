@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ForceValid implements CommandExecutor {
-    private static final String USAGE = "Utilisation : /valid <add|remove> <équipe> <défi>";
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
@@ -25,23 +24,23 @@ public class ForceValid implements CommandExecutor {
         }
         Game.Etat etat = Bingo.getGame().getEtat();
         if (etat != Game.Etat.INGAME && etat != Game.Etat.ENDGAME) {
-            sender.sendMessage(warning("Aucune partie en cours"));
+            sender.sendMessage(Text.warning(Component.translatable("bingo.command.no_game")));
             return false;
         }
         if (args.length != 3 || !(args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("remove"))) {
-            sender.sendMessage(warning(USAGE));
+            sender.sendMessage(Text.warning(Component.translatable("bingo.valid.usage")));
             return false;
         }
 
         Team team = getTeamInGame(args[1]);
         if (team == null) {
-            sender.sendMessage(warning("L'équipe " + args[1] + " n'est pas dans la partie"));
+            sender.sendMessage(Text.warning(Component.translatable("bingo.valid.unknown_team", Component.text(args[1]))));
             return false;
         }
         ChallengeId challengeId = ChallengeId.fromString(args[2].toUpperCase());
         Challenge challenge = challengeId == null ? null : Bingo.getGame().getChallenge(team, challengeId);
         if (challenge == null) {
-            sender.sendMessage(warning("Le défi " + args[2] + " n'est pas dans la grille"));
+            sender.sendMessage(Text.warning(Component.translatable("bingo.valid.unknown_challenge", Component.text(args[2]))));
             return false;
         }
 
@@ -71,13 +70,5 @@ public class ForceValid implements CommandExecutor {
             }
         }
         return null;
-    }
-
-    private static Component warning(String message) {
-        return Component.textOfChildren(
-                Component.text("[", NamedTextColor.DARK_GRAY),
-                Component.text("⚠", NamedTextColor.RED),
-                Component.text("] ", NamedTextColor.DARK_GRAY),
-                Component.text(message, NamedTextColor.WHITE));
     }
 }

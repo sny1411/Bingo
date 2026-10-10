@@ -3,7 +3,9 @@ package fr.sny1411.bingo.commands;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Team;
+import fr.sny1411.bingo.utils.Text;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +24,7 @@ public class Spec implements CommandExecutor {
                 player.setGameMode(GameMode.SPECTATOR);
                 Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);
             } else {
-                player.sendMessage(Component.text("§8[§c⚠§8] §cVous n'avez pas terminé votre partie !"));
+                player.sendMessage(Text.warning(Component.translatable("bingo.spec.not_finished", NamedTextColor.RED)));
             }
         }
         return false;

@@ -16,36 +16,24 @@ import java.util.UUID;
 
 public class Team {
     public enum Color {
-        ORANGE("orange", "§6", "Orange", NamedTextColor.GOLD, Material.ORANGE_BANNER, Material.ORANGE_CONCRETE),
-        ROUGE("red", "§c", "Rouge", NamedTextColor.RED, Material.RED_BANNER, Material.RED_CONCRETE),
-        VIOLET("purple", "§5", "Violet", NamedTextColor.DARK_PURPLE, Material.PURPLE_BANNER, Material.PURPLE_CONCRETE),
-        ROSE("pink", "§d", "Rose", NamedTextColor.LIGHT_PURPLE, Material.PINK_BANNER, Material.PINK_CONCRETE),
-        VERT("green", "§a", "Vert", NamedTextColor.GREEN, Material.LIME_BANNER, Material.LIME_CONCRETE),
-        BLEU("blue", "§b", "Bleu", NamedTextColor.AQUA, Material.LIGHT_BLUE_BANNER, Material.LIGHT_BLUE_CONCRETE),
-        SPECTATOR("spectator", "§8[SPEC] §7§o", "Spectateur", NamedTextColor.GRAY, Material.ENDER_EYE, null);
+        ORANGE("orange", NamedTextColor.GOLD, Material.ORANGE_BANNER, Material.ORANGE_CONCRETE),
+        ROUGE("red", NamedTextColor.RED, Material.RED_BANNER, Material.RED_CONCRETE),
+        VIOLET("purple", NamedTextColor.DARK_PURPLE, Material.PURPLE_BANNER, Material.PURPLE_CONCRETE),
+        ROSE("pink", NamedTextColor.LIGHT_PURPLE, Material.PINK_BANNER, Material.PINK_CONCRETE),
+        VERT("green", NamedTextColor.GREEN, Material.LIME_BANNER, Material.LIME_CONCRETE),
+        BLEU("blue", NamedTextColor.AQUA, Material.LIGHT_BLUE_BANNER, Material.LIGHT_BLUE_CONCRETE),
+        SPECTATOR("spectator", NamedTextColor.GRAY, Material.ENDER_EYE, null);
 
         private final String key;
-        private final String prefixe;
-        private final String nom;
         private final NamedTextColor textColor;
         private final Material materialTeamGui;
         private final Material materialBingoGui;
 
-        Color(String key, String prefixe, String nom, NamedTextColor textColor, Material materialTeamGui, Material materialBingoGui) {
+        Color(String key, NamedTextColor textColor, Material materialTeamGui, Material materialBingoGui) {
             this.key = key;
-            this.prefixe = prefixe;
-            this.nom = nom;
             this.textColor = textColor;
             this.materialTeamGui = materialTeamGui;
             this.materialBingoGui = materialBingoGui;
-        }
-
-        public String getPrefixe() {
-            return prefixe;
-        }
-
-        public String getNom() {
-            return nom;
         }
 
         public Component displayName() {
