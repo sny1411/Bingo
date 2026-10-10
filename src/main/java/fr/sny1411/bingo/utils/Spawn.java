@@ -1,5 +1,8 @@
 package fr.sny1411.bingo.utils;
 
+import fr.sny1411.bingo.Bingo;
+import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.listener.gui.SettingsGui;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,6 +17,8 @@ public final class Spawn {
     private Spawn() {
         throw new IllegalStateException("Utility class");
     }
+
+    public static final String SETTINGS_PERMISSION = "bingo.settings";
 
     private static final List<World> WORLDS = Bukkit.getWorlds();
     private static final World OVERWORLD = WORLDS.get(0);
@@ -57,9 +62,31 @@ public final class Spawn {
     public static void giveItemsPlayer(Player player) {
         Inventory playerInventory = player.getInventory();
         playerInventory.clear();
-        if (player.isOp()) {
+        if (player.hasPermission(SETTINGS_PERMISSION)) {
             playerInventory.setItem(0, Items.getSettings());
         }
         playerInventory.setItem(4, Items.getTeamSelector());
+    }
+
+    public static void updateSettingsItems() {
+        if (Bingo.getGame().getEtat() != Game.Etat.SETUP) {
+            return;
+        }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Inventory playerInventory = player.getInventory();
+            boolean hasItem = playerInventory.containsAtLeast(Items.getSettings(), 1);
+            if (player.hasPermission(SETTINGS_PERMISSION)) {
+                if (!hasItem) {
+                    playerInventory.setItem(0, Items.getSettings());
+                }
+            } else {
+                if (hasItem) {
+                    playerInventory.removeItem(Items.getSettings());
+                }
+                if (SettingsGui.isSettingsGui(player.getOpenInventory().getTopInventory())) {
+                    player.closeInventory();
+                }
+            }
+        }
     }
 }
