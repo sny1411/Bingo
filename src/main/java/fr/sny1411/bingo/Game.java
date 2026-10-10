@@ -1,7 +1,9 @@
 package fr.sny1411.bingo;
 
 import fr.sny1411.bingo.utils.Challenge;
+import fr.sny1411.bingo.utils.ChallengeId;
 import fr.sny1411.bingo.utils.Environment;
+import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.ScoreBoard;
 import fr.sny1411.bingo.utils.Spawn;
@@ -58,6 +60,8 @@ public class Game {
     private ModeVictoire modeVictoire;
     private Etat etat;
     private final Map<Team, Score> teamsScore = new HashMap<>();
+    private Grid gameGrid;
+    private final Map<Team, Grid> teamsGrid = new HashMap<>();
     private static Bingo bingoInstance;
 
     private Game(boolean defiBonus, boolean playersDamage, ModeAffichage modeAffichage, ModeJeu modeJeu, ModeVictoire modeVictoire, Etat etat) {
@@ -90,6 +94,27 @@ public class Game {
         Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
         Environment.clearPlayers();
+    }
+
+    public void createGrids() {
+        gameGrid = Grid.random();
+        teamsGrid.clear();
+        for (Team team : Team.getTeams().values()) {
+            teamsGrid.put(team, gameGrid.copy());
+        }
+    }
+
+    public Grid getGameGrid() {
+        return gameGrid;
+    }
+
+    public Map<Team, Grid> getTeamsGrid() {
+        return teamsGrid;
+    }
+
+    public Challenge getChallenge(Team team, ChallengeId challengeId) {
+        Grid grid = teamsGrid.get(team);
+        return grid == null ? null : grid.getChallenge(challengeId);
     }
 
     public void initScores() {
