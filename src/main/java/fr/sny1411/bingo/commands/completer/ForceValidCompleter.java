@@ -2,6 +2,7 @@ package fr.sny1411.bingo.commands.completer;
 
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Grid;
+import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.Team;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,10 +22,10 @@ public class ForceValidCompleter implements TabCompleter {
             list.add("add");
             list.add("remove");
         } else if (args.length == 2) {
-            for (Team.Color color : Team.getTeams().keySet()) {
-                list.add(color.name());
+            for (Team team : Score.getTeamsScore().keySet()) {
+                list.add(team.getColor().name());
             }
-        } else if (args.length == 3) {
+        } else if (args.length == 3 && Grid.getGameGrid() != null) {
             for (Challenge[] challengeList : Grid.getGameGrid().getGrid()) {
                 for (Challenge challenge : challengeList) {
                     list.add(challenge.getId().name());
