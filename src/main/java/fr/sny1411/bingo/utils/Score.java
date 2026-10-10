@@ -41,10 +41,7 @@ public class Score {
     }
 
     public int getScore() {
-        return nbEasy * Challenge.Difficult.EASY.getPoints() +
-                nbMedium * Challenge.Difficult.MEDIUM.getPoints() +
-                nbHard * Challenge.Difficult.HARD.getPoints() +
-                nbExtreme * Challenge.Difficult.EXTREME.getPoints();
+        return ScoreRules.points(nbEasy, nbMedium, nbHard, nbExtreme);
     }
 
     public int getNbEasy() {
@@ -116,71 +113,14 @@ public class Score {
     }
 
     private void updateNbBingo() {
-        Challenge[][] challenges = Grid.getTeamsGrid().get(team).getGrid();
-        nbBingo = bingoY(challenges) + bingoX(challenges) + bingoDiag(challenges);
-    }
-
-    private int bingoY(Challenge[][] grid) {
-        int nbBingoY = 0;
-        boolean isBingo;
-        for (Challenge[] challenges : grid) {
-            isBingo = true;
-            for (Challenge challenge : challenges) {
-                if (Boolean.FALSE.equals(challenge.getValidated())) {
-                    isBingo = false;
-                    break;
-                }
-            }
-            if (isBingo) {
-                nbBingoY++;
+        Challenge[][] grid = Grid.getTeamsGrid().get(team).getGrid();
+        boolean[][] validated = new boolean[grid.length][grid.length];
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid.length; x++) {
+                validated[y][x] = !Boolean.FALSE.equals(grid[y][x].getValidated());
             }
         }
-        return nbBingoY;
-    }
-
-    private int bingoX(Challenge[][] grid) {
-        int nbBingoX = 0;
-        boolean isBingo;
-        for (int x = 0; x < grid[0].length; x++) {
-            isBingo = true;
-            for (Challenge[] challenges : grid) {
-                if (Boolean.FALSE.equals(challenges[x].getValidated())) {
-                    isBingo = false;
-                    break;
-                }
-            }
-            if (isBingo) {
-                nbBingoX++;
-            }
-        }
-        return nbBingoX;
-    }
-
-    private int bingoDiag(Challenge[][] grid) {
-        boolean isBingo = true;
-        int nbBingoXY = 0;
-        for (int xy = 0; xy < grid.length; xy++) {
-            if (Boolean.FALSE.equals(grid[xy][xy].getValidated())) {
-                isBingo = false;
-                break;
-            }
-        }
-        if (isBingo) {
-            nbBingoXY++;
-        }
-
-        for (int xy = 0; xy < grid.length; xy++) {
-            isBingo = true;
-            if (Boolean.FALSE.equals(grid[4 - xy][xy].getValidated())) {
-                isBingo = false;
-                break;
-            }
-        }
-        if (isBingo) {
-            nbBingoXY++;
-        }
-
-        return nbBingoXY;
+        nbBingo = ScoreRules.countBingos(validated);
     }
 
     private void testGameFinish() {
