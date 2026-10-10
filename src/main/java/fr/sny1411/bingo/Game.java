@@ -12,6 +12,7 @@ import fr.sny1411.bingo.utils.Teams;
 import fr.sny1411.bingo.utils.Timer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Game {
@@ -56,6 +57,7 @@ public class Game {
     private final Settings settings;
     private final Timer timer;
     private final Teams teams;
+    private final List<Challenge> challenges;
     private boolean playersDamage;
     private Etat etat;
     private final Map<Team, Score> teamsScore = new HashMap<>();
@@ -71,6 +73,7 @@ public class Game {
         this.settings = settings;
         this.timer = new Timer(this);
         this.teams = new Teams(settings);
+        this.challenges = Challenge.loadChallenges();
         this.playersDamage = false;
         this.etat = Etat.SETUP;
         setup();
@@ -81,7 +84,6 @@ public class Game {
         Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
         Spawn.giveItemsPlayers();
-        Challenge.init();
     }
 
     public void end() {
@@ -93,11 +95,21 @@ public class Game {
     }
 
     public void createGrids() {
-        gameGrid = Grid.random();
+        gameGrid = Grid.random(challenges, settings);
         teamsGrid.clear();
         for (Team team : teams.values()) {
             teamsGrid.put(team, gameGrid.copy());
         }
+    }
+
+    public int getNbChallenges(Challenge.Difficult difficult) {
+        int nbChallenges = 0;
+        for (Challenge challenge : challenges) {
+            if (challenge.getDifficult() == difficult) {
+                nbChallenges++;
+            }
+        }
+        return nbChallenges;
     }
 
     public Grid getGameGrid() {

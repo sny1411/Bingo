@@ -25,7 +25,7 @@ public class Start implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String str, @NotNull String[] args) {
         if (sender instanceof Player && (Bingo.getGame().getEtat() == Game.Etat.SETUP)) {
-            if (Challenge.verifSettingsToHigh()) {
+            if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
                 sender.sendMessage(gridIncompleteMessage());
                 return false;
             }
@@ -70,7 +70,7 @@ public class Start implements CommandExecutor {
                 Component.text("[", NamedTextColor.DARK_GRAY),
                 Component.text("⚠", NamedTextColor.RED),
                 Component.text("] ", NamedTextColor.DARK_GRAY),
-                Component.text("La grille a " + Challenge.getMaxTotal() + " défis sur " + Grid.NB_CHALLENGES + " : ajoutes-en dans les paramètres de la grille", NamedTextColor.WHITE));
+                Component.text("La grille a " + Bingo.getGame().getSettings().getMaxTotal() + " défis sur " + Grid.NB_CHALLENGES + " : ajoutes-en dans les paramètres de la grille", NamedTextColor.WHITE));
     }
 
     private static boolean isTeamComplete() {
