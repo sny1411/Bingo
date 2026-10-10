@@ -67,6 +67,12 @@ public final class Text {
                 message.colorIfAbsent(NamedTextColor.WHITE));
     }
 
+    public static void broadcastMessage(Component message) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(message);
+        }
+    }
+
     public static void broadcastMessage(String message) {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.sendMessage(Component.text(message));

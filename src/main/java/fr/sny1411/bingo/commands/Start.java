@@ -33,7 +33,7 @@ public class Start implements CommandExecutor {
                 Bingo.getGame().setEtat(Game.Etat.STARTING);
                 Countdown.start(bingo, this::startGame);
             } else {
-                sender.sendMessage(Component.text("§8[§c⚠§8] §fDes joueurs ne possèdent pas d'équipe"));
+                sender.sendMessage(Text.warning(Component.translatable("bingo.start.players_without_team")));
             }
         }
         return false;
@@ -63,17 +63,13 @@ public class Start implements CommandExecutor {
     }
 
     private static Component gridIncompleteMessage() {
-        return Component.textOfChildren(
-                Component.text("[", NamedTextColor.DARK_GRAY),
-                Component.text("⚠", NamedTextColor.RED),
-                Component.text("] ", NamedTextColor.DARK_GRAY),
-                Component.text("La grille a " + Bingo.getGame().getSettings().getMaxTotal() + " défis sur " + Grid.NB_CHALLENGES + " : ajoutes-en dans les paramètres de la grille", NamedTextColor.WHITE));
+        return Text.warning(Component.translatable("bingo.start.grid_incomplete", Component.text(Bingo.getGame().getSettings().getMaxTotal()), Component.text(Grid.NB_CHALLENGES)));
     }
 
     private static boolean isTeamComplete() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (Bingo.getGame().getTeams().getTeam(player) == null) {
-                player.sendMessage(Component.text("§8[§c⚠§8] §fVeuillez rejoindre une équipe"));
+                player.sendMessage(Text.warning(Component.translatable("bingo.start.join_a_team")));
                 return false;
             }
         }
