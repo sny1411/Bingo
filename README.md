@@ -34,7 +34,7 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 
 - Once the plugin is installed on your server, a game is created right away. Before the game starts, players who join are teleported to the spawn and get the team selector. Players who join a game in progress without a team become spectators.
 
-- The settings item is only given to operators. The other commands require either operator status or the permissions listed below:
+- The settings item is given to players with the `bingo.settings` permission (operators by default), and is given or removed when it changes during the setup. The commands require either operator status or the permissions listed below:
 
 | Command                                    | Description                                                                                            | Permission     |
 |--------------------------------------------|--------------------------------------------------------------------------------------------------------|----------------|
