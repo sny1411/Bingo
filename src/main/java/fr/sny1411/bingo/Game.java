@@ -8,6 +8,7 @@ import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.ScoreBoard;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
+import fr.sny1411.bingo.utils.Teams;
 import fr.sny1411.bingo.utils.Timer;
 
 import java.util.HashMap;
@@ -54,6 +55,7 @@ public class Game {
 
     private final Settings settings;
     private final Timer timer;
+    private final Teams teams;
     private boolean playersDamage;
     private Etat etat;
     private final Map<Team, Score> teamsScore = new HashMap<>();
@@ -68,6 +70,7 @@ public class Game {
     public Game(Settings settings) {
         this.settings = settings;
         this.timer = new Timer(this);
+        this.teams = new Teams(settings);
         this.playersDamage = false;
         this.etat = Etat.SETUP;
         setup();
@@ -78,7 +81,6 @@ public class Game {
         Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
         Spawn.giveItemsPlayers();
-        Team.createTeams();
         Challenge.init();
     }
 
@@ -93,7 +95,7 @@ public class Game {
     public void createGrids() {
         gameGrid = Grid.random();
         teamsGrid.clear();
-        for (Team team : Team.getTeams().values()) {
+        for (Team team : teams.values()) {
             teamsGrid.put(team, gameGrid.copy());
         }
     }
@@ -113,7 +115,7 @@ public class Game {
 
     public void initScores() {
         teamsScore.clear();
-        for (Team team : Team.getTeams().values()) {
+        for (Team team : teams.values()) {
             if (team.getColor() != Team.Color.SPECTATOR) {
                 teamsScore.put(team, new Score(team));
             }
@@ -130,6 +132,10 @@ public class Game {
 
     public Timer getTimer() {
         return timer;
+    }
+
+    public Teams getTeams() {
+        return teams;
     }
 
     public static Bingo getBingoInstance() {

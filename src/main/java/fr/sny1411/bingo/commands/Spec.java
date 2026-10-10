@@ -18,10 +18,9 @@ public class Spec implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player &&  Bingo.getGame().getEtat() == Game.Etat.INGAME) {
             Player player = (Player) sender;
-            if (Objects.requireNonNull(Team.getTeam(player)).isGameFinish()) {
+            if (Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).isGameFinish()) {
                 player.setGameMode(GameMode.SPECTATOR);
-                Team.removeTeam(player);
-                Team.getTeams().get(Team.Color.SPECTATOR).addPlayer(player);
+                Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);
             } else {
                 player.sendMessage(Component.text("§8[§c⚠§8] §cVous n'avez pas terminé votre partie !"));
             }

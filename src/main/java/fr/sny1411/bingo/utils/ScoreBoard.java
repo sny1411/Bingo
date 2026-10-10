@@ -29,14 +29,14 @@ public final class ScoreBoard {
                 score4.setScore(8);
                 Score score5 = objective.getScore("  ");
                 score5.setScore(7);
-                Score score = objective.getScore("  Equipes §7: §e" + Team.getNbTeams());
+                Score score = objective.getScore("  Equipes §7: §e" + Bingo.getGame().getSettings().getNbTeams());
                 score.setScore(6);
-                if (Objects.requireNonNull(Team.getTeam(player)).getColor() != Team.Color.SPECTATOR) {
+                if (Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).getColor() != Team.Color.SPECTATOR) {
                     Score score1;
                     if (Bingo.getGame().getModeVictoire() == Game.ModeVictoire.BINGO) {
-                        score1 = objective.getScore("  Bingos §7: §e" + Bingo.getGame().getTeamsScore().get(Team.getTeam(player)).getNbBingo());
+                        score1 = objective.getScore("  Bingos §7: §e" + Bingo.getGame().getTeamsScore().get(Bingo.getGame().getTeams().getTeam(player)).getNbBingo());
                     } else {
-                        score1 = objective.getScore("  Défis §7: §e" + Bingo.getGame().getTeamsScore().get(Team.getTeam(player)).getNbChallenges());
+                        score1 = objective.getScore("  Défis §7: §e" + Bingo.getGame().getTeamsScore().get(Bingo.getGame().getTeams().getTeam(player)).getNbChallenges());
                     }
                     score1.setScore(5);
                 }
