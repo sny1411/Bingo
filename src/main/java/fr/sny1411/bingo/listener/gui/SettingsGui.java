@@ -5,6 +5,7 @@ import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Items;
 import fr.sny1411.bingo.utils.SkullCustom;
+import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -282,10 +283,14 @@ public class SettingsGui implements Listener {
         player.openInventory(guiVictoire);
     }
 
+    public static boolean isSettingsGui(Inventory inventory) {
+        return inventory == gui || inventory == guiDifficult || inventory == guiVictoire || inventory == guiTeams;
+    }
+
     @EventHandler
     public void clickItems(PlayerInteractEvent e) {
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
-            if (e.getMaterial() == Material.COMPARATOR) {
+            if (Items.getSettings().isSimilar(e.getItem()) && e.getPlayer().hasPermission(Spawn.SETTINGS_PERMISSION)) {
                 openGui(e.getPlayer());
             }
         }
@@ -295,6 +300,10 @@ public class SettingsGui implements Listener {
     private void inventoryClick(InventoryClickEvent e) {
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
             Inventory clickedInventory = e.getClickedInventory();
+            if (isSettingsGui(clickedInventory) && !e.getWhoClicked().hasPermission(Spawn.SETTINGS_PERMISSION)) {
+                e.setCancelled(true);
+                return;
+            }
             if (clickedInventory == gui) {
                 Material currentItem = e.getCurrentItem().getType();
                 Player player = (Player) e.getWhoClicked();
