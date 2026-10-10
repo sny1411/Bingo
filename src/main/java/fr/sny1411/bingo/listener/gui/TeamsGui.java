@@ -5,6 +5,7 @@ import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Items;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -85,35 +86,31 @@ public class TeamsGui implements Listener {
     private void clickItemGui(InventoryClickEvent e) {
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP && e.getView().title().equals(Component.text("§3§lSélection des équipes")) && e.getCurrentItem() != null) {
             Player player = (Player) e.getWhoClicked();
-            switch (e.getCurrentItem().getType()) {
-                case ORANGE_BANNER:
-                    Bingo.getGame().getTeams().join(player, Team.Color.ORANGE);
-                    break;
-                case RED_BANNER:
-                    Bingo.getGame().getTeams().join(player, Team.Color.ROUGE);
-                    break;
-                case PURPLE_BANNER:
-                    Bingo.getGame().getTeams().join(player, Team.Color.VIOLET);
-                    break;
-                case PINK_BANNER:
-                    Bingo.getGame().getTeams().join(player, Team.Color.ROSE);
-                    break;
-                case LIME_BANNER:
-                    Bingo.getGame().getTeams().join(player, Team.Color.VERT);
-                    break;
-                case LIGHT_BLUE_BANNER:
-                    Bingo.getGame().getTeams().join(player, Team.Color.BLEU);
-                    break;
-                case ENDER_EYE:
-                    Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);
-                    break;
-                default:
-                    return;
+            Team.Color color = getColor(e.getCurrentItem().getType());
+            if (color == null) {
+                return;
             }
-            updateGui();
-            player.playerListName(Component.text(Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).getColor().getPrefixe() + player.getName()));
+            if (Bingo.getGame().getTeams().join(player, color)) {
+                updateGui();
+                player.playerListName(Component.text(color.getPrefixe() + player.getName()));
+            } else {
+                player.sendMessage(Component.textOfChildren(
+                        Component.text("[", NamedTextColor.DARK_GRAY),
+                        Component.text("⚠", NamedTextColor.RED),
+                        Component.text("] ", NamedTextColor.DARK_GRAY),
+                        Component.text("Cette équipe est complète", NamedTextColor.WHITE)));
+            }
             e.setCancelled(true);
         }
+    }
+
+    private static Team.Color getColor(Material materialTeamGui) {
+        for (Team.Color color : Team.Color.values()) {
+            if (color.getMaterialTeamGui() == materialTeamGui) {
+                return color;
+            }
+        }
+        return null;
     }
 
     private void updateGui() {
