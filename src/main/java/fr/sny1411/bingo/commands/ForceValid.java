@@ -24,7 +24,8 @@ public class ForceValid implements CommandExecutor {
         if (!(sender instanceof Player)) {
             return false;
         }
-        if (Bingo.getGame().getEtat() != Game.Etat.INGAME) {
+        Game.Etat etat = Bingo.getGame().getEtat();
+        if (etat != Game.Etat.INGAME && etat != Game.Etat.ENDGAME) {
             sender.sendMessage(warning("Aucune partie en cours"));
             return false;
         }
