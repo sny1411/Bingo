@@ -5,6 +5,7 @@ import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Random;
 import fr.sny1411.bingo.utils.Text;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -105,7 +106,7 @@ public class BonusEvent {
     }
 
     private void annonceLancement() {
-        Text.broadcastMessage("§7[§eBINGO§7] §fBonus: " + challenge.getName());
-        Text.broadcastMessage("§8≫ §7La première équipe à compléter le défi remportera une §9récompense de niveau " + challenge.getDifficult().getTextDifficult());
+        Bukkit.broadcast(Text.info(Component.translatable("bingo.bonus.launched", challenge.getName())));
+        Bukkit.broadcast(Component.translatable("bingo.bonus.reward", challenge.getDifficult().label()));
     }
 }

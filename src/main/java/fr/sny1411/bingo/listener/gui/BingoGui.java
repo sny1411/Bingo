@@ -70,7 +70,7 @@ public class BingoGui implements Listener {
             if (Boolean.TRUE.equals(challenge.getValidated())) {
                 item = Items.getGlassValidBingo();
             } else {
-                item = challenge.getItem();
+                item = challenge.getItem(player);
             }
             gui.setItem(i, item);
             nbItems++;
