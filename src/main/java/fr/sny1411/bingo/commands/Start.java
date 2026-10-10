@@ -5,6 +5,7 @@ import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.*;
 import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -24,6 +25,10 @@ public class Start implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String str, @NotNull String[] args) {
         if (sender instanceof Player && (Bingo.getGame().getEtat() == Game.Etat.SETUP)) {
+            if (Challenge.verifSettingsToHigh()) {
+                sender.sendMessage(gridIncompleteMessage());
+                return false;
+            }
             Grid.createGrids();
             if (isTeamComplete()) {
                 Bingo.getGame().setEtat(Game.Etat.STARTING);
@@ -58,6 +63,14 @@ public class Start implements CommandExecutor {
         }
 
         Bukkit.getScheduler().runTaskLater(bingo, () -> game.setPlayersDamage(true), 30 * 20L);
+    }
+
+    private static Component gridIncompleteMessage() {
+        return Component.textOfChildren(
+                Component.text("[", NamedTextColor.DARK_GRAY),
+                Component.text("⚠", NamedTextColor.RED),
+                Component.text("] ", NamedTextColor.DARK_GRAY),
+                Component.text("La grille a " + Challenge.getMaxTotal() + " défis sur " + Grid.NB_CHALLENGES + " : ajoutes-en dans les paramètres de la grille", NamedTextColor.WHITE));
     }
 
     private static boolean isTeamComplete() {

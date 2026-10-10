@@ -140,8 +140,12 @@ public class Challenge {
         createChallenges();
     }
 
+    public static int getMaxTotal() {
+        return maxEasy + maxMedium + maxHard + maxExtreme;
+    }
+
     public static boolean verifSettingsToHigh() {
-        return (maxEasy + maxMedium + maxHard + maxExtreme) < 25;
+        return getMaxTotal() < Grid.NB_CHALLENGES;
     }
 
     private static void createChallenges() {
