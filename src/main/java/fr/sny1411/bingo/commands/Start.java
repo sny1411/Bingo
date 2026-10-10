@@ -52,7 +52,7 @@ public class Start implements CommandExecutor {
         ScoreBoard.createScoreBoard(bingo);
         game.initScores();
 
-        for (Player player : Team.getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
+        for (Player player : Bingo.getGame().getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
             if (player.isOnline()) {
                 player.setGameMode(GameMode.SPECTATOR);
             }
@@ -75,7 +75,7 @@ public class Start implements CommandExecutor {
 
     private static boolean isTeamComplete() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (Team.getTeam(player) == null) {
+            if (Bingo.getGame().getTeams().getTeam(player) == null) {
                 player.sendMessage(Component.text("§8[§c⚠§8] §fVeuillez rejoindre une équipe"));
                 return false;
             }

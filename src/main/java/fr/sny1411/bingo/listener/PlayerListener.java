@@ -23,8 +23,8 @@ public class PlayerListener implements Listener {
         if (etat == Game.Etat.SETUP) {
             Spawn.teleportPlayer(player);
             Spawn.giveItemsPlayer(player);
-        } else if ((etat == Game.Etat.STARTING || etat == Game.Etat.INGAME) && (!Team.updatePlayerJoinInGame(player))) {
-                Team.getTeams().get(Team.Color.SPECTATOR).addPlayer(player);
+        } else if ((etat == Game.Etat.STARTING || etat == Game.Etat.INGAME) && (!Bingo.getGame().getTeams().updatePlayerJoinInGame(player))) {
+                Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);
                 player.setGameMode(GameMode.SPECTATOR);
         }
     }
@@ -33,7 +33,7 @@ public class PlayerListener implements Listener {
     private void onPlayerQuit(PlayerQuitEvent e) {
         e.quitMessage(Component.text(String.format("§8[§c-§8]§e %s", e.getPlayer().getName())));
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
-            Team.removeTeam(e.getPlayer());
+            Bingo.getGame().getTeams().leave(e.getPlayer());
         }
     }
 
