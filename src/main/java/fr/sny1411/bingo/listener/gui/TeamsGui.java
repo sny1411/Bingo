@@ -8,6 +8,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -60,7 +61,7 @@ public class TeamsGui implements Listener {
         if (color == Team.Color.SPECTATOR) {
             listLore.add(Component.text("§8>>§7 Clique pour observer la partie !"));
         } else {
-            Iterator<Player> iteratorPlayers = team.getPlayers().iterator();
+            Iterator<OfflinePlayer> iteratorPlayers = team.getPlayers().iterator();
             for (int i = 0; i < Bingo.getGame().getSettings().getNbPlayerTeams(); i++) {
                 if (iteratorPlayers.hasNext()) {
                     listLore.add(Component.text(String.format("§7§o- %s", iteratorPlayers.next().getName())));
