@@ -25,6 +25,7 @@ public class TimerCommand implements CommandExecutor {
             return false;
         }
 
+        Timer timer = Bingo.getGame().getTimer();
         switch (args[0].toLowerCase()) {
             case "set", "add" -> {
                 int seconds = parseTime(args[1]);
@@ -32,13 +33,13 @@ public class TimerCommand implements CommandExecutor {
                     sender.sendMessage(warning(USAGE));
                     return false;
                 }
-                int elapsed = args[0].equalsIgnoreCase("set") ? seconds : Timer.getElapsedSeconds() + seconds;
-                if (elapsed < Timer.getElapsedSeconds()) {
+                int elapsed = args[0].equalsIgnoreCase("set") ? seconds : timer.getElapsedSeconds() + seconds;
+                if (elapsed < timer.getElapsedSeconds()) {
                     sender.sendMessage(warning("Le chrono ne peut pas revenir en arrière"));
                     return false;
                 }
-                Timer.setElapsedSeconds(elapsed);
-                sender.sendMessage(info("Chrono : " + formatTime(elapsed) + " / " + formatTime(Timer.getDurationSeconds())));
+                timer.setElapsedSeconds(elapsed);
+                sender.sendMessage(info("Chrono : " + formatTime(elapsed) + " / " + formatTime(timer.getDurationSeconds())));
             }
             case "speed" -> {
                 int speed = parseSpeed(args[1]);
@@ -46,7 +47,7 @@ public class TimerCommand implements CommandExecutor {
                     sender.sendMessage(warning(USAGE));
                     return false;
                 }
-                Timer.setSpeed(speed);
+                timer.setSpeed(speed);
                 sender.sendMessage(info("Vitesse du chrono : ×" + speed));
             }
             default -> sender.sendMessage(warning(USAGE));

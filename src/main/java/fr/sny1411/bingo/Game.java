@@ -8,6 +8,7 @@ import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.ScoreBoard;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
+import fr.sny1411.bingo.utils.Timer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class Game {
     }
 
     private final Settings settings;
+    private final Timer timer;
     private boolean playersDamage;
     private Etat etat;
     private final Map<Team, Score> teamsScore = new HashMap<>();
@@ -65,6 +67,7 @@ public class Game {
 
     public Game(Settings settings) {
         this.settings = settings;
+        this.timer = new Timer(this);
         this.playersDamage = false;
         this.etat = Etat.SETUP;
         setup();
@@ -123,6 +126,10 @@ public class Game {
 
     public Settings getSettings() {
         return settings;
+    }
+
+    public Timer getTimer() {
+        return timer;
     }
 
     public static Bingo getBingoInstance() {
