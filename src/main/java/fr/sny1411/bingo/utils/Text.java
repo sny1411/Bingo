@@ -3,6 +3,7 @@ package fr.sny1411.bingo.utils;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -42,6 +43,24 @@ public final class Text {
         } else {
             team.sendMessage(message);
         }
+    }
+
+    // [BINGO] before a game message
+    public static Component info(Component message) {
+        return Component.textOfChildren(
+                Component.text("[", NamedTextColor.GRAY),
+                Component.text("BINGO", NamedTextColor.YELLOW),
+                Component.text("] ", NamedTextColor.GRAY),
+                message.colorIfAbsent(NamedTextColor.WHITE));
+    }
+
+    // [⚠] before a message telling a player what went wrong
+    public static Component warning(Component message) {
+        return Component.textOfChildren(
+                Component.text("[", NamedTextColor.DARK_GRAY),
+                Component.text("⚠", NamedTextColor.RED),
+                Component.text("] ", NamedTextColor.DARK_GRAY),
+                message.colorIfAbsent(NamedTextColor.WHITE));
     }
 
     public static void broadcastMessage(String message) {

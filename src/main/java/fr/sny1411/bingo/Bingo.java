@@ -4,6 +4,7 @@ import fr.sny1411.bingo.commands.*;
 import fr.sny1411.bingo.commands.completer.BonusCompleter;
 import fr.sny1411.bingo.commands.completer.ForceValidCompleter;
 import fr.sny1411.bingo.commands.completer.TimerCompleter;
+import fr.sny1411.bingo.i18n.Translations;
 import fr.sny1411.bingo.listener.challenges.AdvancementChallengesListener;
 import fr.sny1411.bingo.listener.challenges.MobChallengesListener;
 import fr.sny1411.bingo.listener.challenges.PlayerChallengesListener;
@@ -22,8 +23,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.jar.JarFile;
+import java.util.logging.Level;
 
 public final class Bingo extends JavaPlugin {
     private static Game game;
@@ -38,6 +42,11 @@ public final class Bingo extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        try (JarFile jar = new JarFile(getFile())) {
+            Translations.load(jar, getLogger());
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Could not read the plugin jar to load the translations", e);
+        }
         Items.init();
         Game.setBingoInstance(this);
         game = new Game();
@@ -63,6 +72,11 @@ public final class Bingo extends JavaPlugin {
         pluginManager.registerEvents(new BingoGui(), this);
 
         Bukkit.getScheduler().runTaskTimer(this, Spawn::updateSettingsItems, 20L, 20L);
+    }
+
+    @Override
+    public void onDisable() {
+        Translations.unload();
     }
 
     public static Game getGame() {

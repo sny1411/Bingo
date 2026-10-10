@@ -4,7 +4,6 @@ import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitTask;
@@ -105,18 +104,14 @@ public class Timer {
     }
 
     private static Component endWarningMessage(int remainingSeconds) {
-        String remaining;
+        Component remaining;
         if (remainingSeconds >= 60) {
             int minutes = remainingSeconds / 60;
-            remaining = minutes + (minutes == 1 ? " minute restante" : " minutes restantes");
+            remaining = minutes == 1 ? Component.translatable("bingo.timer.remaining.minute") : Component.translatable("bingo.timer.remaining.minutes", Component.text(minutes));
         } else {
-            remaining = remainingSeconds + (remainingSeconds == 1 ? " seconde restante" : " secondes restantes");
+            remaining = remainingSeconds == 1 ? Component.translatable("bingo.timer.remaining.second") : Component.translatable("bingo.timer.remaining.seconds", Component.text(remainingSeconds));
         }
-        return Component.textOfChildren(
-                Component.text("[", NamedTextColor.GRAY),
-                Component.text("BINGO", NamedTextColor.YELLOW),
-                Component.text("] ", NamedTextColor.GRAY),
-                Component.text(remaining, NamedTextColor.WHITE));
+        return Text.info(remaining);
     }
 
     private void end() {
