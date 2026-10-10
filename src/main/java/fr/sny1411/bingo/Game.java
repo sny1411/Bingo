@@ -23,17 +23,7 @@ public class Game {
     public enum ModeAffichage {CHILL, COMPETITION}
 
     public enum ModeJeu {
-        CLASSIC("Classique"), DUEL("Duel"), HANDICAP("Handicap");
-
-        private final String name;
-
-        ModeJeu(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
+        CLASSIC, DUEL, HANDICAP;
 
         public Component label() {
             return Component.translatable("bingo.game_mode." + name().toLowerCase(Locale.ROOT));
@@ -41,18 +31,12 @@ public class Game {
     }
 
     public enum ModeVictoire {
-        BINGO("Bingo", "bingo"), DEFIS("Défis", "challenges");
+        BINGO("bingo"), DEFIS("challenges");
 
-        private final String name;
         private final String key;
 
-        ModeVictoire(String name, String key) {
-            this.name = name;
+        ModeVictoire(String key) {
             this.key = key;
-        }
-
-        public String getName() {
-            return name;
         }
 
         public Component label() {

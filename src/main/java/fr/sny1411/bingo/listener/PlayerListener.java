@@ -5,6 +5,7 @@ import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +20,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     private void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        e.joinMessage(Component.text(String.format("§8[§a+§8]§e %s", player.getName())));
+        e.joinMessage(connectionMessage("+", NamedTextColor.GREEN, player.getName()));
         Game.Etat etat = Bingo.getGame().getEtat();
         if (etat == Game.Etat.SETUP) {
             Spawn.teleportPlayer(player);
@@ -40,10 +41,19 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     private void onPlayerQuit(PlayerQuitEvent e) {
-        e.quitMessage(Component.text(String.format("§8[§c-§8]§e %s", e.getPlayer().getName())));
+        e.quitMessage(connectionMessage("-", NamedTextColor.RED, e.getPlayer().getName()));
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
             Bingo.getGame().getTeams().leave(e.getPlayer());
         }
+    }
+
+    // [+] Player when they join, [-] Player when they leave
+    private static Component connectionMessage(String sign, NamedTextColor color, String playerName) {
+        return Component.textOfChildren(
+                Component.text("[", NamedTextColor.DARK_GRAY),
+                Component.text(sign, color),
+                Component.text("] ", NamedTextColor.DARK_GRAY),
+                Component.text(playerName, NamedTextColor.YELLOW));
     }
 
     @EventHandler
