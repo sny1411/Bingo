@@ -10,12 +10,20 @@ version = "1.0"
 
 dependencies {
     compileOnly(libs.paper.api)
+
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks {
     withType<JavaCompile>().configureEach {
         options.release = 25
         options.encoding = "UTF-8"
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     processResources {
