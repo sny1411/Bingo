@@ -57,7 +57,7 @@ id|name|description|difficulty|icon
 - `difficulty`: `EASY`, `MEDIUM`, `HARD` or `EXTREME`
 - `icon`: a Bukkit `Material` name in uppercase (e.g. `FIRE_CHARGE`), or a lowercase key for a custom icon defined in `Challenge.createItem()` (e.g. `dolphin`)
 
-The detection of the challenge goes in `listener/ChallengesListener.java`, using its id (`ChallengeId.SUICIDE_SQUAD`).
+The detection of the challenge goes in `listener/challenges/`, using its id (`ChallengeId.SUICIDE_SQUAD`): in the listener of its theme (mobs, player, advancements, world) when an event realizes it, or in `ChallengeVerifier.verifChallenge()` when it is checked by clicking it in the grid.
 
 ## Opening a pull request
 

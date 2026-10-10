@@ -4,7 +4,10 @@ import fr.sny1411.bingo.commands.*;
 import fr.sny1411.bingo.commands.completer.BonusCompleter;
 import fr.sny1411.bingo.commands.completer.ForceValidCompleter;
 import fr.sny1411.bingo.commands.completer.TimerCompleter;
-import fr.sny1411.bingo.listener.ChallengesListener;
+import fr.sny1411.bingo.listener.challenges.AdvancementChallengesListener;
+import fr.sny1411.bingo.listener.challenges.MobChallengesListener;
+import fr.sny1411.bingo.listener.challenges.PlayerChallengesListener;
+import fr.sny1411.bingo.listener.challenges.WorldChallengesListener;
 import fr.sny1411.bingo.listener.PlayerListener;
 import fr.sny1411.bingo.listener.SetupListener;
 import fr.sny1411.bingo.listener.gui.BingoGui;
@@ -15,9 +18,11 @@ import fr.sny1411.bingo.utils.Spawn;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.Objects;
 
 public final class Bingo extends JavaPlugin {
@@ -25,7 +30,11 @@ public final class Bingo extends JavaPlugin {
     private static final PlainTextComponentSerializer plainSerializer = PlainTextComponentSerializer.plainText();
     private static final PluginManager pluginManager = Bukkit.getServer().getPluginManager();
 
-    private static final ChallengesListener challengesListener = new ChallengesListener();
+    private static final List<Listener> challengesListeners = List.of(
+            new MobChallengesListener(),
+            new PlayerChallengesListener(),
+            new AdvancementChallengesListener(),
+            new WorldChallengesListener());
 
     @Override
     public void onEnable() {
@@ -67,9 +76,13 @@ public final class Bingo extends JavaPlugin {
         return plainSerializer;
     }
     public static void setListenChallenges() {
-        pluginManager.registerEvents(challengesListener, Game.getBingoInstance());
+        for (Listener listener : challengesListeners) {
+            pluginManager.registerEvents(listener, Game.getBingoInstance());
+        }
     }
     public static void setNotListenChallenges() {
-        HandlerList.unregisterAll(challengesListener);
+        for (Listener listener : challengesListeners) {
+            HandlerList.unregisterAll(listener);
+        }
     }
 }
