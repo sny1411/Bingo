@@ -10,7 +10,9 @@ import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
 import fr.sny1411.bingo.utils.Teams;
 import fr.sny1411.bingo.utils.Timer;
+import fr.sny1411.bingo.utils.bonus.BonusEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,7 @@ public class Game {
     private final Timer timer;
     private final Teams teams;
     private final List<Challenge> challenges;
+    private final List<BonusEvent> bonusEvents = new ArrayList<>();
     private boolean playersDamage;
     private Etat etat;
     private final Map<Team, Score> teamsScore = new HashMap<>();
@@ -123,6 +126,15 @@ public class Game {
     public Challenge getChallenge(Team team, ChallengeId challengeId) {
         Grid grid = teamsGrid.get(team);
         return grid == null ? null : grid.getChallenge(challengeId);
+    }
+
+    public void initBonusEvents() {
+        bonusEvents.clear();
+        bonusEvents.addAll(BonusEvent.createEvents(settings.getDurationMinutes()));
+    }
+
+    public List<BonusEvent> getBonusEvents() {
+        return bonusEvents;
     }
 
     public void initScores() {
