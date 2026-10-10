@@ -4,12 +4,11 @@ import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -17,19 +16,7 @@ public class Timer {
     private Timer() {
         throw new IllegalStateException("Utility class");
     }
-    private static final List<Integer> END_WARNING_TIMES = new ArrayList<>(Arrays.asList(110 * 60, 115 * 60, 117 * 60, 118 * 60, 119 * 60, 119 * 60 + 30, 119 * 60 + 45, 119 * 60 + 50, 119 * 60 + 55, 119 * 60 + 57, 119 * 60 + 58, 119 * 60 + 59)); // in seconds
-    private static final List<String> END_WARNING_MESSAGES = new ArrayList<>(Arrays.asList("§7[§eBINGO§7] §f10 minutes restantes",
-            "§7[§eBINGO§7] §f5 minutes restantes",
-            "§7[§eBINGO§7] §f3 minutes restantes",
-            "§7[§eBINGO§7] §f2 minutes restantes",
-            "§7[§eBINGO§7] §f1 minute restante",
-            "§7[§eBINGO§7] §f30 secondes restantes",
-            "§7[§eBINGO§7] §f15 secondes restantes",
-            "§7[§eBINGO§7] §f10 secondes restantes",
-            "§7[§eBINGO§7] §f5 secondes restantes",
-            "§7[§eBINGO§7] §f3 secondes restantes",
-            "§7[§eBINGO§7] §f2 secondes restantes",
-            "§7[§eBINGO§7] §f1 seconde restante"));
+    private static final List<Integer> END_WARNING_TIMES = List.of(10 * 60, 5 * 60, 3 * 60, 2 * 60, 60, 30, 15, 10, 5, 3, 2, 1); // remaining seconds
 
     // Real time rather than ticks, so the game lasts its real duration even if the server lags
     private static final Stopwatch stopwatch = new Stopwatch();
@@ -48,6 +35,9 @@ public class Timer {
         stopwatch.start();
         elapsedSeconds = 0;
         nextEndWarning = 0;
+        while (nextEndWarning < END_WARNING_TIMES.size() && END_WARNING_TIMES.get(nextEndWarning) >= getDurationSeconds()) {
+            nextEndWarning++;
+        }
         stormStarted = false;
         stormTime = Random.choice(60, 105) * 60;
         Bukkit.getLogger().log(Level.INFO, String.format("Storm planned at minute %d", stormTime / 60));
@@ -63,8 +53,9 @@ public class Timer {
         elapsedSeconds = elapsed;
 
         // >= rather than ==: a lag spike can skip a second
-        while (nextEndWarning < END_WARNING_TIMES.size() && END_WARNING_TIMES.get(nextEndWarning) <= elapsed) {
-            Bukkit.broadcast(Component.text(END_WARNING_MESSAGES.get(nextEndWarning)));
+        int remaining = getDurationSeconds() - elapsed;
+        while (nextEndWarning < END_WARNING_TIMES.size() && END_WARNING_TIMES.get(nextEndWarning) >= remaining) {
+            Bukkit.broadcast(endWarningMessage(END_WARNING_TIMES.get(nextEndWarning)));
             nextEndWarning++;
         }
 
@@ -83,9 +74,28 @@ public class Timer {
             }
         }
 
-        if (elapsed >= maxHours * 3600 + maxMinutes * 60) {
+        if (remaining <= 0) {
             end();
         }
+    }
+
+    private static Component endWarningMessage(int remainingSeconds) {
+        String remaining;
+        if (remainingSeconds >= 60) {
+            int minutes = remainingSeconds / 60;
+            remaining = minutes + (minutes == 1 ? " minute restante" : " minutes restantes");
+        } else {
+            remaining = remainingSeconds + (remainingSeconds == 1 ? " seconde restante" : " secondes restantes");
+        }
+        return Component.textOfChildren(
+                Component.text("[", NamedTextColor.GRAY),
+                Component.text("BINGO", NamedTextColor.YELLOW),
+                Component.text("] ", NamedTextColor.GRAY),
+                Component.text(remaining, NamedTextColor.WHITE));
+    }
+
+    private static int getDurationSeconds() {
+        return maxHours * 3600 + maxMinutes * 60;
     }
 
     private static void end() {
