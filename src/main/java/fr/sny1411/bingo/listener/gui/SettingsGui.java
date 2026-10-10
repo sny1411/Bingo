@@ -188,41 +188,41 @@ public class SettingsGui implements Listener {
         ItemStack hard = new ItemStack(Material.STRUCTURE_VOID);
         ItemStack extreme = new ItemStack(Material.STRUCTURE_VOID);
 
-        if (Challenge.getMaxEasy() > 0) {
-            easy = new ItemStack(Material.COAL, Challenge.getMaxEasy());
+        if (Bingo.getGame().getSettings().getMaxEasy() > 0) {
+            easy = new ItemStack(Material.COAL, Bingo.getGame().getSettings().getMaxEasy());
         }
-        if (Challenge.getMaxMedium() > 0) {
-            medium = new ItemStack(Material.COPPER_INGOT, Challenge.getMaxMedium());
+        if (Bingo.getGame().getSettings().getMaxMedium() > 0) {
+            medium = new ItemStack(Material.COPPER_INGOT, Bingo.getGame().getSettings().getMaxMedium());
         }
-        if (Challenge.getMaxHard() > 0) {
-            hard = new ItemStack(Material.AMETHYST_SHARD, Challenge.getMaxHard());
+        if (Bingo.getGame().getSettings().getMaxHard() > 0) {
+            hard = new ItemStack(Material.AMETHYST_SHARD, Bingo.getGame().getSettings().getMaxHard());
         }
-        if (Challenge.getMaxExtreme() > 0) {
-            extreme = new ItemStack(Material.NETHERITE_SCRAP, Challenge.getMaxExtreme());
+        if (Bingo.getGame().getSettings().getMaxExtreme() > 0) {
+            extreme = new ItemStack(Material.NETHERITE_SCRAP, Bingo.getGame().getSettings().getMaxExtreme());
         }
 
         ItemMeta easyMeta = easy.getItemMeta();
         easyMeta.displayName(Component.text("§8Défi(s) facile(s)"));
         ArrayList<Component> easyLore = new ArrayList<>();
-        easyLore.add(Component.text("§7[ " + Challenge.getMaxEasy() + " / " + Challenge.getNbEasy() + " ]"));
+        easyLore.add(Component.text("§7[ " + Bingo.getGame().getSettings().getMaxEasy() + " / " + Bingo.getGame().getNbChallenges(Challenge.Difficult.EASY) + " ]"));
         easyMeta.lore(easyLore);
         easy.setItemMeta(easyMeta);
         ItemMeta mediumMeta = medium.getItemMeta();
         mediumMeta.displayName(Component.text("§6Défi(s) moyen(s)"));
         ArrayList<Component> mediumLore = new ArrayList<>();
-        mediumLore.add(Component.text("§7[ " + Challenge.getMaxMedium() + " / " + Challenge.getNbMedium() + " ]"));
+        mediumLore.add(Component.text("§7[ " + Bingo.getGame().getSettings().getMaxMedium() + " / " + Bingo.getGame().getNbChallenges(Challenge.Difficult.MEDIUM) + " ]"));
         mediumMeta.lore(mediumLore);
         medium.setItemMeta(mediumMeta);
         ItemMeta hardMeta = hard.getItemMeta();
         hardMeta.displayName(Component.text("§dDéfi(s) dur(s)"));
         ArrayList<Component> hardLore = new ArrayList<>();
-        hardLore.add(Component.text("§7[ " + Challenge.getMaxHard() + " / " + Challenge.getNbHard() + " ]"));
+        hardLore.add(Component.text("§7[ " + Bingo.getGame().getSettings().getMaxHard() + " / " + Bingo.getGame().getNbChallenges(Challenge.Difficult.HARD) + " ]"));
         hardMeta.lore(hardLore);
         hard.setItemMeta(hardMeta);
         ItemMeta extremeMeta = extreme.getItemMeta();
         extremeMeta.displayName(Component.text("§4Défi(s) extrême(s)"));
         ArrayList<Component> extremeLore = new ArrayList<>();
-        extremeLore.add(Component.text("§7[ " + Challenge.getMaxExtreme() + " / " + Challenge.getNbExtreme() + " ]"));
+        extremeLore.add(Component.text("§7[ " + Bingo.getGame().getSettings().getMaxExtreme() + " / " + Bingo.getGame().getNbChallenges(Challenge.Difficult.EXTREME) + " ]"));
         extremeMeta.lore(extremeLore);
         extreme.setItemMeta(extremeMeta);
 
@@ -250,8 +250,8 @@ public class SettingsGui implements Listener {
     }
 
     private static ItemStack getTotalItem() {
-        int total = Challenge.getMaxTotal();
-        boolean complete = !Challenge.verifSettingsToHigh();
+        int total = Bingo.getGame().getSettings().getMaxTotal();
+        boolean complete = !Bingo.getGame().getSettings().verifSettingsToHigh();
         ItemStack item = new ItemStack(Material.MAP, Math.max(total, 1));
         ItemMeta meta = item.getItemMeta();
         meta.itemName(Component.text("Défis dans la grille : " + total + " / " + Grid.NB_CHALLENGES, complete ? NamedTextColor.GREEN : NamedTextColor.RED));
@@ -389,48 +389,48 @@ public class SettingsGui implements Listener {
                 }
 
                 else if (cursor == 1) {
-                    if (Challenge.verifSettingsToHigh()) {
-                        Challenge.setMaxEasy(Challenge.getMaxEasy() + 1);
+                    if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
+                        Bingo.getGame().getSettings().setMaxEasy(Bingo.getGame().getSettings().getMaxEasy() + 1);
                         openGuiDifficult(player);
                     }
                 } else if (cursor == 3) {
-                    if (Challenge.verifSettingsToHigh()) {
-                        Challenge.setMaxMedium(Challenge.getMaxMedium() + 1);
+                    if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
+                        Bingo.getGame().getSettings().setMaxMedium(Bingo.getGame().getSettings().getMaxMedium() + 1);
                         openGuiDifficult(player);
                     }
                 } else if (cursor == 5) {
-                    if (Challenge.verifSettingsToHigh()) {
-                        if (Challenge.getNbHard() > Challenge.getMaxHard()) {
-                            Challenge.setMaxHard(Challenge.getMaxHard() + 1);
+                    if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
+                        if (Bingo.getGame().getNbChallenges(Challenge.Difficult.HARD) > Bingo.getGame().getSettings().getMaxHard()) {
+                            Bingo.getGame().getSettings().setMaxHard(Bingo.getGame().getSettings().getMaxHard() + 1);
                             openGuiDifficult(player);
                         }
                     }
                 } else if (cursor == 7) {
-                    if (Challenge.verifSettingsToHigh()) {
-                        if (Challenge.getNbExtreme() > Challenge.getMaxExtreme()) {
-                            Challenge.setMaxExtreme(Challenge.getMaxExtreme() + 1);
+                    if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
+                        if (Bingo.getGame().getNbChallenges(Challenge.Difficult.EXTREME) > Bingo.getGame().getSettings().getMaxExtreme()) {
+                            Bingo.getGame().getSettings().setMaxExtreme(Bingo.getGame().getSettings().getMaxExtreme() + 1);
                             openGuiDifficult(player);
                         }
 
                     }
                 } else if (cursor == 19) {
-                    if (Challenge.getMaxEasy() > 0) {
-                        Challenge.setMaxEasy(Challenge.getMaxEasy() - 1);
+                    if (Bingo.getGame().getSettings().getMaxEasy() > 0) {
+                        Bingo.getGame().getSettings().setMaxEasy(Bingo.getGame().getSettings().getMaxEasy() - 1);
                         openGuiDifficult(player);
                     }
                 } else if (cursor == 21) {
-                    if (Challenge.getMaxMedium() > 0) {
-                        Challenge.setMaxMedium(Challenge.getMaxMedium() - 1);
+                    if (Bingo.getGame().getSettings().getMaxMedium() > 0) {
+                        Bingo.getGame().getSettings().setMaxMedium(Bingo.getGame().getSettings().getMaxMedium() - 1);
                         openGuiDifficult(player);
                     }
                 } else if (cursor == 23) {
-                    if (Challenge.getMaxHard() > 0) {
-                        Challenge.setMaxHard(Challenge.getMaxHard() - 1);
+                    if (Bingo.getGame().getSettings().getMaxHard() > 0) {
+                        Bingo.getGame().getSettings().setMaxHard(Bingo.getGame().getSettings().getMaxHard() - 1);
                         openGuiDifficult(player);
                     }
                 } else if (cursor == 25) {
-                    if (Challenge.getMaxExtreme() > 0) {
-                        Challenge.setMaxExtreme(Challenge.getMaxExtreme() - 1);
+                    if (Bingo.getGame().getSettings().getMaxExtreme() > 0) {
+                        Bingo.getGame().getSettings().setMaxExtreme(Bingo.getGame().getSettings().getMaxExtreme() - 1);
                         openGuiDifficult(player);
                     }
                 }
@@ -513,15 +513,8 @@ public class SettingsGui implements Listener {
 
     private void setChallengePreset(Player player) {
         resetColorTab();
-        if (Bingo.getGame().getSettings().getNbPlayerTeams() == 1) {
-            Challenge.presetOnePlayer();
-        } else if (Bingo.getGame().getSettings().getNbPlayerTeams() == 2) {
-            Challenge.presetTwoPlayers();
-        } else if (Bingo.getGame().getSettings().getNbPlayerTeams() == 3) {
-            Challenge.presetThreePlayers();
-        } else if (Bingo.getGame().getSettings().getNbPlayerTeams() == 4) {
-            Challenge.presetFourPlayers();
-        }
+        Settings settings = Bingo.getGame().getSettings();
+        settings.setChallengePreset(settings.getNbPlayerTeams());
         openGuiTeams(player);
     }
 

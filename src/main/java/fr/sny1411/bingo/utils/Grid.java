@@ -1,5 +1,7 @@
 package fr.sny1411.bingo.utils;
 
+import fr.sny1411.bingo.Settings;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,9 +11,9 @@ public class Grid {
 
     private Challenge[][] grid;
 
-    private Grid() {
+    private Grid(List<Challenge> challenges, Settings settings) {
         grid = new Challenge[5][5];
-        fillGrid();
+        fillGrid(challenges, settings);
     }
 
     private Grid(Grid grid) {
@@ -25,7 +27,7 @@ public class Grid {
         this.grid = gridCopy;
     }
 
-    private List<Challenge> getChallenges() {
+    private static List<Challenge> pickChallenges(List<Challenge> allChallenges, Settings settings) {
         List<Challenge> challenges = new ArrayList<>();
         int i = 0;
         int nbEasy = 0;
@@ -33,28 +35,28 @@ public class Grid {
         int nbHard = 0;
         int nbExtreme = 0;
         while (challenges.size() != NB_CHALLENGES) {
-            Challenge challenge = Challenge.getChallenges().get(i);
+            Challenge challenge = allChallenges.get(i);
             switch (challenge.getDifficult()) {
                 case EASY:
-                    if (nbEasy < Challenge.getMaxEasy()) {
+                    if (nbEasy < settings.getMaxEasy()) {
                         nbEasy++;
                         challenges.add(challenge);
                     }
                     break;
                 case MEDIUM:
-                    if (nbMedium < Challenge.getMaxMedium()) {
+                    if (nbMedium < settings.getMaxMedium()) {
                         nbMedium++;
                         challenges.add(challenge);
                     }
                     break;
                 case HARD:
-                    if (nbHard < Challenge.getMaxHard()) {
+                    if (nbHard < settings.getMaxHard()) {
                         nbHard++;
                         challenges.add(challenge);
                     }
                     break;
                 case EXTREME:
-                    if (nbExtreme < Challenge.getMaxExtreme()) {
+                    if (nbExtreme < settings.getMaxExtreme()) {
                         nbExtreme++;
                         challenges.add(challenge);
                     }
@@ -65,8 +67,8 @@ public class Grid {
         return challenges;
     }
 
-    private void fillGrid() {
-        List<Challenge> challenges = getChallenges();
+    private void fillGrid(List<Challenge> allChallenges, Settings settings) {
+        List<Challenge> challenges = pickChallenges(allChallenges, settings);
         Collections.shuffle(challenges);
         int i = 0;
         for (int x = 0; x < 5; x++) {
@@ -77,8 +79,8 @@ public class Grid {
         }
     }
 
-    public static Grid random() {
-        return new Grid();
+    public static Grid random(List<Challenge> challenges, Settings settings) {
+        return new Grid(challenges, settings);
     }
 
     public Grid copy() {

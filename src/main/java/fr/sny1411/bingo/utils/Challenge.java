@@ -47,113 +47,8 @@ public class Challenge {
         }
     }
 
-    // Static
-
-    private static int maxEasy;
-    private static int maxMedium;
-    private static int maxHard;
-    private static int maxExtreme;
-    private static int nbEasy = 0;
-    private static int nbMedium = 0;
-    private static int nbHard = 0;
-    private static int nbExtreme = 0;
-
-    private static final List<Challenge> challenges = new ArrayList<>();
-
-    public static List<Challenge> getChallenges() {
-        return challenges;
-    }
-
-    public static int getNbEasy() {
-        return nbEasy;
-    }
-
-    public static int getNbMedium() {
-        return nbMedium;
-    }
-
-    public static int getNbHard() {
-        return nbHard;
-    }
-
-    public static int getNbExtreme() {
-        return nbExtreme;
-    }
-
-    public static int getMaxEasy() {
-        return maxEasy;
-    }
-
-    public static void setMaxEasy(int maxEasy) {
-        Challenge.maxEasy = maxEasy;
-    }
-
-    public static int getMaxMedium() {
-        return maxMedium;
-    }
-
-    public static void setMaxMedium(int maxMedium) {
-        Challenge.maxMedium = maxMedium;
-    }
-
-    public static int getMaxHard() {
-        return maxHard;
-    }
-
-    public static void setMaxHard(int maxHard) {
-        Challenge.maxHard = maxHard;
-    }
-
-    public static int getMaxExtreme() {
-        return maxExtreme;
-    }
-
-    public static void setMaxExtreme(int maxExtreme) {
-        Challenge.maxExtreme = maxExtreme;
-    }
-
-    private static void setPreset(int maxEasy, int maxMedium, int maxHard, int maxExtreme) {
-        setMaxEasy(maxEasy);
-        setMaxMedium(maxMedium);
-        setMaxHard(maxHard);
-        setMaxExtreme(maxExtreme);
-    }
-
-    public static void presetOnePlayer() {
-        setPreset(13, 8, 4, 0);
-    }
-
-    public static void presetTwoPlayers() {
-        setPreset(10, 10, 5, 0);
-    }
-
-    public static void presetThreePlayers() {
-        setPreset(6, 13, 6, 0);
-    }
-
-    public static void presetFourPlayers() {
-        setPreset(2, 10, 12, 1);
-    }
-
-    public static void init() {
-        presetThreePlayers();
-        createChallenges();
-    }
-
-    public static int getMaxTotal() {
-        return maxEasy + maxMedium + maxHard + maxExtreme;
-    }
-
-    public static boolean verifSettingsToHigh() {
-        return getMaxTotal() < Grid.NB_CHALLENGES;
-    }
-
-    private static void createChallenges() {
-        challenges.clear();
-        nbEasy = 0;
-        nbMedium = 0;
-        nbHard = 0;
-        nbExtreme = 0;
+    public static List<Challenge> loadChallenges() {
+        List<Challenge> challenges = new ArrayList<>();
         try {
             URL resourceURL = Game.getBingoInstance().getClass().getResource("/challenges.csv");
             assert resourceURL != null;
@@ -183,7 +78,7 @@ public class Challenge {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        return challenges;
     }
 
     private static ItemStack createItem(ChallengeId id, String name, String description, String type, String difficult) {
@@ -307,24 +202,7 @@ public class Challenge {
         this.realized = false;
         this.validated = false;
 
-        switch (Difficult.valueOf(difficult)) {
-            case EASY:
-                nbEasy++;
-                this.difficult = Difficult.EASY;
-                break;
-            case MEDIUM:
-                nbMedium++;
-                this.difficult = Difficult.MEDIUM;
-                break;
-            case HARD:
-                nbHard++;
-                this.difficult = Difficult.HARD;
-                break;
-            case EXTREME:
-                nbExtreme++;
-                this.difficult = Difficult.EXTREME;
-                break;
-        }
+        this.difficult = Difficult.valueOf(difficult);
     }
 
     public Challenge(ChallengeId id, Difficult difficult, String name, ItemStack item) {
