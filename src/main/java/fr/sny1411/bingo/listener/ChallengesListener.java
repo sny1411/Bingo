@@ -73,13 +73,16 @@ public class ChallengesListener implements Listener {
     }
 
     public static void valideAndRealizeChallenge(Player player, ChallengeId challengeId) {
-        Challenge challenge = Grid.getChallenge(Team.getTeam(player), challengeId);
+        valideAndRealizeChallenge(Team.getTeam(player), challengeId);
+    }
+
+    public static void valideAndRealizeChallenge(Team team, ChallengeId challengeId) {
+        Challenge challenge = Grid.getChallenge(team, challengeId);
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
             challenge.setRealized(true);
-            Team teamPlayer = Team.getTeam(player);
-            Text.validMessage(teamPlayer, challenge.getName());
-            Score.getTeamsScore().get(teamPlayer).addChallenge(challenge);
+            Text.validMessage(team, challenge.getName());
+            Score.getTeamsScore().get(team).addChallenge(challenge);
         }
     }
 

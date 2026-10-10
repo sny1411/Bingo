@@ -91,10 +91,33 @@ public class Score {
                 break;
         }
         nbChallenges++;
-        Challenge[][] challenges = Grid.getTeamsGrid().get(team).getGrid();
-        nbBingo = bingoY(challenges) + bingoX(challenges) + bingoDiag(challenges);
+        updateNbBingo();
 
         testGameFinish();
+    }
+
+    public void removeChallenge(Challenge challenge) {
+        switch (challenge.getDifficult()) {
+            case EASY:
+                nbEasy--;
+                break;
+            case MEDIUM:
+                nbMedium--;
+                break;
+            case HARD:
+                nbHard--;
+                break;
+            case EXTREME:
+                nbExtreme--;
+                break;
+        }
+        nbChallenges--;
+        updateNbBingo();
+    }
+
+    private void updateNbBingo() {
+        Challenge[][] challenges = Grid.getTeamsGrid().get(team).getGrid();
+        nbBingo = bingoY(challenges) + bingoX(challenges) + bingoDiag(challenges);
     }
 
     private int bingoY(Challenge[][] grid) {
