@@ -6,7 +6,6 @@ import fr.sny1411.bingo.listener.ChallengesListener;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.ChallengeId;
 import fr.sny1411.bingo.utils.Grid;
-import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -58,7 +57,7 @@ public class ForceValid implements CommandExecutor {
             } else {
                 challenge.setValidated(false);
                 challenge.setRealized(false);
-                Score.getTeamsScore().get(team).removeChallenge(challenge);
+                Bingo.getGame().getTeamsScore().get(team).removeChallenge(challenge);
                 sender.sendMessage(Component.text("Le défi " + challenge.getName() + " n'est plus validé pour l'équipe " + team.getColor().getNom(), NamedTextColor.WHITE));
             }
         }
@@ -66,7 +65,7 @@ public class ForceValid implements CommandExecutor {
     }
 
     private static Team getTeamInGame(String name) {
-        for (Team team : Score.getTeamsScore().keySet()) {
+        for (Team team : Bingo.getGame().getTeamsScore().keySet()) {
             if (team.getColor().name().equalsIgnoreCase(name)) {
                 return team;
             }

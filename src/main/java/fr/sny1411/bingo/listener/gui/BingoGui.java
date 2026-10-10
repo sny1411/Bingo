@@ -91,7 +91,7 @@ public class BingoGui implements Listener {
                 }
                 ArrayList<Component> loreTeams = new ArrayList<>();
                 if (Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL) {
-                    loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f" + Score.getTeamsScore().get(team).getNbChallenges()));
+                    loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f" + Bingo.getGame().getTeamsScore().get(team).getNbChallenges()));
                 } else {
                     loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f§k!!"));
                 }
