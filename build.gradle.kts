@@ -33,6 +33,8 @@ tasks {
 
         // Spigot ignores --online-mode, so the test server settings are written to server.properties.
         val serverProperties = runDirectory.file("server.properties")
+        val bukkitYml = runDirectory.file("bukkit.yml")
+        val paperGlobalYml = runDirectory.file("config/paper-global.yml")
         val port = providers.gradleProperty("testServerPort")
         doFirst {
             val file = serverProperties.get().asFile
@@ -43,8 +45,23 @@ tasks {
             properties["online-mode"] = "false"
             properties["server-ip"] = "127.0.0.1"
             properties["server-port"] = port.get()
+            // The server settings recommended in the README
+            properties["spawn-protection"] = "0"
+            properties["gamemode"] = "survival"
+            properties["force-gamemode"] = "false"
+            properties["generate-structures"] = "true"
             file.parentFile.mkdirs()
             file.writer().use { properties.store(it, null) }
+
+            // These files are created on the first start, with the Nether and the End enabled
+            setYamlValue(bukkitYml.get().asFile, "allow-end", "true")
+            setYamlValue(paperGlobalYml.get().asFile, "enable-nether", "true")
         }
+    }
+}
+
+fun setYamlValue(file: File, key: String, value: String) {
+    if (file.exists()) {
+        file.writeText(file.readText().replace(Regex("(?m)^(\\s*$key:).*$"), "$1 $value"))
     }
 }
