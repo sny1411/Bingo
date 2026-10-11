@@ -35,9 +35,7 @@ public class Timer {
         stopwatch.start();
         elapsedSeconds = 0;
         nextEndWarning = 0;
-        while (nextEndWarning < END_WARNING_TIMES.size() && END_WARNING_TIMES.get(nextEndWarning) >= getDurationSeconds()) {
-            nextEndWarning++;
-        }
+        skipEndWarnings(getDurationSeconds() - 1);
         stormStarted = false;
         stormTime = Random.choice(60, 105) * 60;
         Bukkit.getLogger().log(Level.INFO, String.format("Storm planned at minute %d", stormTime / 60));
@@ -79,6 +77,33 @@ public class Timer {
         }
     }
 
+    private static void skipEndWarnings(int remainingSeconds) {
+        while (nextEndWarning < END_WARNING_TIMES.size() && END_WARNING_TIMES.get(nextEndWarning) > remainingSeconds) {
+            nextEndWarning++;
+        }
+    }
+
+    public static void setElapsedSeconds(int seconds) {
+        stopwatch.setElapsedSeconds(seconds);
+        skipEndWarnings(getDurationSeconds() - seconds);
+    }
+
+    public static int getElapsedSeconds() {
+        return elapsedSeconds;
+    }
+
+    public static int getSpeed() {
+        return stopwatch.getSpeed();
+    }
+
+    public static void setSpeed(int speed) {
+        stopwatch.setSpeed(speed);
+    }
+
+    public static int getDurationSeconds() {
+        return maxHours * 3600 + maxMinutes * 60;
+    }
+
     private static Component endWarningMessage(int remainingSeconds) {
         String remaining;
         if (remainingSeconds >= 60) {
@@ -92,10 +117,6 @@ public class Timer {
                 Component.text("BINGO", NamedTextColor.YELLOW),
                 Component.text("] ", NamedTextColor.GRAY),
                 Component.text(remaining, NamedTextColor.WHITE));
-    }
-
-    private static int getDurationSeconds() {
-        return maxHours * 3600 + maxMinutes * 60;
     }
 
     private static void end() {
