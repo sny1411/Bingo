@@ -43,28 +43,40 @@ public class BonusEvent {
     }
 
     private void setChallenge() {
-        boolean find = false;
-        int x = -1;
-        int y = -1;
-        int nbTest = 0;
-        while (!find && nbTest < 25) {
-            x = Random.choice(0,4);
-            y = Random.choice(0,4);
-
-            boolean canAdd = false;
-            for (Grid grid : Bingo.getGame().getTeamsGrid().values()) {
-                Challenge challengeChoice = grid.getGrid()[x][y];
-                if (Boolean.TRUE.equals(challengeChoice.getRealized()) && challengeChoice.getDifficult() == Challenge.Difficult.EXTREME) {
-                    canAdd = true;
-                    break;
+        Challenge[][] gameGrid = Bingo.getGame().getGameGrid().getGrid();
+        List<Challenge> candidates = new ArrayList<>();
+        for (int x = 0; x < gameGrid.length; x++) {
+            for (int y = 0; y < gameGrid[x].length; y++) {
+                if (!isRealizedExtreme(x, y) && !isRunningBonus(gameGrid[x][y])) {
+                    candidates.add(gameGrid[x][y]);
                 }
             }
-            if (!canAdd) {
-                find = true;
-            }
-            nbTest++;
         }
-        this.challenge = Bingo.getGame().getGameGrid().getGrid()[x][y];
+        if (candidates.isEmpty()) {
+            for (Challenge[] row : gameGrid) {
+                candidates.addAll(List.of(row));
+            }
+        }
+        this.challenge = candidates.get(Random.choice(0, candidates.size() - 1));
+    }
+
+    private static boolean isRealizedExtreme(int x, int y) {
+        for (Grid grid : Bingo.getGame().getTeamsGrid().values()) {
+            Challenge challenge = grid.getGrid()[x][y];
+            if (Boolean.TRUE.equals(challenge.getRealized()) && challenge.getDifficult() == Challenge.Difficult.EXTREME) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isRunningBonus(Challenge challenge) {
+        for (BonusEvent event : Bingo.getGame().getBonusEvents()) {
+            if (event != this && event.isEnable() && event.getChallenge().getId() == challenge.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Challenge getChallenge() {
