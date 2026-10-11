@@ -59,12 +59,18 @@ public class Teams {
         return null;
     }
 
-    public void join(Player player, Team.Color color) {
+    // Returns false when the team is full
+    public boolean join(Player player, Team.Color color) {
         Team team = teams.get(color);
-        if (color == Team.Color.SPECTATOR || team.getPlayers().size() != settings.getNbPlayerTeams()) {
-            leave(player);
-            team.addPlayer(player);
+        if (team.getPlayers().contains(player)) {
+            return true;
         }
+        if (color != Team.Color.SPECTATOR && team.getPlayers().size() == settings.getNbPlayerTeams()) {
+            return false;
+        }
+        leave(player);
+        team.addPlayer(player);
+        return true;
     }
 
     public void leave(Player player) {
