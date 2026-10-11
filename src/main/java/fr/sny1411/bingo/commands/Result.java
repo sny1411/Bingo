@@ -19,8 +19,8 @@ public class Result implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (Bingo.getGame().getEtat() == Game.Etat.ENDGAME) {
-            List<Score> classementPts = new ArrayList<>(Score.getTeamsScore().values());
-            List<Score> classementBingo = new ArrayList<>(Score.getTeamsScore().values());
+            List<Score> classementPts = new ArrayList<>(Bingo.getGame().getTeamsScore().values());
+            List<Score> classementBingo = new ArrayList<>(Bingo.getGame().getTeamsScore().values());
 
             sortClassementPts(classementPts);
             sortClassementBingo(classementBingo);

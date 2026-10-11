@@ -2,9 +2,13 @@ package fr.sny1411.bingo;
 
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Environment;
+import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.ScoreBoard;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Game {
     public enum ModeAffichage {CHILL, COMPETITION}
@@ -53,6 +57,7 @@ public class Game {
     private ModeJeu modeJeu;
     private ModeVictoire modeVictoire;
     private Etat etat;
+    private final Map<Team, Score> teamsScore = new HashMap<>();
     private static Bingo bingoInstance;
 
     private Game(boolean defiBonus, boolean playersDamage, ModeAffichage modeAffichage, ModeJeu modeJeu, ModeVictoire modeVictoire, Etat etat) {
@@ -85,6 +90,19 @@ public class Game {
         Environment.setGamerulesSetup();
         Spawn.teleportPlayers();
         Environment.clearPlayers();
+    }
+
+    public void initScores() {
+        teamsScore.clear();
+        for (Team team : Team.getTeams().values()) {
+            if (team.getColor() != Team.Color.SPECTATOR) {
+                teamsScore.put(team, new Score(team));
+            }
+        }
+    }
+
+    public Map<Team, Score> getTeamsScore() {
+        return teamsScore;
     }
 
     public static Bingo getBingoInstance() {

@@ -60,7 +60,7 @@ public class ChallengesListener implements Listener {
             challenge.setValidated(true);
             Team teamPlayer = Team.getTeam(player);
             Text.validMessage(teamPlayer, challenge.getName());
-            Score.getTeamsScore().get(teamPlayer).addChallenge(challenge);
+            Bingo.getGame().getTeamsScore().get(teamPlayer).addChallenge(challenge);
         }
     }
 
@@ -82,7 +82,7 @@ public class ChallengesListener implements Listener {
             challenge.setValidated(true);
             challenge.setRealized(true);
             Text.validMessage(team, challenge.getName());
-            Score.getTeamsScore().get(team).addChallenge(challenge);
+            Bingo.getGame().getTeamsScore().get(team).addChallenge(challenge);
         }
     }
 

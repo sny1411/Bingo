@@ -50,7 +50,7 @@ public class Start implements CommandExecutor {
 
         Timer.start(bingo);
         ScoreBoard.createScoreBoard(bingo);
-        Score.init();
+        game.initScores();
 
         for (Player player : Team.getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
             if (player.isOnline()) {

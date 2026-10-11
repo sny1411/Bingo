@@ -3,23 +3,7 @@ package fr.sny1411.bingo.utils;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 
-import java.util.HashMap;
-
 public class Score {
-    private static final HashMap<Team, Score> teamsScore = new HashMap<>();
-
-    public static void init() {
-        teamsScore.clear();
-        for (Team team : Team.getTeams().values()) {
-            if (team.getColor() != Team.Color.SPECTATOR) {
-                teamsScore.put(team, new Score(team));
-            }
-        }
-    }
-
-    public static HashMap<Team, Score> getTeamsScore() {
-        return teamsScore;
-    }
     private final Team team;
 
     private int nbEasy;
