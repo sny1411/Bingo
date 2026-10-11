@@ -2,13 +2,18 @@ package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.i18n.Translations;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public final class ScoreBoard {
@@ -25,62 +30,50 @@ public final class ScoreBoard {
                 Scoreboard board = manager.getNewScoreboard();
                 Objective objective = board.registerNewObjective("scoreBoardInfo", Criteria.DUMMY, Component.text("\uE005"));
                 objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-                Score score4 = objective.getScore("§6§l»§f§l§m                   ");
-                score4.setScore(8);
-                Score score5 = objective.getScore("  ");
-                score5.setScore(7);
-                Score score = objective.getScore("  Equipes §7: §e" + Bingo.getGame().getSettings().getNbTeams());
-                score.setScore(6);
-                if (Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).getColor() != Team.Color.SPECTATOR) {
-                    Score score1;
-                    if (Bingo.getGame().getModeVictoire() == Game.ModeVictoire.BINGO) {
-                        score1 = objective.getScore("  Bingos §7: §e" + Bingo.getGame().getTeamsScore().get(Bingo.getGame().getTeams().getTeam(player)).getNbBingo());
-                    } else {
-                        score1 = objective.getScore("  Défis §7: §e" + Bingo.getGame().getTeamsScore().get(Bingo.getGame().getTeams().getTeam(player)).getNbChallenges());
-                    }
-                    score1.setScore(5);
+                List<Component> lines = lines(player);
+                for (int i = 0; i < lines.size(); i++) {
+                    // Each line is an entry named after its position, and shows its text in the player's language
+                    Score line = objective.getScore("line" + i);
+                    line.customName(Translations.render(lines.get(i), player));
+                    line.setScore(lines.size() - 1 - i);
                 }
-                Score score2 = objective.getScore("  Mode §7: §e" + Bingo.getGame().getModeJeu().getName());
-                score2.setScore(4);
-                Score score6 = objective.getScore("   ");
-                score6.setScore(3);
-                String temps = "";
-                int seconds = Bingo.getGame().getTimer().getSeconds();
-                int minutes = Bingo.getGame().getTimer().getMinutes();
-                if (Bingo.getGame().getTimer().getHours() == 0) {
-                    if (minutes < 10) {
-                        temps += ("0" + minutes);
-                    } else {
-                        temps += (minutes);
-                    }
-                    if (seconds < 10) {
-                        temps += (":0" + seconds);
-                    } else {
-                        temps += (":" + seconds);
-                    }
-                    Score score3 = objective.getScore("  Durée §7: §e" + temps);
-                    score3.setScore(2);
-                } else {
-                    if (minutes < 10) {
-                        temps += (":0" + minutes);
-                    } else {
-                        temps += (":" + minutes);
-                    }
-                    if (seconds < 10) {
-                        temps += (":0" + seconds);
-                    } else {
-                        temps += (":" + seconds);
-                    }
-                    Score score3 = objective.getScore("  Durée §7: §e0" + Bingo.getGame().getTimer().getHours() + temps);
-                    score3.setScore(2);
-                }
-                Score score7 = objective.getScore(" ");
-                score7.setScore(1);
-                Score score8 = objective.getScore("§6§l»§f§l§m                   ");
-                score8.setScore(0);
                 player.setScoreboard(board);
             }
         }, 0L, 20L);
+    }
+
+    private static List<Component> lines(Player player) {
+        Game game = Bingo.getGame();
+        Component separator = Component.textOfChildren(
+                Component.text("»", NamedTextColor.GOLD, TextDecoration.BOLD),
+                Component.text("                   ", NamedTextColor.WHITE, TextDecoration.BOLD, TextDecoration.STRIKETHROUGH));
+        List<Component> lines = new ArrayList<>();
+        lines.add(separator);
+        lines.add(Component.empty());
+        lines.add(line("bingo.scoreboard.teams", Component.text(game.getSettings().getNbTeams())));
+        Team team = Objects.requireNonNull(game.getTeams().getTeam(player));
+        if (team.getColor() != Team.Color.SPECTATOR) {
+            fr.sny1411.bingo.utils.Score score = game.getTeamsScore().get(team);
+            if (game.getModeVictoire() == Game.ModeVictoire.BINGO) {
+                lines.add(line("bingo.scoreboard.bingos", Component.text(score.getNbBingo())));
+            } else {
+                lines.add(line("bingo.scoreboard.challenges", Component.text(score.getNbChallenges())));
+            }
+        }
+        lines.add(line("bingo.scoreboard.mode", game.getModeJeu().label()));
+        lines.add(Component.empty());
+        Timer timer = game.getTimer();
+        String duration = timer.getHours() == 0
+                ? String.format("%02d:%02d", timer.getMinutes(), timer.getSeconds())
+                : String.format("%02d:%02d:%02d", timer.getHours(), timer.getMinutes(), timer.getSeconds());
+        lines.add(line("bingo.scoreboard.duration", Component.text(duration)));
+        lines.add(Component.empty());
+        lines.add(separator);
+        return lines;
+    }
+
+    private static Component line(String key, Component value) {
+        return Component.text("  ").append(Component.translatable(key, value.color(NamedTextColor.YELLOW)));
     }
 
     public static void stop() {

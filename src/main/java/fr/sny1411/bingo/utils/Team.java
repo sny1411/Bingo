@@ -2,6 +2,7 @@ package fr.sny1411.bingo.utils;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -49,6 +50,14 @@ public class Team {
 
         public Component displayName() {
             return Component.translatable("bingo.team." + key, textColor);
+        }
+
+        // The name of a player of this team, in the tab list
+        public Component playerName(String playerName) {
+            if (this == SPECTATOR) {
+                return Component.textOfChildren(Component.text("[SPEC] ", NamedTextColor.DARK_GRAY), Component.text(playerName, textColor, TextDecoration.ITALIC));
+            }
+            return Component.text(playerName, textColor);
         }
 
         public Material getMaterialTeamGui() {

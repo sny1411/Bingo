@@ -86,7 +86,7 @@ public class TeamsGui implements Listener {
             }
             if (Bingo.getGame().getTeams().join(player, color)) {
                 updateGui();
-                player.playerListName(Component.text(color.getPrefixe() + player.getName()));
+                player.playerListName(color.playerName(player.getName()));
             } else {
                 player.sendMessage(Text.warning(Component.translatable("bingo.gui.teams.full")));
             }
