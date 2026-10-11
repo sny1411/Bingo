@@ -67,7 +67,7 @@ public class Timer {
         }
 
         for (BonusEvent event : game.getBonusEvents()) {
-            if (!event.isEnable() && event.getTimeLaunch() * 60 <= elapsed) {
+            if (!event.isLaunched() && event.getTimeLaunch() * 60 <= elapsed) {
                 event.setEnable(true);
             }
         }

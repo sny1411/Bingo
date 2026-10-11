@@ -30,6 +30,7 @@ public class BonusEvent {
     private Challenge challenge;
     private final int timeLaunch;
     private boolean enable;
+    private boolean launched;
 
     private BonusEvent(Challenge challenge, int timeLaunch) {
         this.challenge = challenge;
@@ -78,9 +79,14 @@ public class BonusEvent {
         return enable;
     }
 
+    public boolean isLaunched() {
+        return launched;
+    }
+
     public void setEnable(boolean enable) {
         this.enable = enable;
         if (enable) {
+            launched = true;
             setChallenge();
             annonceLancement();
         }
