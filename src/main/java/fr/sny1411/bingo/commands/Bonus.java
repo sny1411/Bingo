@@ -2,7 +2,7 @@ package fr.sny1411.bingo.commands;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
-import fr.sny1411.bingo.listener.ChallengesListener;
+import fr.sny1411.bingo.listener.challenges.ChallengeVerifier;
 import fr.sny1411.bingo.utils.ChallengeId;
 import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import fr.sny1411.bingo.utils.bonus.RewardsBonusEvent;
@@ -19,7 +19,7 @@ public class Bonus implements CommandExecutor {
             Player player = (Player) sender;
             ChallengeId challengeId = ChallengeId.fromString(args[0]);
             if (isEnabledBonus(challengeId) &&
-                    (ChallengesListener.verifChallenge(player, challengeId))) {
+                    (ChallengeVerifier.verifChallenge(player, challengeId))) {
                 BonusEvent bonusEvent = findBonus(challengeId);
                 assert bonusEvent != null;
                 RewardsBonusEvent.setBonus(bonusEvent.getChallenge(), player);

@@ -2,7 +2,7 @@ package fr.sny1411.bingo.commands;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
-import fr.sny1411.bingo.listener.ChallengesListener;
+import fr.sny1411.bingo.listener.challenges.ChallengeProgress;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.ChallengeId;
 import fr.sny1411.bingo.utils.Team;
@@ -48,7 +48,7 @@ public class ForceValid implements CommandExecutor {
             if (challenge.getValidated()) {
                 sender.sendMessage(warning("Le défi " + challenge.getName() + " est déjà validé"));
             } else {
-                ChallengesListener.valideAndRealizeChallenge(team, challengeId);
+                ChallengeProgress.valideAndRealizeChallenge(team, challengeId);
             }
         } else {
             if (!challenge.getValidated()) {

@@ -2,7 +2,7 @@ package fr.sny1411.bingo.listener.gui;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
-import fr.sny1411.bingo.listener.ChallengesListener;
+import fr.sny1411.bingo.listener.challenges.ChallengeVerifier;
 import fr.sny1411.bingo.utils.*;
 import fr.sny1411.bingo.utils.items.collections.Concrete;
 import net.kyori.adventure.text.Component;
@@ -143,7 +143,7 @@ public class BingoGui implements Listener {
             } else {
                 ChallengeId challengeId = Challenge.getId(e.getCurrentItem());
                 if (challengeId != null) {
-                    ChallengesListener.verifChallenge(player, challengeId);
+                    ChallengeVerifier.verifChallenge(player, challengeId);
                 }
             }
            updateGui();
