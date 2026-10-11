@@ -22,6 +22,8 @@ Start a local test server with the plugin:
 ```
 The server lives in `run/` (ignored by git) and listens on `localhost:25566`, in offline mode. Starting it means you accept the [Minecraft EULA](https://aka.ms/MinecraftEULA). Type server commands (`op <name>`, `stop`…) directly in the terminal.
 
+Each start applies the server settings recommended in the [README](README.md#usage-and-commands), even if you changed them by hand. Structures only appear in newly generated chunks: if your test world was created without them, delete `run/world*` to generate a new one. If you change these recommendations, update both the README and the `runServer` task in `build.gradle.kts`.
+
 To test what depends on the game time (end-of-game warnings, storm, bonus challenges, end of the game) without waiting, use `/timer` during a game: `/timer set 1:59:50` jumps to 10 seconds before the end of a 2-hour game, `/timer add 10:00` moves forward by 10 minutes, and `/timer speed 60` makes one second last a minute (`/timer speed 1` to go back to real time). What was planned in the skipped time happens once, and the skipped end-of-game warnings are not shown.
 
 Then start test clients, in another terminal:
