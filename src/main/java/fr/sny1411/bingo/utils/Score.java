@@ -91,10 +91,33 @@ public class Score {
                 break;
         }
         nbChallenges++;
-        Challenge[][] challenges = Grid.getTeamsGrid().get(team).getGrid();
-        nbBingo = bingoY(challenges) + bingoX(challenges) + bingoDiag(challenges);
+        updateNbBingo();
 
         testGameFinish();
+    }
+
+    public void removeChallenge(Challenge challenge) {
+        switch (challenge.getDifficult()) {
+            case EASY:
+                nbEasy--;
+                break;
+            case MEDIUM:
+                nbMedium--;
+                break;
+            case HARD:
+                nbHard--;
+                break;
+            case EXTREME:
+                nbExtreme--;
+                break;
+        }
+        nbChallenges--;
+        updateNbBingo();
+    }
+
+    private void updateNbBingo() {
+        Challenge[][] challenges = Grid.getTeamsGrid().get(team).getGrid();
+        nbBingo = bingoY(challenges) + bingoX(challenges) + bingoDiag(challenges);
     }
 
     private int bingoY(Challenge[][] grid) {
@@ -162,7 +185,7 @@ public class Score {
 
     private void testGameFinish() {
         Game game = Bingo.getGame();
-        if (((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
+        if (game.getEtat() == Game.Etat.INGAME && ((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
                 (game.getModeVictoire() == Game.ModeVictoire.DEFIS && nbChallenges == 25)) && !team.isGameFinish()) {
             team.setGameFinish(true);
             Text.broadcastMessage("§7[§eBINGO§7] §fL'équipe " + team.getColor().getPrefixe() + team.getColor().getNom() + " §fa fini sa partie");
