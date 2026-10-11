@@ -1,5 +1,6 @@
 package fr.sny1411.bingo.utils.bonus;
 
+import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Random;
@@ -62,7 +63,7 @@ public class BonusEvent {
             y = Random.choice(0,4);
 
             boolean canAdd = false;
-            for (Grid grid : Grid.getTeamsGrid().values()) {
+            for (Grid grid : Bingo.getGame().getTeamsGrid().values()) {
                 Challenge challengeChoice = grid.getGrid()[x][y];
                 if (Boolean.TRUE.equals(challengeChoice.getRealized()) && challengeChoice.getDifficult() == Challenge.Difficult.EXTREME) {
                     canAdd = true;
@@ -74,7 +75,7 @@ public class BonusEvent {
             }
             nbTest++;
         }
-        this.challenge = Grid.getGameGrid().getGrid()[x][y];
+        this.challenge = Bingo.getGame().getGameGrid().getGrid()[x][y];
     }
 
     public Challenge getChallenge() {

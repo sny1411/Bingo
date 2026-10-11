@@ -5,7 +5,6 @@ import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.listener.ChallengesListener;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.ChallengeId;
-import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -39,7 +38,7 @@ public class ForceValid implements CommandExecutor {
             return false;
         }
         ChallengeId challengeId = ChallengeId.fromString(args[2].toUpperCase());
-        Challenge challenge = challengeId == null ? null : Grid.getChallenge(team, challengeId);
+        Challenge challenge = challengeId == null ? null : Bingo.getGame().getChallenge(team, challengeId);
         if (challenge == null) {
             sender.sendMessage(warning("Le défi " + args[2] + " n'est pas dans la grille"));
             return false;

@@ -2,22 +2,10 @@ package fr.sny1411.bingo.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class Grid {
     public static final int NB_CHALLENGES = 25;
-
-    private static HashMap<Team, Grid> teamsGrid;
-    private static Grid gameGrid;
-
-    public static void createGrids() {
-        teamsGrid = new HashMap<>();
-        gameGrid = new Grid();
-        for (Team team : Team.getTeams().values()) {
-            teamsGrid.put(team, new Grid(gameGrid));
-        }
-    }
 
     private Challenge[][] grid;
 
@@ -89,27 +77,23 @@ public class Grid {
         }
     }
 
-    public static Challenge getChallenge(Team team, ChallengeId challengeId) {
-        Grid grid = getTeamsGrid().get(team);
-        Challenge[][] challenges = grid.getGrid();
+    public static Grid random() {
+        return new Grid();
+    }
 
-        for (Challenge[] value : challenges) {
-            for (int x = 0; x < challenges[0].length; x++) {
-                Challenge challenge = value[x];
+    public Grid copy() {
+        return new Grid(this);
+    }
+
+    public Challenge getChallenge(ChallengeId challengeId) {
+        for (Challenge[] row : grid) {
+            for (Challenge challenge : row) {
                 if (challenge.getId() == challengeId) {
                     return challenge;
                 }
             }
         }
         return null;
-    }
-
-    public static HashMap<Team, Grid> getTeamsGrid() {
-        return teamsGrid;
-    }
-
-    public static Grid getGameGrid() {
-        return gameGrid;
     }
 
     public Challenge[][] getGrid() {

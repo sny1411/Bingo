@@ -97,7 +97,7 @@ public class Score {
     }
 
     private void updateNbBingo() {
-        Challenge[][] grid = Grid.getTeamsGrid().get(team).getGrid();
+        Challenge[][] grid = Bingo.getGame().getTeamsGrid().get(team).getGrid();
         boolean[][] validated = new boolean[grid.length][grid.length];
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid.length; x++) {

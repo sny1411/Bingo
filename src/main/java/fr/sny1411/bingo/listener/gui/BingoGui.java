@@ -44,12 +44,12 @@ public class BingoGui implements Listener {
         assert playerTeam != null;
         if (playerTeam.getColor() == Team.Color.SPECTATOR) {
             if (spectatorMemory.containsKey(player)) {
-                playerGrid = Grid.getTeamsGrid().get(Team.getTeam(spectatorMemory.get(player)));
+                playerGrid = Bingo.getGame().getTeamsGrid().get(Team.getTeam(spectatorMemory.get(player)));
             } else {
-                playerGrid = Grid.getGameGrid();
+                playerGrid = Bingo.getGame().getGameGrid();
             }
         } else {
-            playerGrid = Grid.getTeamsGrid().get(Team.getTeam(player));
+            playerGrid = Bingo.getGame().getTeamsGrid().get(Team.getTeam(player));
         }
 
         int i = 3;

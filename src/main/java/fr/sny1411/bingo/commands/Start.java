@@ -29,7 +29,7 @@ public class Start implements CommandExecutor {
                 sender.sendMessage(gridIncompleteMessage());
                 return false;
             }
-            Grid.createGrids();
+            Bingo.getGame().createGrids();
             if (isTeamComplete()) {
                 Bingo.getGame().setEtat(Game.Etat.STARTING);
                 Countdown.start(bingo, this::startGame);
