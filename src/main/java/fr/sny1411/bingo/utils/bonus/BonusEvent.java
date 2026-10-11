@@ -13,29 +13,18 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class BonusEvent {
-    private static final List<BonusEvent> events = new ArrayList<>();
-    public static List<BonusEvent> getEvents() {
-        return events;
-    }
-
-    public static void init() {
-        createBonus();
-        sortEvents();
-    }
-
-    private static void createBonus() {
-        int nbEvents = Random.choice(1,4);
+    public static List<BonusEvent> createEvents(int durationMinutes) {
+        List<BonusEvent> events = new ArrayList<>();
+        int nbEvents = Random.choice(1, 4);
         for (int i = 0; i < nbEvents; i++) {
             // Between 1/8 and 3/4 of the game, like between 15 and 90 minutes in a 2-hour game
-            events.add(new BonusEvent(Random.choice(Bingo.getGame().getSettings().getDurationMinutes() / 8, Bingo.getGame().getSettings().getDurationMinutes() * 3 / 4)));
+            events.add(new BonusEvent(Random.choice(durationMinutes / 8, durationMinutes * 3 / 4)));
         }
-        for (BonusEvent event : BonusEvent.getEvents()) {
+        events.sort(Comparator.comparingInt(BonusEvent::getTimeLaunch));
+        for (BonusEvent event : events) {
             Bukkit.getLogger().log(Level.INFO, "event : " + event.getTimeLaunch());
         }
-    }
-
-    private static void sortEvents() {
-        events.sort(Comparator.comparingInt(BonusEvent::getTimeLaunch));
+        return events;
     }
 
     private Challenge challenge;
