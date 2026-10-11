@@ -115,10 +115,6 @@ public class Team {
         this.gameFinish = gameFinish;
     }
 
-    public void sendMessage(String message) {
-        sendMessage(Component.text(message));
-    }
-
     public void sendMessage(Component message) {
         for (Player player : getOnlinePlayers()) {
             player.sendMessage(message);

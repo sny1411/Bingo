@@ -2,6 +2,7 @@ package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Bingo;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -16,7 +17,7 @@ public final class Countdown {
     }
 
     private static final int SECONDS = 3;
-    private static final List<String> COLORS = List.of("§1", "§9", "§b"); // 1, 2, 3
+    private static final List<NamedTextColor> COLORS = List.of(NamedTextColor.DARK_BLUE, NamedTextColor.BLUE, NamedTextColor.AQUA); // 1, 2, 3
     public static final Title.Times TITLE_TIMES = Title.Times.times(Duration.ZERO, Duration.ofSeconds(1), Duration.ZERO);
 
     private static BukkitTask task;
@@ -29,7 +30,7 @@ public final class Countdown {
 
     private static void tick(Runnable onEnd) {
         if (remaining > 0) {
-            showTitle(Title.title(Component.text(COLORS.get(remaining - 1) + remaining), Component.text(""), TITLE_TIMES));
+            showTitle(Title.title(Component.text(remaining, COLORS.get(remaining - 1)), Component.empty(), TITLE_TIMES));
             remaining--;
             return;
         }
