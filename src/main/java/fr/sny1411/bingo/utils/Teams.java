@@ -43,7 +43,7 @@ public class Teams {
 
     public Team getTeam(Player player) {
         for (Team team : teams.values()) {
-            if (team.getPlayers().contains(player)) {
+            if (team.contains(player)) {
                 return team;
             }
         }
@@ -62,10 +62,10 @@ public class Teams {
     // Returns false when the team is full
     public boolean join(Player player, Team.Color color) {
         Team team = teams.get(color);
-        if (team.getPlayers().contains(player)) {
+        if (team.contains(player)) {
             return true;
         }
-        if (color != Team.Color.SPECTATOR && team.getPlayers().size() == settings.getNbPlayerTeams()) {
+        if (color != Team.Color.SPECTATOR && team.size() == settings.getNbPlayerTeams()) {
             return false;
         }
         leave(player);
@@ -75,23 +75,10 @@ public class Teams {
 
     public void leave(Player player) {
         for (Team team : teams.values()) {
-            if (team.getPlayers().contains(player)) {
+            if (team.contains(player)) {
                 team.removePlayer(player);
                 return;
             }
         }
-    }
-
-    public boolean updatePlayerJoinInGame(Player player) {
-        for (Team team : teams.values()) {
-            for (Player playerTeam : team.getPlayers()) {
-                if (playerTeam.getUniqueId().equals(player.getUniqueId())) {
-                    team.removePlayer(playerTeam);
-                    team.addPlayer(player);
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

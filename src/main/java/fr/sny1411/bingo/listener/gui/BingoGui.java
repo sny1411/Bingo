@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -95,8 +96,9 @@ public class BingoGui implements Listener {
                 } else {
                     loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f§k!!"));
                 }
-                for (Player playerInTeam : team.getPlayers()) {
-                    String playerName = Bingo.getPlainSerializer().serialize(playerInTeam.displayName());
+                for (OfflinePlayer playerInTeam : team.getPlayers()) {
+                    Player onlinePlayer = playerInTeam.getPlayer();
+                    String playerName = onlinePlayer != null ? Bingo.getPlainSerializer().serialize(onlinePlayer.displayName()) : playerInTeam.getName();
                     loreTeams.add(Component.text("§7§o- " + playerName));
                 }
                 itemMeta.lore(loreTeams);

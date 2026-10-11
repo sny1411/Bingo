@@ -23,7 +23,7 @@ public class PlayerListener implements Listener {
         if (etat == Game.Etat.SETUP) {
             Spawn.teleportPlayer(player);
             Spawn.giveItemsPlayer(player);
-        } else if ((etat == Game.Etat.STARTING || etat == Game.Etat.INGAME) && (!Bingo.getGame().getTeams().updatePlayerJoinInGame(player))) {
+        } else if ((etat == Game.Etat.STARTING || etat == Game.Etat.INGAME) && Bingo.getGame().getTeams().getTeam(player) == null) {
                 Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);
                 player.setGameMode(GameMode.SPECTATOR);
         }

@@ -55,15 +55,13 @@ public final class RewardsBonusEvent {
         player.sendMessage(bonusMessage("Votre équipe reçoit le bonus ", potionEffectType, "I"));
         Team team = Bingo.getGame().getTeams().getTeam(player);
         assert team != null;
-        for (Player playerTeam : team.getPlayers()) {
-            if (playerTeam.isOnline()) {
-                if (player.equals(playerTeam)) {
-                    if (setOnPlayerRealized) {
-                        setBonusI(potionEffectType, playerTeam);
-                    }
-                } else {
+        for (Player playerTeam : team.getOnlinePlayers()) {
+            if (player.equals(playerTeam)) {
+                if (setOnPlayerRealized) {
                     setBonusI(potionEffectType, playerTeam);
                 }
+            } else {
+                setBonusI(potionEffectType, playerTeam);
             }
         }
     }
