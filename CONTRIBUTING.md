@@ -43,7 +43,7 @@ Each client joins the test server with an offline username (3 to 16 letters, dig
 1. Fork the repository and create a branch from `main`, named after the issue, for example `fix/7-finish-message` or `feat/14-challenge-ids`.
 2. Keep each pull request focused on **one issue**. Small pull requests are reviewed faster.
 3. Match the style of the surrounding code (4-space indentation, same naming).
-4. For new messages, use Adventure components (`Component.text("Text", NamedTextColor.GREEN)`) instead of `§` color codes (see [#18](https://github.com/sny1411/Bingo/issues/18)).
+4. Write the texts shown to players in the language files, not in the code (see [Texts and translations](#texts-and-translations)), and never use `§` color codes (see [#18](https://github.com/sny1411/Bingo/issues/18)).
 5. Refactoring pull requests must not change the gameplay.
 6. Test your change on a Paper 26.2 server: start a game, and check the server console for errors.
 
@@ -58,6 +58,19 @@ id|name|description|difficulty|icon
 - `icon`: a Bukkit `Material` name in uppercase (e.g. `FIRE_CHARGE`), or a lowercase key for a custom icon defined in `Challenge.createItem()` (e.g. `dolphin`)
 
 The detection of the challenge goes in `listener/challenges/`, using its id (`ChallengeId.SUICIDE_SQUAD`): in the listener of its theme (mobs, player, advancements, world) when an event realizes it, or in `ChallengeVerifier.verifChallenge()` when it is checked by clicking it in the grid.
+
+## Texts and translations
+
+The plugin shows its texts in the language of each player's game. They are in `src/main/resources/lang/`, one file per language (`en.properties`, `fr.properties`…), with one key per text, written in [MiniMessage](https://docs.advntr.dev/minimessage/format.html):
+```
+bingo.team.finished=Team <arg:0> has finished its game
+```
+
+To add a text:
+1. Add its key, starting with `bingo.`, to `en.properties` and to the other language files. English is used when a player's language has no file, or when the key is missing in it.
+2. In the code, use `Component.translatable("bingo.team.finished", teamName)`: the arguments replace `<arg:0>`, `<arg:1>`… Paper translates chat messages, titles and action bars for each player. Texts that it doesn't translate, such as item names and lores, must be rendered for the player with `Translations.render(component, player)`.
+
+To add a language, add a file named after its language code (`de.properties`, or `pt_BR.properties` for a variant) with the same keys: the plugin loads every file of the folder on startup.
 
 ## Opening a pull request
 

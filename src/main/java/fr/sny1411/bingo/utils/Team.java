@@ -1,6 +1,7 @@
 package fr.sny1411.bingo.utils;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -14,22 +15,24 @@ import java.util.UUID;
 
 public class Team {
     public enum Color {
-        ORANGE("§6", "Orange", Material.ORANGE_BANNER, Material.ORANGE_CONCRETE),
-        ROUGE("§c", "Rouge", Material.RED_BANNER, Material.RED_CONCRETE),
-        VIOLET("§5", "Violet", Material.PURPLE_BANNER, Material.PURPLE_CONCRETE),
-        ROSE("§d", "Rose", Material.PINK_BANNER, Material.PINK_CONCRETE),
-        VERT("§a", "Vert", Material.LIME_BANNER, Material.LIME_CONCRETE),
-        BLEU("§b", "Bleu", Material.LIGHT_BLUE_BANNER, Material.LIGHT_BLUE_CONCRETE),
-        SPECTATOR("§8[SPEC] §7§o", "Spectateur", Material.ENDER_EYE, null);
+        ORANGE("§6", "Orange", NamedTextColor.GOLD, Material.ORANGE_BANNER, Material.ORANGE_CONCRETE),
+        ROUGE("§c", "Rouge", NamedTextColor.RED, Material.RED_BANNER, Material.RED_CONCRETE),
+        VIOLET("§5", "Violet", NamedTextColor.DARK_PURPLE, Material.PURPLE_BANNER, Material.PURPLE_CONCRETE),
+        ROSE("§d", "Rose", NamedTextColor.LIGHT_PURPLE, Material.PINK_BANNER, Material.PINK_CONCRETE),
+        VERT("§a", "Vert", NamedTextColor.GREEN, Material.LIME_BANNER, Material.LIME_CONCRETE),
+        BLEU("§b", "Bleu", NamedTextColor.AQUA, Material.LIGHT_BLUE_BANNER, Material.LIGHT_BLUE_CONCRETE),
+        SPECTATOR("§8[SPEC] §7§o", "Spectateur", NamedTextColor.GRAY, Material.ENDER_EYE, null);
 
         private final String prefixe;
         private final String nom;
+        private final NamedTextColor textColor;
         private final Material materialTeamGui;
         private final Material materialBingoGui;
 
-        Color(String prefixe, String nom, Material materialTeamGui, Material materialBingoGui) {
+        Color(String prefixe, String nom, NamedTextColor textColor, Material materialTeamGui, Material materialBingoGui) {
             this.prefixe = prefixe;
             this.nom = nom;
+            this.textColor = textColor;
             this.materialTeamGui = materialTeamGui;
             this.materialBingoGui = materialBingoGui;
         }
@@ -40,6 +43,10 @@ public class Team {
 
         public String getNom() {
             return nom;
+        }
+
+        public Component displayName() {
+            return Component.text(nom, textColor);
         }
 
         public Material getMaterialTeamGui() {
@@ -110,9 +117,12 @@ public class Team {
     }
 
     public void sendMessage(String message) {
-        Component componentMessage = Component.text(message);
+        sendMessage(Component.text(message));
+    }
+
+    public void sendMessage(Component message) {
         for (Player player : getOnlinePlayers()) {
-            player.sendMessage(componentMessage);
+            player.sendMessage(message);
         }
     }
 }
