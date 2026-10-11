@@ -1,5 +1,7 @@
 package fr.sny1411.bingo;
 
+import fr.sny1411.bingo.utils.Grid;
+
 /**
  * The game settings, kept from one game to the next by /newGame.
  */
@@ -16,6 +18,10 @@ public class Settings {
     private int durationMinutes = 2 * 60;
     private int nbTeams = 4;
     private int nbPlayerTeams = 2;
+    private int maxEasy = 6;
+    private int maxMedium = 13;
+    private int maxHard = 6;
+    private int maxExtreme = 0;
 
     public boolean isDefiBonus() {
         return defiBonus;
@@ -79,5 +85,63 @@ public class Settings {
 
     public void setNbPlayerTeams(int nbPlayerTeams) {
         this.nbPlayerTeams = nbPlayerTeams;
+    }
+
+    public int getMaxEasy() {
+        return maxEasy;
+    }
+
+    public void setMaxEasy(int maxEasy) {
+        this.maxEasy = maxEasy;
+    }
+
+    public int getMaxMedium() {
+        return maxMedium;
+    }
+
+    public void setMaxMedium(int maxMedium) {
+        this.maxMedium = maxMedium;
+    }
+
+    public int getMaxHard() {
+        return maxHard;
+    }
+
+    public void setMaxHard(int maxHard) {
+        this.maxHard = maxHard;
+    }
+
+    public int getMaxExtreme() {
+        return maxExtreme;
+    }
+
+    public void setMaxExtreme(int maxExtreme) {
+        this.maxExtreme = maxExtreme;
+    }
+
+    public int getMaxTotal() {
+        return maxEasy + maxMedium + maxHard + maxExtreme;
+    }
+
+    public boolean verifSettingsToHigh() {
+        return getMaxTotal() < Grid.NB_CHALLENGES;
+    }
+
+    // Challenges per difficulty recommended for a number of players per team
+    public void setChallengePreset(int nbPlayerTeams) {
+        switch (nbPlayerTeams) {
+            case 1 -> setPreset(13, 8, 4, 0);
+            case 2 -> setPreset(10, 10, 5, 0);
+            case 3 -> setPreset(6, 13, 6, 0);
+            case 4 -> setPreset(2, 10, 12, 1);
+            default -> { }
+        }
+    }
+
+    private void setPreset(int maxEasy, int maxMedium, int maxHard, int maxExtreme) {
+        this.maxEasy = maxEasy;
+        this.maxMedium = maxMedium;
+        this.maxHard = maxHard;
+        this.maxExtreme = maxExtreme;
     }
 }
