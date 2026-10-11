@@ -2,24 +2,10 @@ package fr.sny1411.bingo.utils;
 
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
-
-import java.util.HashMap;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 
 public class Score {
-    private static final HashMap<Team, Score> teamsScore = new HashMap<>();
-
-    public static void init() {
-        teamsScore.clear();
-        for (Team team : Team.getTeams().values()) {
-            if (team.getColor() != Team.Color.SPECTATOR) {
-                teamsScore.put(team, new Score(team));
-            }
-        }
-    }
-
-    public static HashMap<Team, Score> getTeamsScore() {
-        return teamsScore;
-    }
     private final Team team;
 
     private int nbEasy;
@@ -41,10 +27,7 @@ public class Score {
     }
 
     public int getScore() {
-        return nbEasy * Challenge.Difficult.EASY.getPoints() +
-                nbMedium * Challenge.Difficult.MEDIUM.getPoints() +
-                nbHard * Challenge.Difficult.HARD.getPoints() +
-                nbExtreme * Challenge.Difficult.EXTREME.getPoints();
+        return ScoreRules.points(nbEasy, nbMedium, nbHard, nbExtreme);
     }
 
     public int getNbEasy() {
@@ -91,83 +74,49 @@ public class Score {
                 break;
         }
         nbChallenges++;
-        Challenge[][] challenges = Grid.getTeamsGrid().get(team).getGrid();
-        nbBingo = bingoY(challenges) + bingoX(challenges) + bingoDiag(challenges);
+        updateNbBingo();
 
         testGameFinish();
     }
 
-    private int bingoY(Challenge[][] grid) {
-        int nbBingoY = 0;
-        boolean isBingo;
-        for (Challenge[] challenges : grid) {
-            isBingo = true;
-            for (Challenge challenge : challenges) {
-                if (Boolean.FALSE.equals(challenge.getValidated())) {
-                    isBingo = false;
-                    break;
-                }
-            }
-            if (isBingo) {
-                nbBingoY++;
-            }
+    public void removeChallenge(Challenge challenge) {
+        switch (challenge.getDifficult()) {
+            case EASY:
+                nbEasy--;
+                break;
+            case MEDIUM:
+                nbMedium--;
+                break;
+            case HARD:
+                nbHard--;
+                break;
+            case EXTREME:
+                nbExtreme--;
+                break;
         }
-        return nbBingoY;
+        nbChallenges--;
+        updateNbBingo();
     }
 
-    private int bingoX(Challenge[][] grid) {
-        int nbBingoX = 0;
-        boolean isBingo;
-        for (int x = 0; x < grid[0].length; x++) {
-            isBingo = true;
-            for (Challenge[] challenges : grid) {
-                if (Boolean.FALSE.equals(challenges[x].getValidated())) {
-                    isBingo = false;
-                    break;
-                }
-            }
-            if (isBingo) {
-                nbBingoX++;
+    private void updateNbBingo() {
+        Challenge[][] grid = Bingo.getGame().getTeamsGrid().get(team).getGrid();
+        boolean[][] validated = new boolean[grid.length][grid.length];
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid.length; x++) {
+                validated[y][x] = !Boolean.FALSE.equals(grid[y][x].getValidated());
             }
         }
-        return nbBingoX;
-    }
-
-    private int bingoDiag(Challenge[][] grid) {
-        boolean isBingo = true;
-        int nbBingoXY = 0;
-        for (int xy = 0; xy < grid.length; xy++) {
-            if (Boolean.FALSE.equals(grid[xy][xy].getValidated())) {
-                isBingo = false;
-                break;
-            }
-        }
-        if (isBingo) {
-            nbBingoXY++;
-        }
-
-        for (int xy = 0; xy < grid.length; xy++) {
-            isBingo = true;
-            if (Boolean.FALSE.equals(grid[4 - xy][xy].getValidated())) {
-                isBingo = false;
-                break;
-            }
-        }
-        if (isBingo) {
-            nbBingoXY++;
-        }
-
-        return nbBingoXY;
+        nbBingo = ScoreRules.countBingos(validated);
     }
 
     private void testGameFinish() {
         Game game = Bingo.getGame();
-        if (((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
+        if (game.getEtat() == Game.Etat.INGAME && ((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
                 (game.getModeVictoire() == Game.ModeVictoire.DEFIS && nbChallenges == 25)) && !team.isGameFinish()) {
             team.setGameFinish(true);
-            Text.broadcastMessage("§7[§eBINGO§7] §fL'équipe " + team.getColor().getPrefixe() + team.getColor().getNom() + " §fa fini sa partie");
-            Text.broadcastMessage("Elle peut continuer de jouer ou devenir spectatrice");
-            team.sendMessage("§7§oUtilisez la commande §e§o/spec §7§opour devenir spectateur");
+            Bukkit.broadcast(Text.info(Component.translatable("bingo.team.finished", team.getColor().displayName())));
+            Bukkit.broadcast(Component.translatable("bingo.team.finished.continue"));
+            team.sendMessage(Component.translatable("bingo.team.finished.spec"));
         }
     }
 }

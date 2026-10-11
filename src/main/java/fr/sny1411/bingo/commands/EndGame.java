@@ -4,7 +4,7 @@ import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Countdown;
 import fr.sny1411.bingo.utils.Text;
-import fr.sny1411.bingo.utils.Timer;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,11 +19,11 @@ public class EndGame implements CommandExecutor {
             if (game.getEtat() == Game.Etat.STARTING) {
                 Countdown.cancel();
                 game.setEtat(Game.Etat.SETUP);
-                Text.broadcastMessage("§7[§eBINGO§7] §fLancement annulé");
+                Text.broadcastMessage(Text.info(Component.translatable("bingo.start.cancelled")));
                 return false;
             }
             game.setEtat(Game.Etat.ENDGAME);
-            Timer.stop();
+            game.getTimer().stop();
         }
         return false;
     }

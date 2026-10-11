@@ -1,19 +1,26 @@
 package fr.sny1411.bingo.utils;
 
+import fr.sny1411.bingo.Bingo;
+import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.listener.gui.SettingsGui;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 
 public final class Spawn {
     private Spawn() {
         throw new IllegalStateException("Utility class");
     }
+
+    public static final String SETTINGS_PERMISSION = "bingo.settings";
 
     private static final List<World> WORLDS = Bukkit.getWorlds();
     private static final World OVERWORLD = WORLDS.get(0);
@@ -55,11 +62,43 @@ public final class Spawn {
     }
 
     public static void giveItemsPlayer(Player player) {
+        giveItemsPlayer(player, player.locale());
+    }
+
+    // The locale is given when it changes, since the player's locale is only updated after the event
+    public static void giveItemsPlayer(Player player, Locale locale) {
         Inventory playerInventory = player.getInventory();
         playerInventory.clear();
-        if (player.isOp()) {
-            playerInventory.setItem(0, Items.getSettings());
+        if (player.hasPermission(SETTINGS_PERMISSION)) {
+            playerInventory.setItem(0, Items.getSettings(locale));
         }
-        playerInventory.setItem(4, Items.getTeamSelector());
+        playerInventory.setItem(4, Items.getTeamSelector(locale));
+    }
+
+    public static void updateSettingsItems() {
+        if (Bingo.getGame().getEtat() != Game.Etat.SETUP) {
+            return;
+        }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerInventory playerInventory = player.getInventory();
+            int settingsSlot = -1;
+            for (int slot = 0; slot < playerInventory.getSize(); slot++) {
+                if (Items.isSettings(playerInventory.getItem(slot))) {
+                    settingsSlot = slot;
+                }
+            }
+            if (player.hasPermission(SETTINGS_PERMISSION)) {
+                if (settingsSlot == -1) {
+                    playerInventory.setItem(0, Items.getSettings(player.locale()));
+                }
+            } else {
+                if (settingsSlot != -1) {
+                    playerInventory.setItem(settingsSlot, null);
+                }
+                if (SettingsGui.isSettingsGui(player.getOpenInventory().getTopInventory())) {
+                    player.closeInventory();
+                }
+            }
+        }
     }
 }

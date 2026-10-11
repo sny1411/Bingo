@@ -52,7 +52,7 @@ public class SetupListener implements Listener {
     private void onPlayerMove(PlayerMoveEvent e) {
         if (Bingo.getGame().getEtat().isBeforeGame()) {
             Player player = e.getPlayer();
-            Team team = Team.getTeam(player);
+            Team team = Bingo.getGame().getTeams().getTeam(player);
             if (team != null) {
                 Location location = e.getPlayer().getLocation();
                 location.setY(200);

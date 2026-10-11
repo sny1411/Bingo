@@ -3,8 +3,8 @@ package fr.sny1411.bingo.commands;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.*;
-import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -24,12 +24,16 @@ public class Start implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String str, @NotNull String[] args) {
         if (sender instanceof Player && (Bingo.getGame().getEtat() == Game.Etat.SETUP)) {
-            Grid.createGrids();
+            if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
+                sender.sendMessage(gridIncompleteMessage());
+                return false;
+            }
+            Bingo.getGame().createGrids();
             if (isTeamComplete()) {
                 Bingo.getGame().setEtat(Game.Etat.STARTING);
                 Countdown.start(bingo, this::startGame);
             } else {
-                sender.sendMessage(Component.text("§8[§c⚠§8] §fDes joueurs ne possèdent pas d'équipe"));
+                sender.sendMessage(Text.warning(Component.translatable("bingo.start.players_without_team")));
             }
         }
         return false;
@@ -43,27 +47,29 @@ public class Start implements CommandExecutor {
         Environment.clearPlayers();
         Environment.setGamerulesInGame();
 
-        Timer.start(bingo);
+        game.getTimer().start(bingo);
         ScoreBoard.createScoreBoard(bingo);
-        Score.init();
+        game.initScores();
 
-        for (Player player : Team.getTeams().get(Team.Color.SPECTATOR).getPlayers()) {
-            if (player.isOnline()) {
-                player.setGameMode(GameMode.SPECTATOR);
-            }
+        for (Player player : Bingo.getGame().getTeams().get(Team.Color.SPECTATOR).getOnlinePlayers()) {
+            player.setGameMode(GameMode.SPECTATOR);
         }
 
         if (Bingo.getGame().isDefiBonus()) {
-            BonusEvent.init();
+            game.initBonusEvents();
         }
 
         Bukkit.getScheduler().runTaskLater(bingo, () -> game.setPlayersDamage(true), 30 * 20L);
     }
 
+    private static Component gridIncompleteMessage() {
+        return Text.warning(Component.translatable("bingo.start.grid_incomplete", Component.text(Bingo.getGame().getSettings().getMaxTotal()), Component.text(Grid.NB_CHALLENGES)));
+    }
+
     private static boolean isTeamComplete() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (Team.getTeam(player) == null) {
-                player.sendMessage(Component.text("§8[§c⚠§8] §fVeuillez rejoindre une équipe"));
+            if (Bingo.getGame().getTeams().getTeam(player) == null) {
+                player.sendMessage(Text.warning(Component.translatable("bingo.start.join_a_team")));
                 return false;
             }
         }

@@ -34,7 +34,7 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 
 - Once the plugin is installed on your server, a game is created right away. Before the game starts, players who join are teleported to the spawn and get the team selector. Players who join a game in progress without a team become spectators.
 
-- The settings item is only given to operators. The other commands require either operator status or the permissions listed below:
+- The settings item is given to players with the `bingo.settings` permission (operators by default), and is given or removed when it changes during the setup. The commands require either operator status or the permissions listed below:
 
 | Command                                    | Description                                                                                            | Permission     |
 |--------------------------------------------|--------------------------------------------------------------------------------------------------------|----------------|
@@ -42,8 +42,9 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 | `/start`                                   | Starts the game (every online player must be in a team)                                                | bingo.start    |
 | `/bingo`                                   | Shows your challenge grid during a game                                                                | No permission  |
 | `/testPack`                                | Shows a title and plays a sound so players can check whether the resource pack is installed            | bingo.testPack |
-| `/valid add <team> <challenge>`            | Forces a challenge to be validated in case of a problem (use `_` instead of spaces in the name)        | bingo.valid    |
+| `/valid <add\|remove> <team> <challenge>`  | Forces a challenge to be validated, or un-validated, during or after a game (ids are suggested)        | bingo.valid    |
 | `/stopGame`                                | Stops the game before the end                                                                          | bingo.stopGame |
+| `/timer <set\|add\|speed> <value>`         | Moves the game timer forward (`set 59:59`, `add 10:00`) or speeds it up (`speed 60`)                   | bingo.timer    |
 | `/result`                                  | Shows the ranking to everyone once the game is over                                                    | bingo.result   |
 | `/spec`                                    | Lets players switch to spectator mode once their team has finished                                     | No permission  |
 | `/bonus <challenge>`                       | Validates an active bonus challenge                                                                    | No permission  |
