@@ -51,31 +51,22 @@ public class Game {
         }
     }
 
-    private int nbreBingoForWin;
-
-    private boolean defiBonus;
+    private final Settings settings;
     private boolean playersDamage;
-    private ModeAffichage modeAffichage;
-    private ModeJeu modeJeu;
-    private ModeVictoire modeVictoire;
     private Etat etat;
     private final Map<Team, Score> teamsScore = new HashMap<>();
     private Grid gameGrid;
     private final Map<Team, Grid> teamsGrid = new HashMap<>();
     private static Bingo bingoInstance;
 
-    private Game(boolean defiBonus, boolean playersDamage, ModeAffichage modeAffichage, ModeJeu modeJeu, ModeVictoire modeVictoire, Etat etat) {
-        this.defiBonus = defiBonus;
-        this.playersDamage = playersDamage;
-        this.modeAffichage = modeAffichage;
-        this.modeJeu = modeJeu;
-        this.modeVictoire = modeVictoire;
-        this.etat = etat;
-        this.nbreBingoForWin = 3;
+    public Game() {
+        this(new Settings());
     }
 
-    public Game() {
-        this(false, false, ModeAffichage.CHILL, ModeJeu.CLASSIC, ModeVictoire.BINGO, Etat.SETUP);
+    public Game(Settings settings) {
+        this.settings = settings;
+        this.playersDamage = false;
+        this.etat = Etat.SETUP;
         setup();
     }
 
@@ -130,6 +121,10 @@ public class Game {
         return teamsScore;
     }
 
+    public Settings getSettings() {
+        return settings;
+    }
+
     public static Bingo getBingoInstance() {
         return bingoInstance;
     }
@@ -139,7 +134,7 @@ public class Game {
     }
 
     public void setDefiBonus(boolean defiBonus) {
-        this.defiBonus = defiBonus;
+        settings.setDefiBonus(defiBonus);
     }
 
     public void setPlayersDamage(boolean playersDamage) {
@@ -147,15 +142,15 @@ public class Game {
     }
 
     public void setModeAffichage(ModeAffichage modeAffichage) {
-        this.modeAffichage = modeAffichage;
+        settings.setModeAffichage(modeAffichage);
     }
 
     public void setModeJeu(ModeJeu modeJeu) {
-        this.modeJeu = modeJeu;
+        settings.setModeJeu(modeJeu);
     }
 
     public void setModeVictoire(ModeVictoire modeVictoire) {
-        this.modeVictoire = modeVictoire;
+        settings.setModeVictoire(modeVictoire);
     }
 
     public void setEtat(Etat etat) {
@@ -169,7 +164,7 @@ public class Game {
     }
 
     public boolean isDefiBonus() {
-        return defiBonus;
+        return settings.isDefiBonus();
     }
 
     public boolean isPlayersDamage() {
@@ -177,15 +172,15 @@ public class Game {
     }
 
     public ModeAffichage getModeAffichage() {
-        return modeAffichage;
+        return settings.getModeAffichage();
     }
 
     public ModeJeu getModeJeu() {
-        return modeJeu;
+        return settings.getModeJeu();
     }
 
     public ModeVictoire getModeVictoire() {
-        return modeVictoire;
+        return settings.getModeVictoire();
     }
 
     public Etat getEtat() {
@@ -193,10 +188,10 @@ public class Game {
     }
 
     public int getNbreBingoForWin() {
-        return nbreBingoForWin;
+        return settings.getNbreBingoForWin();
     }
 
     public void setNbreBingoForWin(int nbreBingoForWin) {
-        this.nbreBingoForWin = nbreBingoForWin;
+        settings.setNbreBingoForWin(nbreBingoForWin);
     }
 }

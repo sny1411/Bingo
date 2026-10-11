@@ -26,7 +26,7 @@ public class NewGame implements CommandExecutor {
             if (Bingo.getGame().getEtat() == Game.Etat.STARTING) {
                 Countdown.cancel();
             }
-            Bingo.setGame(new Game());
+            Bingo.setGame(new Game(Bingo.getGame().getSettings()));
             return false;
         }
         return true;
