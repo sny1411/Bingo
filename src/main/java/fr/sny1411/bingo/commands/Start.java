@@ -48,7 +48,7 @@ public class Start implements CommandExecutor {
         Environment.clearPlayers();
         Environment.setGamerulesInGame();
 
-        Timer.start(bingo);
+        game.getTimer().start(bingo);
         ScoreBoard.createScoreBoard(bingo);
         game.initScores();
 

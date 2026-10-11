@@ -4,7 +4,6 @@ import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Countdown;
 import fr.sny1411.bingo.utils.Text;
-import fr.sny1411.bingo.utils.Timer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,7 +22,7 @@ public class EndGame implements CommandExecutor {
                 return false;
             }
             game.setEtat(Game.Etat.ENDGAME);
-            Timer.stop();
+            game.getTimer().stop();
         }
         return false;
     }
