@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Grid {
+    public static final int NB_CHALLENGES = 25;
+
     private static HashMap<Team, Grid> teamsGrid;
     private static Grid gameGrid;
 
@@ -42,7 +44,7 @@ public class Grid {
         int nbMedium = 0;
         int nbHard = 0;
         int nbExtreme = 0;
-        while (challenges.size() != 25) {
+        while (challenges.size() != NB_CHALLENGES) {
             Challenge challenge = Challenge.getChallenges().get(i);
             switch (challenge.getDifficult()) {
                 case EASY:

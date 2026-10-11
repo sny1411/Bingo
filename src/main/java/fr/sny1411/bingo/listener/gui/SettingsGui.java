@@ -3,10 +3,13 @@ package fr.sny1411.bingo.listener.gui;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Challenge;
+import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Items;
 import fr.sny1411.bingo.utils.SkullCustom;
 import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -225,12 +228,26 @@ public class SettingsGui implements Listener {
         guiDifficult.setItem(12, medium);
         guiDifficult.setItem(14, hard);
         guiDifficult.setItem(16, extreme);
+        guiDifficult.setItem(18, getTotalItem());
         ItemStack back = new ItemStack(Material.BARRIER);
         ItemMeta backMeta = back.getItemMeta();
         backMeta.displayName(Component.text("§cRetour"));
         back.setItemMeta(backMeta);
         guiDifficult.setItem(26, back);
         player.openInventory(guiDifficult);
+    }
+
+    private static ItemStack getTotalItem() {
+        int total = Challenge.getMaxTotal();
+        boolean complete = !Challenge.verifSettingsToHigh();
+        ItemStack item = new ItemStack(Material.MAP, Math.max(total, 1));
+        ItemMeta meta = item.getItemMeta();
+        meta.itemName(Component.text("Défis dans la grille : " + total + " / " + Grid.NB_CHALLENGES, complete ? NamedTextColor.GREEN : NamedTextColor.RED));
+        if (!complete) {
+            meta.lore(List.of(Component.text("Il en faut " + Grid.NB_CHALLENGES + " pour lancer la partie", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)));
+        }
+        item.setItemMeta(meta);
+        return item;
     }
 
     private void openGuiVictoire(Player player) {
