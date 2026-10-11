@@ -39,17 +39,17 @@ public class BingoGui implements Listener {
     }
 
     private static void placeGrid(Player player, Inventory gui) {
-        Team playerTeam = Team.getTeam(player);
+        Team playerTeam = Bingo.getGame().getTeams().getTeam(player);
         Grid playerGrid = null;
         assert playerTeam != null;
         if (playerTeam.getColor() == Team.Color.SPECTATOR) {
             if (spectatorMemory.containsKey(player)) {
-                playerGrid = Bingo.getGame().getTeamsGrid().get(Team.getTeam(spectatorMemory.get(player)));
+                playerGrid = Bingo.getGame().getTeamsGrid().get(Bingo.getGame().getTeams().getTeam(spectatorMemory.get(player)));
             } else {
                 playerGrid = Bingo.getGame().getGameGrid();
             }
         } else {
-            playerGrid = Bingo.getGame().getTeamsGrid().get(Team.getTeam(player));
+            playerGrid = Bingo.getGame().getTeamsGrid().get(Bingo.getGame().getTeams().getTeam(player));
         }
 
         int i = 3;
@@ -78,13 +78,13 @@ public class BingoGui implements Listener {
     }
 
     private static void placeTeams(Player player, Inventory gui) {
-        for (Team team : Team.getTeams().values()) {
+        for (Team team : Bingo.getGame().getTeams().values()) {
             Team.Color colorTeam = team.getColor();
             if (colorTeam != Team.Color.SPECTATOR) {
                 ItemStack item = new ItemStack(colorTeam.getMaterialBingoGui());
                 ItemMeta itemMeta = item.getItemMeta();
                 itemMeta.displayName(Component.text(colorTeam.getPrefixe() + colorTeam.getNom()));
-                Team playerTeam = Team.getTeam(player);
+                Team playerTeam = Bingo.getGame().getTeams().getTeam(player);
                 if (playerTeam == team || (Objects.requireNonNull(playerTeam).getColor() == Team.Color.SPECTATOR && spectatorMemory.containsKey(player) && spectatorMemory.get(player) == item.getType())) {
                     itemMeta.addEnchant(Enchantment.UNBREAKING, 5, true);
                     itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -133,7 +133,7 @@ public class BingoGui implements Listener {
         if (e.getView().title().equals(Component.text("§3§lBINGO")) && e.getCurrentItem() != null) {
             Bukkit.getLogger().log(Level.INFO, "bingogui2");
             Player player = (Player) e.getWhoClicked();
-            if (Objects.requireNonNull(Team.getTeam(player)).getColor() == Team.Color.SPECTATOR && e.getCurrentItem() != null) {
+            if (Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).getColor() == Team.Color.SPECTATOR && e.getCurrentItem() != null) {
                 Material concrete = e.getCurrentItem().getType();
                 if (Concrete.isConcrete(concrete)) {
                     spectatorMemory.put(player, concrete);

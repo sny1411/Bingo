@@ -1,5 +1,6 @@
 package fr.sny1411.bingo.utils.bonus;
 
+import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Random;
 import fr.sny1411.bingo.utils.Team;
@@ -52,7 +53,7 @@ public final class RewardsBonusEvent {
 
     private static void setBonusII(PotionEffectType potionEffectType, Player player, boolean setOnPlayerRealized) {
         player.sendMessage(bonusMessage("Votre équipe reçoit le bonus ", potionEffectType, "I"));
-        Team team = Team.getTeam(player);
+        Team team = Bingo.getGame().getTeams().getTeam(player);
         assert team != null;
         for (Player playerTeam : team.getPlayers()) {
             if (playerTeam.isOnline()) {

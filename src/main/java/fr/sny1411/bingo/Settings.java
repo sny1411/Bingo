@@ -14,6 +14,8 @@ public class Settings {
     private Game.ModeVictoire modeVictoire = Game.ModeVictoire.BINGO;
     private int nbreBingoForWin = 3;
     private int durationMinutes = 2 * 60;
+    private int nbTeams = 4;
+    private int nbPlayerTeams = 2;
 
     public boolean isDefiBonus() {
         return defiBonus;
@@ -61,5 +63,21 @@ public class Settings {
 
     public void setDurationMinutes(int durationMinutes) {
         this.durationMinutes = durationMinutes;
+    }
+
+    public int getNbTeams() {
+        return nbTeams;
+    }
+
+    public void setNbTeams(int nbTeams) {
+        this.nbTeams = nbTeams;
+    }
+
+    public int getNbPlayerTeams() {
+        return nbPlayerTeams;
+    }
+
+    public void setNbPlayerTeams(int nbPlayerTeams) {
+        this.nbPlayerTeams = nbPlayerTeams;
     }
 }

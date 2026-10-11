@@ -147,13 +147,13 @@ public class SettingsGui implements Listener {
         moins.setItemMeta(moinsMeta);
         guiTeams.setItem(21, moins);
         guiTeams.setItem(23, moins);
-        ItemStack nombreTeams = new ItemStack(Material.DIAMOND_HORSE_ARMOR, Team.getNbTeams());
+        ItemStack nombreTeams = new ItemStack(Material.DIAMOND_HORSE_ARMOR, Bingo.getGame().getSettings().getNbTeams());
 
         ItemMeta nombreTeamsMeta = nombreTeams.getItemMeta();
         nombreTeamsMeta.displayName(Component.text("§bNombre de teams"));
         nombreTeams.setItemMeta(nombreTeamsMeta);
         guiTeams.setItem(12, nombreTeams);
-        ItemStack nombreJoueursTeams = new ItemStack(Material.PUFFERFISH, Team.getNbPlayerTeams());
+        ItemStack nombreJoueursTeams = new ItemStack(Material.PUFFERFISH, Bingo.getGame().getSettings().getNbPlayerTeams());
         ItemMeta nombreJoueursTeamsMeta = nombreJoueursTeams.getItemMeta();
         nombreJoueursTeamsMeta.displayName(Component.text("§bNombre de joueurs"));
         nombreJoueursTeams.setItemMeta(nombreJoueursTeamsMeta);
@@ -478,26 +478,31 @@ public class SettingsGui implements Listener {
             } else if (clickedInventory == guiTeams) {
                 Material currentItem = e.getCurrentItem().getType();
                 Player player = (Player) e.getWhoClicked();
+                Settings settings = Bingo.getGame().getSettings();
                 if (currentItem == Material.BARRIER) {
                     openGui(player);
                 } else if (e.getSlot() == 3) {
-                    if (Team.getNbTeams() < 6) {
-                        Team.setNbTeams(Team.getNbTeams() + 1);
+                    if (settings.getNbTeams() < 6) {
+                        settings.setNbTeams(settings.getNbTeams() + 1);
+                        Bingo.getGame().getTeams().create();
                         openGuiTeams(player);
                     }
                 } else if (e.getSlot() == 5) {
-                    if (Team.getNbPlayerTeams() < 10) {
-                        Team.setNbPlayerTeams(Team.getNbPlayerTeams() + 1);
+                    if (settings.getNbPlayerTeams() < 10) {
+                        settings.setNbPlayerTeams(settings.getNbPlayerTeams() + 1);
+                        Bingo.getGame().getTeams().create();
                         setChallengePreset(player);
                     }
                 } else if (e.getSlot() == 21) {
-                    if (Team.getNbTeams() > 2) {
-                        Team.setNbTeams(Team.getNbTeams() - 1);
+                    if (settings.getNbTeams() > 2) {
+                        settings.setNbTeams(settings.getNbTeams() - 1);
+                        Bingo.getGame().getTeams().create();
                         openGuiTeams(player);
                     }
                 } else if (e.getSlot() == 23) {
-                    if (Team.getNbPlayerTeams() > 1) {
-                        Team.setNbPlayerTeams(Team.getNbPlayerTeams() - 1);
+                    if (settings.getNbPlayerTeams() > 1) {
+                        settings.setNbPlayerTeams(settings.getNbPlayerTeams() - 1);
+                        Bingo.getGame().getTeams().create();
                         setChallengePreset(player);
                     }
                 }
@@ -508,13 +513,13 @@ public class SettingsGui implements Listener {
 
     private void setChallengePreset(Player player) {
         resetColorTab();
-        if (Team.getNbPlayerTeams() == 1) {
+        if (Bingo.getGame().getSettings().getNbPlayerTeams() == 1) {
             Challenge.presetOnePlayer();
-        } else if (Team.getNbPlayerTeams() == 2) {
+        } else if (Bingo.getGame().getSettings().getNbPlayerTeams() == 2) {
             Challenge.presetTwoPlayers();
-        } else if (Team.getNbPlayerTeams() == 3) {
+        } else if (Bingo.getGame().getSettings().getNbPlayerTeams() == 3) {
             Challenge.presetThreePlayers();
-        } else if (Team.getNbPlayerTeams() == 4) {
+        } else if (Bingo.getGame().getSettings().getNbPlayerTeams() == 4) {
             Challenge.presetFourPlayers();
         }
         openGuiTeams(player);

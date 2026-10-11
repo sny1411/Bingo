@@ -48,24 +48,24 @@ public class ChallengesListener implements Listener {
     }
 
     private static void realizeChallenge(Player player, ChallengeId challengeId) {
-        Challenge challenge = Bingo.getGame().getChallenge(Team.getTeam(player), challengeId);
+        Challenge challenge = Bingo.getGame().getChallenge(Bingo.getGame().getTeams().getTeam(player), challengeId);
         if (challenge != null && !challenge.getRealized()) {
             challenge.setRealized(true);
         }
     }
 
     private static void valideChallenge(Player player, ChallengeId challengeId) {
-        Challenge challenge = Bingo.getGame().getChallenge(Team.getTeam(player), challengeId);
+        Challenge challenge = Bingo.getGame().getChallenge(Bingo.getGame().getTeams().getTeam(player), challengeId);
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
-            Team teamPlayer = Team.getTeam(player);
+            Team teamPlayer = Bingo.getGame().getTeams().getTeam(player);
             Text.validMessage(teamPlayer, challenge.getName());
             Bingo.getGame().getTeamsScore().get(teamPlayer).addChallenge(challenge);
         }
     }
 
     private static boolean verifValideChallenge(Player player, ChallengeId challengeId) {
-        if (Boolean.TRUE.equals(Objects.requireNonNull(Bingo.getGame().getChallenge(Team.getTeam(player), challengeId)).getRealized())) {
+        if (Boolean.TRUE.equals(Objects.requireNonNull(Bingo.getGame().getChallenge(Bingo.getGame().getTeams().getTeam(player), challengeId)).getRealized())) {
             valideChallenge(player, challengeId);
             return true;
         }
@@ -73,7 +73,7 @@ public class ChallengesListener implements Listener {
     }
 
     public static void valideAndRealizeChallenge(Player player, ChallengeId challengeId) {
-        valideAndRealizeChallenge(Team.getTeam(player), challengeId);
+        valideAndRealizeChallenge(Bingo.getGame().getTeams().getTeam(player), challengeId);
     }
 
     public static void valideAndRealizeChallenge(Team team, ChallengeId challengeId) {

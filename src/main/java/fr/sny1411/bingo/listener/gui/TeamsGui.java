@@ -26,8 +26,8 @@ public class TeamsGui implements Listener {
 
     public static void openGui(Player player) {
         Inventory gui = Bukkit.createInventory(null, 27, Component.text("§3§lSélection des équipes"));
-        Iterator<Team> iteratorTeam = Team.getTeams().values().iterator();
-        Bukkit.getConsoleSender().sendMessage(Component.text(Team.getTeams().values().toString()));
+        Iterator<Team> iteratorTeam = Bingo.getGame().getTeams().values().iterator();
+        Bukkit.getConsoleSender().sendMessage(Component.text(Bingo.getGame().getTeams().values().toString()));
         int compteurTeam = 0;
         for (int i = 0; i < 27; i++) {
             if (i > 9 && i < 17) {
@@ -53,14 +53,14 @@ public class TeamsGui implements Listener {
         ItemMeta itemMeta = item.getItemMeta();
 
         itemMeta.displayName(Component.text(String.format("%s%s", color.getPrefixe(), color.getNom())));
-        Team team = Team.getTeams().get(color);
+        Team team = Bingo.getGame().getTeams().get(color);
 
         List<Component> listLore = new ArrayList<>();
         if (color == Team.Color.SPECTATOR) {
             listLore.add(Component.text("§8>>§7 Clique pour observer la partie !"));
         } else {
             Iterator<Player> iteratorPlayers = team.getPlayers().iterator();
-            for (int i = 0; i < Team.getNbPlayerTeams(); i++) {
+            for (int i = 0; i < Bingo.getGame().getSettings().getNbPlayerTeams(); i++) {
                 if (iteratorPlayers.hasNext()) {
                     listLore.add(Component.text(String.format("§7§o- %s", iteratorPlayers.next().getName())));
                 } else {
@@ -87,31 +87,31 @@ public class TeamsGui implements Listener {
             Player player = (Player) e.getWhoClicked();
             switch (e.getCurrentItem().getType()) {
                 case ORANGE_BANNER:
-                    Team.getTeams().get(Team.Color.ORANGE).addPlayer(player);
+                    Bingo.getGame().getTeams().join(player, Team.Color.ORANGE);
                     break;
                 case RED_BANNER:
-                    Team.getTeams().get(Team.Color.ROUGE).addPlayer(player);
+                    Bingo.getGame().getTeams().join(player, Team.Color.ROUGE);
                     break;
                 case PURPLE_BANNER:
-                    Team.getTeams().get(Team.Color.VIOLET).addPlayer(player);
+                    Bingo.getGame().getTeams().join(player, Team.Color.VIOLET);
                     break;
                 case PINK_BANNER:
-                    Team.getTeams().get(Team.Color.ROSE).addPlayer(player);
+                    Bingo.getGame().getTeams().join(player, Team.Color.ROSE);
                     break;
                 case LIME_BANNER:
-                    Team.getTeams().get(Team.Color.VERT).addPlayer(player);
+                    Bingo.getGame().getTeams().join(player, Team.Color.VERT);
                     break;
                 case LIGHT_BLUE_BANNER:
-                    Team.getTeams().get(Team.Color.BLEU).addPlayer(player);
+                    Bingo.getGame().getTeams().join(player, Team.Color.BLEU);
                     break;
                 case ENDER_EYE:
-                    Team.getTeams().get(Team.Color.SPECTATOR).addPlayer(player);
+                    Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);
                     break;
                 default:
                     return;
             }
             updateGui();
-            player.playerListName(Component.text(Objects.requireNonNull(Team.getTeam(player)).getColor().getPrefixe() + player.getName()));
+            player.playerListName(Component.text(Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).getColor().getPrefixe() + player.getName()));
             e.setCancelled(true);
         }
     }
