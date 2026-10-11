@@ -22,8 +22,10 @@ public class Timer {
     private static final Stopwatch stopwatch = new Stopwatch();
     private static int elapsedSeconds = 0;
 
-    private static int maxMinutes = 0;
-    private static int maxHours = 2;
+    public static final int MIN_DURATION_MINUTES = 30;
+    public static final int MAX_DURATION_MINUTES = 4 * 60;
+    public static final int DURATION_STEP_MINUTES = 15;
+    private static int durationMinutes = 2 * 60;
 
     private static int stormTime; // in seconds
     private static boolean stormStarted;
@@ -37,7 +39,8 @@ public class Timer {
         nextEndWarning = 0;
         skipEndWarnings(getDurationSeconds() - 1);
         stormStarted = false;
-        stormTime = Random.choice(60, 105) * 60;
+        // Between half and 7/8 of the game, like between 60 and 105 minutes in a 2-hour game
+        stormTime = Random.choice(getDurationSeconds() / 2, getDurationSeconds() * 7 / 8);
         Bukkit.getLogger().log(Level.INFO, String.format("Storm planned at minute %d", stormTime / 60));
 
         task = Bukkit.getScheduler().runTaskTimer(bingo, Timer::tick, 1L, 1L);
@@ -101,7 +104,7 @@ public class Timer {
     }
 
     public static int getDurationSeconds() {
-        return maxHours * 3600 + maxMinutes * 60;
+        return durationMinutes * 60;
     }
 
     private static Component endWarningMessage(int remainingSeconds) {
@@ -126,20 +129,12 @@ public class Timer {
         Bukkit.getLogger().log(Level.INFO, "Game over");
     }
 
-    public static int getMaxMinutes() {
-        return maxMinutes;
+    public static int getDurationMinutes() {
+        return durationMinutes;
     }
 
-    public static void setMaxMinutes(int maxMinutes) {
-        Timer.maxMinutes = maxMinutes;
-    }
-
-    public static int getMaxHours() {
-        return maxHours;
-    }
-
-    public static void setMaxHours(int maxHours) {
-        Timer.maxHours = maxHours;
+    public static void setDurationMinutes(int durationMinutes) {
+        Timer.durationMinutes = durationMinutes;
     }
 
     public static int getSeconds() {

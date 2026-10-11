@@ -8,6 +8,7 @@ import fr.sny1411.bingo.utils.Items;
 import fr.sny1411.bingo.utils.SkullCustom;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
+import fr.sny1411.bingo.utils.Timer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -238,6 +239,16 @@ public class SettingsGui implements Listener {
         player.openInventory(guiDifficult);
     }
 
+    private static ItemStack getDurationItem() {
+        int duration = Timer.getDurationMinutes();
+        ItemStack item = new ItemStack(Material.CLOCK, duration / Timer.DURATION_STEP_MINUTES);
+        ItemMeta meta = item.getItemMeta();
+        meta.itemName(Component.text("Durée de la partie", NamedTextColor.AQUA, TextDecoration.BOLD));
+        meta.lore(List.of(Component.text(String.format("%d h %02d", duration / 60, duration % 60), NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)));
+        item.setItemMeta(meta);
+        return item;
+    }
+
     private static ItemStack getTotalItem() {
         int total = Challenge.getMaxTotal();
         boolean complete = !Challenge.verifSettingsToHigh();
@@ -257,11 +268,13 @@ public class SettingsGui implements Listener {
         plusMeta.displayName(Component.text("§a+"));
         plus.setItemMeta(plusMeta);
         guiVictoire.setItem(3, plus);
+        guiVictoire.setItem(7, plus);
         ItemStack moins = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU0YjhiOGQyMzYyYzg2NGUwNjIzMDE0ODdkOTRkMzI3MmE2YjU3MGFmYmY4MGMyYzViMTQ4Yzk1NDU3OWQ0NiJ9fX0=");
         ItemMeta moinsMeta = moins.getItemMeta();
         moinsMeta.displayName(Component.text("§c-"));
         moins.setItemMeta(moinsMeta);
         guiVictoire.setItem(21, moins);
+        guiVictoire.setItem(25, moins);
 
         ItemStack nombreBingos = new ItemStack(Material.SPECTRAL_ARROW, Bingo.getGame().getNbreBingoForWin());
         ItemMeta nombreBingosMeta = nombreBingos.getItemMeta();
@@ -292,6 +305,7 @@ public class SettingsGui implements Listener {
         winMeta.lore(winLore);
         winMode.setItemMeta(winMeta);
         guiVictoire.setItem(14, winMode);
+        guiVictoire.setItem(16, getDurationItem());
         ItemStack back = new ItemStack(Material.BARRIER);
         ItemMeta backMeta = back.getItemMeta();
         backMeta.displayName(Component.text("§cRetour"));
@@ -447,6 +461,16 @@ public class SettingsGui implements Listener {
                 } else if (cursor == 21) {
                     if (Bingo.getGame().getNbreBingoForWin() > 1) {
                         Bingo.getGame().setNbreBingoForWin(Bingo.getGame().getNbreBingoForWin() - 1);
+                        openGuiVictoire(player);
+                    }
+                } else if (cursor == 7) {
+                    if (Timer.getDurationMinutes() < Timer.MAX_DURATION_MINUTES) {
+                        Timer.setDurationMinutes(Timer.getDurationMinutes() + Timer.DURATION_STEP_MINUTES);
+                        openGuiVictoire(player);
+                    }
+                } else if (cursor == 25) {
+                    if (Timer.getDurationMinutes() > Timer.MIN_DURATION_MINUTES) {
+                        Timer.setDurationMinutes(Timer.getDurationMinutes() - Timer.DURATION_STEP_MINUTES);
                         openGuiVictoire(player);
                     }
                 }

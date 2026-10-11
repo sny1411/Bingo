@@ -4,6 +4,7 @@ import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Random;
 import fr.sny1411.bingo.utils.Text;
+import fr.sny1411.bingo.utils.Timer;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ public class BonusEvent {
     private static void createBonus() {
         int nbEvents = Random.choice(1,4);
         for (int i = 0; i < nbEvents; i++) {
-            events.add(new BonusEvent(Random.choice(15,90)));
+            // Between 1/8 and 3/4 of the game, like between 15 and 90 minutes in a 2-hour game
+            events.add(new BonusEvent(Random.choice(Timer.getDurationMinutes() / 8, Timer.getDurationMinutes() * 3 / 4)));
         }
         for (BonusEvent event : BonusEvent.getEvents()) {
             Bukkit.getLogger().log(Level.INFO, "event : " + event.getTimeLaunch());
