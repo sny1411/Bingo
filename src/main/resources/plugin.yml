@@ -28,3 +28,7 @@ commands:
     description: Validates an active bonus challenge
   spec:
     description: Lets players switch to spectator mode once their game is finished
+permissions:
+  bingo.settings:
+    description: Allows changing the game settings during setup
+    default: op
