@@ -14,6 +14,8 @@ Build the plugin:
 ```
 On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-1.0.jar`.
 
+The build also runs the unit tests (`src/test/java`, JUnit). Run them alone with `./gradlew test`. They cover the logic that doesn't need a server, such as the bingo and points rules in `ScoreRules`.
+
 Start a local test server with the plugin:
 ```
 ./gradlew runServer
