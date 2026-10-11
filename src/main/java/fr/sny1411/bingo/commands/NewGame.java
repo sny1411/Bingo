@@ -3,6 +3,7 @@ package fr.sny1411.bingo.commands;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Countdown;
+import fr.sny1411.bingo.utils.Timer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,6 +21,7 @@ public class NewGame implements CommandExecutor {
                     sender.sendMessage(Component.text("§2Une partie est en cours, faites §c\"/newGame confirm\" §2si vous êtes sûr de vous"));
                     return false;
                 }
+                Timer.stop();
             }
             if (Bingo.getGame().getEtat() == Game.Etat.STARTING) {
                 Countdown.cancel();
