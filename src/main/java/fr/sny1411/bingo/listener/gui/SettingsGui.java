@@ -3,12 +3,12 @@ package fr.sny1411.bingo.listener.gui;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.Settings;
+import fr.sny1411.bingo.listener.gui.GuiHolder.Type;
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Items;
 import fr.sny1411.bingo.utils.SkullCustom;
 import fr.sny1411.bingo.utils.Spawn;
-import fr.sny1411.bingo.utils.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -22,306 +22,192 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SettingsGui implements Listener {
-    private static final Inventory gui = Bukkit.createInventory(null, 27, Component.text("§3§lParamètres"));
-    private static final Inventory guiDifficult = Bukkit.createInventory(null, 27, Component.text("§3§lParamètres grille"));
-    private static final Inventory guiVictoire = Bukkit.createInventory(null, 27, Component.text("§3§lParamètres victoire"));
-    private static final Inventory guiTeams = Bukkit.createInventory(null, 27, Component.text("§3§lParamètres teams"));
+    private static final String PLUS_TEXTURE = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19";
+    private static final String MINUS_TEXTURE = "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU0YjhiOGQyMzYyYzg2NGUwNjIzMDE0ODdkOTRkMzI3MmE2YjU3MGFmYmY4MGMyYzViMTQ4Yzk1NDU3OWQ0NiJ9fX0=";
+
+    private static Component setting(String key) {
+        return Component.translatable(key, NamedTextColor.AQUA, TextDecoration.BOLD);
+    }
+
+    private static Component clickToEdit() {
+        return Component.translatable("bingo.gui.settings.click_to_edit", NamedTextColor.GRAY);
+    }
+
+    private static ItemStack plus(Player player) {
+        return GuiItems.named(SkullCustom.getCustomSkull(PLUS_TEXTURE), Component.text("+", NamedTextColor.GREEN), List.of(), player);
+    }
+
+    private static ItemStack minus(Player player) {
+        return GuiItems.named(SkullCustom.getCustomSkull(MINUS_TEXTURE), Component.text("-", NamedTextColor.RED), List.of(), player);
+    }
+
+    private static ItemStack back(Player player) {
+        return GuiItems.item(Material.BARRIER, Component.translatable("bingo.gui.back", NamedTextColor.RED), player);
+    }
+
+    public static void open(Player player, Type type) {
+        switch (type) {
+            case SETTINGS -> openGui(player);
+            case SETTINGS_GRID -> openGuiDifficult(player);
+            case SETTINGS_VICTORY -> openGuiVictoire(player);
+            case SETTINGS_TEAMS -> openGuiTeams(player);
+            default -> throw new IllegalArgumentException("Not a settings GUI: " + type);
+        }
+    }
 
     private static void openGui(Player player) {
+        Inventory gui = GuiHolder.createInventory(Type.SETTINGS, 27, GuiItems.title("bingo.gui.settings.title", player));
         for (int i = 0; i < 27; i++) {
             if (i < 10 || i > 16) {
                 gui.setItem(i, Items.getGlassForGui());
             }
         }
+        Game game = Bingo.getGame();
 
-        ItemStack item = new ItemStack(Material.WHITE_BANNER);
-        ItemMeta meta = item.getItemMeta();
-        meta.displayName(Component.text("§b§lEquipes"));
+        gui.setItem(10, GuiItems.item(Material.WHITE_BANNER, 1, setting("bingo.gui.settings.teams"), List.of(clickToEdit()), player));
 
-        List<Component> itemLore = new ArrayList<>();
-        itemLore.add(Component.text("§7>> Clique pour modifier"));
-        meta.lore(itemLore);
-        item.setItemMeta(meta);
-        gui.setItem(10, item);
+        boolean chill = game.getModeAffichage() == Game.ModeAffichage.CHILL;
+        gui.setItem(11, GuiItems.item(chill ? Material.IRON_BLOCK : Material.NETHERITE_BLOCK, 1, setting("bingo.gui.settings.display"), List.of(
+                GuiItems.option(Component.translatable("bingo.display_mode.chill"), chill),
+                GuiItems.option(Component.translatable("bingo.display_mode.competition"), !chill)), player));
 
-        itemLore = new ArrayList<>();
-        if (Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL) {
-            item = new ItemStack(Material.IRON_BLOCK);
-            meta = item.getItemMeta();
-            meta.displayName(Component.text("§b§lAffichage des défis"));
-            itemLore.add(Component.text("§6§l>> §r§eChill"));
-            itemLore.add(Component.text("§7Compétition"));
-        } else {
-            item = new ItemStack(Material.NETHERITE_BLOCK);
-            meta = item.getItemMeta();
-            meta.displayName(Component.text("§b§lAffichage des défis"));
-            itemLore.add(Component.text("§7Chill"));
-            itemLore.add(Component.text("§6§l>> §r§eCompétition"));
+        gui.setItem(12, GuiItems.item(Material.CAULDRON, 1, setting("bingo.gui.settings.grid"), List.of(clickToEdit()), player));
+
+        if (game.getModeJeu() == Game.ModeJeu.DUEL) {
+            game.setModeVictoire(Game.ModeVictoire.DEFIS);
+        } else if (game.getModeJeu() == Game.ModeJeu.HANDICAP) {
+            game.setModeVictoire(Game.ModeVictoire.BINGO);
         }
-        meta.lore(itemLore);
-        item.setItemMeta(meta);
-        gui.setItem(11, item);
-
-        item = new ItemStack(Material.CAULDRON);
-        meta = item.getItemMeta();
-        meta.displayName(Component.text("§b§lDifficulté de la grille"));
-        itemLore = new ArrayList<>();
-        itemLore.add(Component.text("§7>> Clique pour modifier"));
-        meta.lore(itemLore);
-        item.setItemMeta(meta);
-        gui.setItem(12, item);
-
-        item = new ItemStack(Material.CRAFTING_TABLE);
-        meta = item.getItemMeta();
-        meta.displayName(Component.text("§b§lMode de jeu"));
-        itemLore = new ArrayList<>();
-        if (Bingo.getGame().getModeJeu() == Game.ModeJeu.CLASSIC) {
-            itemLore.add(Component.text("§6§l>> §r§eClassic"));
-            itemLore.add(Component.text("§7Duel"));
-            itemLore.add(Component.text("§7Handicap"));
-        } else if (Bingo.getGame().getModeJeu() == Game.ModeJeu.DUEL) {
-            Bingo.getGame().setModeVictoire(Game.ModeVictoire.DEFIS);
-            itemLore.add(Component.text("§7Classic"));
-            itemLore.add(Component.text("§6§l>> §r§eDuel"));
-            itemLore.add(Component.text("§7Handicap"));
-        } else {
-            Bingo.getGame().setModeVictoire(Game.ModeVictoire.BINGO);
-            itemLore.add(Component.text("§7Classic"));
-            itemLore.add(Component.text("§7Duel"));
-            itemLore.add(Component.text("§6§l>> §r§eHandicap"));
+        List<Component> modes = new ArrayList<>();
+        for (Game.ModeJeu mode : Game.ModeJeu.values()) {
+            modes.add(GuiItems.option(mode.label(), game.getModeJeu() == mode));
         }
-        meta.lore(itemLore);
-        item.setItemMeta(meta);
-        gui.setItem(13, item);
+        gui.setItem(13, GuiItems.item(Material.CRAFTING_TABLE, 1, setting("bingo.gui.settings.game_mode"), modes, player));
 
-        item = new ItemStack(Material.REDSTONE);
-        meta = item.getItemMeta();
-        meta.displayName(Component.text("§b§lCondition de victoire"));
-        itemLore = new ArrayList<>();
-        itemLore.add(Component.text("§7>> Clique pour modifier"));
-        meta.lore(itemLore);
-        item.setItemMeta(meta);
-        gui.setItem(14, item);
+        gui.setItem(14, GuiItems.item(Material.REDSTONE, 1, setting("bingo.gui.settings.victory"), List.of(clickToEdit()), player));
 
-        if (Bingo.getGame().isDefiBonus()) {
-            item = new ItemStack(Material.GLOWSTONE);
-            meta = item.getItemMeta();
-            itemLore = new ArrayList<>();
-            itemLore.add(Component.text("§e§lOn §r§7/ Off"));
-        } else {
-            item = new ItemStack(Material.REDSTONE_LAMP);
-            meta = item.getItemMeta();
-            itemLore = new ArrayList<>();
-            itemLore.add(Component.text("§7On /§e§l Off"));
-        }
-        meta.displayName(Component.text("§b§lEvent défis bonus"));
-        meta.lore(itemLore);
-        item.setItemMeta(meta);
-        gui.setItem(15, item);
+        boolean bonus = game.isDefiBonus();
+        gui.setItem(15, GuiItems.item(bonus ? Material.GLOWSTONE : Material.REDSTONE_LAMP, 1, setting("bingo.gui.settings.bonus"), List.of(
+                pair(Component.translatable("bingo.gui.on"), Component.translatable("bingo.gui.off"), bonus)), player));
 
-        ItemStack resetBlock = new ItemStack(Material.REDSTONE_BLOCK);
-        ItemMeta resetMeta = resetBlock.getItemMeta();
-        resetMeta.displayName(Component.text("§c§lReset"));
-        resetBlock.setItemMeta(resetMeta);
-        gui.setItem(16, resetBlock);
+        gui.setItem(16, GuiItems.item(Material.REDSTONE_BLOCK, Component.translatable("bingo.gui.settings.reset", NamedTextColor.RED, TextDecoration.BOLD), player));
 
         player.openInventory(gui);
     }
 
-    private void openGuiTeams(Player player) {
-        ItemStack plus = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19");
-        ItemMeta plusMeta = plus.getItemMeta();
-        plusMeta.displayName(Component.text("§a+"));
-        plus.setItemMeta(plusMeta);
-        guiTeams.setItem(3, plus);
-        guiTeams.setItem(5, plus);
-        ItemStack moins = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU0YjhiOGQyMzYyYzg2NGUwNjIzMDE0ODdkOTRkMzI3MmE2YjU3MGFmYmY4MGMyYzViMTQ4Yzk1NDU3OWQ0NiJ9fX0=");
-        ItemMeta moinsMeta = moins.getItemMeta();
-        moinsMeta.displayName(Component.text("§c-"));
-        moins.setItemMeta(moinsMeta);
-        guiTeams.setItem(21, moins);
-        guiTeams.setItem(23, moins);
-        ItemStack nombreTeams = new ItemStack(Material.DIAMOND_HORSE_ARMOR, Bingo.getGame().getSettings().getNbTeams());
-
-        ItemMeta nombreTeamsMeta = nombreTeams.getItemMeta();
-        nombreTeamsMeta.displayName(Component.text("§bNombre de teams"));
-        nombreTeams.setItemMeta(nombreTeamsMeta);
-        guiTeams.setItem(12, nombreTeams);
-        ItemStack nombreJoueursTeams = new ItemStack(Material.PUFFERFISH, Bingo.getGame().getSettings().getNbPlayerTeams());
-        ItemMeta nombreJoueursTeamsMeta = nombreJoueursTeams.getItemMeta();
-        nombreJoueursTeamsMeta.displayName(Component.text("§bNombre de joueurs"));
-        nombreJoueursTeams.setItemMeta(nombreJoueursTeamsMeta);
-        guiTeams.setItem(14, nombreJoueursTeams);
-        ItemStack back = new ItemStack(Material.BARRIER);
-        ItemMeta backMeta = back.getItemMeta();
-        backMeta.displayName(Component.text("§cRetour"));
-        back.setItemMeta(backMeta);
-        guiTeams.setItem(26, back);
-        player.openInventory(guiTeams);
+    // "First / Second" with the selected one in bold yellow
+    private static Component pair(Component first, Component second, boolean firstSelected) {
+        return Component.textOfChildren(
+                firstSelected ? first.color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD) : first.color(NamedTextColor.GRAY),
+                Component.text(" / ", NamedTextColor.GRAY),
+                firstSelected ? second.color(NamedTextColor.GRAY) : second.color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD));
     }
 
-    private void openGuiDifficult(Player player) {
-        ItemStack plus = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19");
-        ItemMeta plusMeta = plus.getItemMeta();
-        plusMeta.displayName(Component.text("§a+"));
-        plus.setItemMeta(plusMeta);
-        guiDifficult.setItem(1, plus);
-        guiDifficult.setItem(3, plus);
-        guiDifficult.setItem(5, plus);
-        guiDifficult.setItem(7, plus);
-        ItemStack moins = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU0YjhiOGQyMzYyYzg2NGUwNjIzMDE0ODdkOTRkMzI3MmE2YjU3MGFmYmY4MGMyYzViMTQ4Yzk1NDU3OWQ0NiJ9fX0=");
-        ItemMeta moinsMeta = moins.getItemMeta();
-        moinsMeta.displayName(Component.text("§c-"));
-        moins.setItemMeta(moinsMeta);
-        guiDifficult.setItem(19, moins);
-        guiDifficult.setItem(21, moins);
-        guiDifficult.setItem(23, moins);
-        guiDifficult.setItem(25, moins);
-        ItemStack easy = new ItemStack(Material.STRUCTURE_VOID);
-        ItemStack medium = new ItemStack(Material.STRUCTURE_VOID);
-        ItemStack hard = new ItemStack(Material.STRUCTURE_VOID);
-        ItemStack extreme = new ItemStack(Material.STRUCTURE_VOID);
-
-        if (Bingo.getGame().getSettings().getMaxEasy() > 0) {
-            easy = new ItemStack(Material.COAL, Bingo.getGame().getSettings().getMaxEasy());
-        }
-        if (Bingo.getGame().getSettings().getMaxMedium() > 0) {
-            medium = new ItemStack(Material.COPPER_INGOT, Bingo.getGame().getSettings().getMaxMedium());
-        }
-        if (Bingo.getGame().getSettings().getMaxHard() > 0) {
-            hard = new ItemStack(Material.AMETHYST_SHARD, Bingo.getGame().getSettings().getMaxHard());
-        }
-        if (Bingo.getGame().getSettings().getMaxExtreme() > 0) {
-            extreme = new ItemStack(Material.NETHERITE_SCRAP, Bingo.getGame().getSettings().getMaxExtreme());
-        }
-
-        ItemMeta easyMeta = easy.getItemMeta();
-        easyMeta.displayName(Component.text("§8Défi(s) facile(s)"));
-        ArrayList<Component> easyLore = new ArrayList<>();
-        easyLore.add(Component.text("§7[ " + Bingo.getGame().getSettings().getMaxEasy() + " / " + Bingo.getGame().getNbChallenges(Challenge.Difficult.EASY) + " ]"));
-        easyMeta.lore(easyLore);
-        easy.setItemMeta(easyMeta);
-        ItemMeta mediumMeta = medium.getItemMeta();
-        mediumMeta.displayName(Component.text("§6Défi(s) moyen(s)"));
-        ArrayList<Component> mediumLore = new ArrayList<>();
-        mediumLore.add(Component.text("§7[ " + Bingo.getGame().getSettings().getMaxMedium() + " / " + Bingo.getGame().getNbChallenges(Challenge.Difficult.MEDIUM) + " ]"));
-        mediumMeta.lore(mediumLore);
-        medium.setItemMeta(mediumMeta);
-        ItemMeta hardMeta = hard.getItemMeta();
-        hardMeta.displayName(Component.text("§dDéfi(s) dur(s)"));
-        ArrayList<Component> hardLore = new ArrayList<>();
-        hardLore.add(Component.text("§7[ " + Bingo.getGame().getSettings().getMaxHard() + " / " + Bingo.getGame().getNbChallenges(Challenge.Difficult.HARD) + " ]"));
-        hardMeta.lore(hardLore);
-        hard.setItemMeta(hardMeta);
-        ItemMeta extremeMeta = extreme.getItemMeta();
-        extremeMeta.displayName(Component.text("§4Défi(s) extrême(s)"));
-        ArrayList<Component> extremeLore = new ArrayList<>();
-        extremeLore.add(Component.text("§7[ " + Bingo.getGame().getSettings().getMaxExtreme() + " / " + Bingo.getGame().getNbChallenges(Challenge.Difficult.EXTREME) + " ]"));
-        extremeMeta.lore(extremeLore);
-        extreme.setItemMeta(extremeMeta);
-
-        guiDifficult.setItem(10, easy);
-        guiDifficult.setItem(12, medium);
-        guiDifficult.setItem(14, hard);
-        guiDifficult.setItem(16, extreme);
-        guiDifficult.setItem(18, getTotalItem());
-        ItemStack back = new ItemStack(Material.BARRIER);
-        ItemMeta backMeta = back.getItemMeta();
-        backMeta.displayName(Component.text("§cRetour"));
-        back.setItemMeta(backMeta);
-        guiDifficult.setItem(26, back);
-        player.openInventory(guiDifficult);
+    private static void openGuiTeams(Player player) {
+        Inventory gui = GuiHolder.createInventory(Type.SETTINGS_TEAMS, 27, GuiItems.title("bingo.gui.settings.teams.title", player));
+        Settings settings = Bingo.getGame().getSettings();
+        gui.setItem(3, plus(player));
+        gui.setItem(5, plus(player));
+        gui.setItem(21, minus(player));
+        gui.setItem(23, minus(player));
+        gui.setItem(12, GuiItems.item(Material.DIAMOND_HORSE_ARMOR, settings.getNbTeams(), Component.translatable("bingo.gui.settings.teams.count", NamedTextColor.AQUA), List.of(), player));
+        gui.setItem(14, GuiItems.item(Material.PUFFERFISH, settings.getNbPlayerTeams(), Component.translatable("bingo.gui.settings.teams.players", NamedTextColor.AQUA), List.of(), player));
+        gui.setItem(26, back(player));
+        player.openInventory(gui);
     }
 
-    private static ItemStack getDurationItem() {
+    private static ItemStack difficultyItem(Material material, Challenge.Difficult difficult, String key, NamedTextColor color, Player player) {
+        int max = maxChallenges(difficult);
+        return GuiItems.item(max > 0 ? material : Material.STRUCTURE_VOID, Math.max(max, 1), Component.translatable(key, color), List.of(
+                Component.text("[ " + max + " / " + Bingo.getGame().getNbChallenges(difficult) + " ]", NamedTextColor.GRAY)), player);
+    }
+
+    private static int maxChallenges(Challenge.Difficult difficult) {
+        Settings settings = Bingo.getGame().getSettings();
+        return switch (difficult) {
+            case EASY -> settings.getMaxEasy();
+            case MEDIUM -> settings.getMaxMedium();
+            case HARD -> settings.getMaxHard();
+            case EXTREME -> settings.getMaxExtreme();
+        };
+    }
+
+    private static void openGuiDifficult(Player player) {
+        Inventory gui = GuiHolder.createInventory(Type.SETTINGS_GRID, 27, GuiItems.title("bingo.gui.settings.grid.title", player));
+        for (int slot : new int[]{1, 3, 5, 7}) {
+            gui.setItem(slot, plus(player));
+        }
+        for (int slot : new int[]{19, 21, 23, 25}) {
+            gui.setItem(slot, minus(player));
+        }
+        gui.setItem(10, difficultyItem(Material.COAL, Challenge.Difficult.EASY, "bingo.gui.settings.grid.easy", NamedTextColor.DARK_GRAY, player));
+        gui.setItem(12, difficultyItem(Material.COPPER_INGOT, Challenge.Difficult.MEDIUM, "bingo.gui.settings.grid.medium", NamedTextColor.GOLD, player));
+        gui.setItem(14, difficultyItem(Material.AMETHYST_SHARD, Challenge.Difficult.HARD, "bingo.gui.settings.grid.hard", NamedTextColor.LIGHT_PURPLE, player));
+        gui.setItem(16, difficultyItem(Material.NETHERITE_SCRAP, Challenge.Difficult.EXTREME, "bingo.gui.settings.grid.extreme", NamedTextColor.DARK_RED, player));
+        gui.setItem(18, getTotalItem(player));
+        gui.setItem(26, back(player));
+        player.openInventory(gui);
+    }
+
+    private static ItemStack getDurationItem(Player player) {
         int duration = Bingo.getGame().getSettings().getDurationMinutes();
-        ItemStack item = new ItemStack(Material.CLOCK, duration / Settings.DURATION_STEP_MINUTES);
-        ItemMeta meta = item.getItemMeta();
-        meta.itemName(Component.text("Durée de la partie", NamedTextColor.AQUA, TextDecoration.BOLD));
-        meta.lore(List.of(Component.text(String.format("%d h %02d", duration / 60, duration % 60), NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)));
-        item.setItemMeta(meta);
-        return item;
+        return GuiItems.item(Material.CLOCK, duration / Settings.DURATION_STEP_MINUTES, setting("bingo.gui.settings.victory.duration"), List.of(
+                Component.text(String.format("%d h %02d", duration / 60, duration % 60), NamedTextColor.GRAY)), player);
     }
 
-    private static ItemStack getTotalItem() {
+    private static ItemStack getTotalItem(Player player) {
         int total = Bingo.getGame().getSettings().getMaxTotal();
         boolean complete = !Bingo.getGame().getSettings().verifSettingsToHigh();
-        ItemStack item = new ItemStack(Material.MAP, Math.max(total, 1));
-        ItemMeta meta = item.getItemMeta();
-        meta.itemName(Component.text("Défis dans la grille : " + total + " / " + Grid.NB_CHALLENGES, complete ? NamedTextColor.GREEN : NamedTextColor.RED));
-        if (!complete) {
-            meta.lore(List.of(Component.text("Il en faut " + Grid.NB_CHALLENGES + " pour lancer la partie", NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false)));
-        }
-        item.setItemMeta(meta);
-        return item;
+        List<Component> lore = complete ? List.of() : List.of(Component.translatable("bingo.gui.settings.grid.missing", NamedTextColor.GRAY, Component.text(Grid.NB_CHALLENGES)));
+        return GuiItems.item(Material.MAP, Math.max(total, 1), Component.translatable("bingo.gui.settings.grid.total", complete ? NamedTextColor.GREEN : NamedTextColor.RED,
+                Component.text(total), Component.text(Grid.NB_CHALLENGES)), lore, player);
     }
 
-    private void openGuiVictoire(Player player) {
-        ItemStack plus = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19");
-        ItemMeta plusMeta = plus.getItemMeta();
-        plusMeta.displayName(Component.text("§a+"));
-        plus.setItemMeta(plusMeta);
-        guiVictoire.setItem(3, plus);
-        guiVictoire.setItem(7, plus);
-        ItemStack moins = SkullCustom.getCustomSkull("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU0YjhiOGQyMzYyYzg2NGUwNjIzMDE0ODdkOTRkMzI3MmE2YjU3MGFmYmY4MGMyYzViMTQ4Yzk1NDU3OWQ0NiJ9fX0=");
-        ItemMeta moinsMeta = moins.getItemMeta();
-        moinsMeta.displayName(Component.text("§c-"));
-        moins.setItemMeta(moinsMeta);
-        guiVictoire.setItem(21, moins);
-        guiVictoire.setItem(25, moins);
+    private static void openGuiVictoire(Player player) {
+        Inventory gui = GuiHolder.createInventory(Type.SETTINGS_VICTORY, 27, GuiItems.title("bingo.gui.settings.victory.title", player));
+        gui.setItem(3, plus(player));
+        gui.setItem(7, plus(player));
+        gui.setItem(21, minus(player));
+        gui.setItem(25, minus(player));
 
-        ItemStack nombreBingos = new ItemStack(Material.SPECTRAL_ARROW, Bingo.getGame().getNbreBingoForWin());
-        ItemMeta nombreBingosMeta = nombreBingos.getItemMeta();
-        nombreBingosMeta.displayName(Component.text("§b§lNombre de bingos"));
-        nombreBingos.setItemMeta(nombreBingosMeta);
-        guiVictoire.setItem(12, nombreBingos);
-
-        ItemStack winMode = new ItemStack(Material.TARGET);
-        ItemMeta winMeta = winMode.getItemMeta();
-        winMeta.displayName(Component.text("§b§lMode de victoire"));
-        ArrayList<Component> winLore = new ArrayList<>();
         Game game = Bingo.getGame();
-        if (game.getModeJeu() == Game.ModeJeu.DUEL) {
-            winLore.add(Component.text("§7Bingos /§e Défis"));
-            winLore.add(Component.text("§cLe mode de jeu empêche la"));
-            winLore.add(Component.text("§cmodification du mode de victoire"));
-        } else if (game.getModeJeu() == Game.ModeJeu.HANDICAP) {
-            winLore.add(Component.text("§eBingos§7 / Défis"));
-            winLore.add(Component.text("§cLe mode de jeu empêche la"));
-            winLore.add(Component.text("§cmodification du mode de victoire"));
-        } else {
-            if (game.getModeVictoire() == Game.ModeVictoire.BINGO) {
-                winLore.add(Component.text("§eBingos§7 / Défis"));
-            } else {
-                winLore.add(Component.text("§7Bingos /§e Défis"));
-            }
+        gui.setItem(12, GuiItems.item(Material.SPECTRAL_ARROW, game.getNbreBingoForWin(), setting("bingo.gui.settings.victory.bingos"), List.of(), player));
+
+        List<Component> winLore = new ArrayList<>();
+        winLore.add(pair(Game.ModeVictoire.BINGO.label(), Game.ModeVictoire.DEFIS.label(), game.getModeVictoire() == Game.ModeVictoire.BINGO));
+        if (game.getModeJeu() == Game.ModeJeu.DUEL || game.getModeJeu() == Game.ModeJeu.HANDICAP) {
+            winLore.add(Component.translatable("bingo.gui.settings.victory.locked", NamedTextColor.RED));
         }
-        winMeta.lore(winLore);
-        winMode.setItemMeta(winMeta);
-        guiVictoire.setItem(14, winMode);
-        guiVictoire.setItem(16, getDurationItem());
-        ItemStack back = new ItemStack(Material.BARRIER);
-        ItemMeta backMeta = back.getItemMeta();
-        backMeta.displayName(Component.text("§cRetour"));
-        back.setItemMeta(backMeta);
-        guiVictoire.setItem(26, back);
-        player.openInventory(guiVictoire);
+        gui.setItem(14, GuiItems.item(Material.TARGET, 1, setting("bingo.gui.settings.victory.mode"), winLore, player));
+        gui.setItem(16, getDurationItem(player));
+        gui.setItem(26, back(player));
+        player.openInventory(gui);
     }
 
     public static boolean isSettingsGui(Inventory inventory) {
-        return inventory == gui || inventory == guiDifficult || inventory == guiVictoire || inventory == guiTeams;
+        Type type = GuiHolder.typeOf(inventory);
+        return type == Type.SETTINGS || type == Type.SETTINGS_GRID || type == Type.SETTINGS_VICTORY || type == Type.SETTINGS_TEAMS;
+    }
+
+    // Shows a change of the settings to the other players who have the settings open
+    private static void refreshOthers(Player player) {
+        for (Player other : Bukkit.getOnlinePlayers()) {
+            Inventory open = other.getOpenInventory().getTopInventory();
+            if (other != player && isSettingsGui(open)) {
+                open(other, GuiHolder.typeOf(open));
+            }
+        }
     }
 
     @EventHandler
     public void clickItems(PlayerInteractEvent e) {
         if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
-            if (Items.getSettings().isSimilar(e.getItem()) && e.getPlayer().hasPermission(Spawn.SETTINGS_PERMISSION)) {
+            if (Items.isSettings(e.getItem()) && e.getPlayer().hasPermission(Spawn.SETTINGS_PERMISSION)) {
                 openGui(e.getPlayer());
             }
         }
@@ -329,196 +215,193 @@ public class SettingsGui implements Listener {
 
     @EventHandler
     private void inventoryClick(InventoryClickEvent e) {
-        if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
-            Inventory clickedInventory = e.getClickedInventory();
-            if (isSettingsGui(clickedInventory) && !e.getWhoClicked().hasPermission(Spawn.SETTINGS_PERMISSION)) {
-                e.setCancelled(true);
-                return;
-            }
-            if (clickedInventory == gui) {
-                Material currentItem = e.getCurrentItem().getType();
-                Player player = (Player) e.getWhoClicked();
-                Game game = Bingo.getGame();
-                if (currentItem == Material.IRON_BLOCK) {
-                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 500.0f, 1.0f);
-                    game.setModeAffichage(Game.ModeAffichage.COMPETITION);
-                    openGui(player);
-                } else if (currentItem == Material.CRAFTING_TABLE) {
-                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 500.0f, 1.0f);
-                    if (game.getModeJeu() == Game.ModeJeu.CLASSIC) {
-                        game.setModeJeu(Game.ModeJeu.DUEL);
-                        openGui(player);
-                    } else if (game.getModeJeu() == Game.ModeJeu.DUEL) {
-                        game.setModeJeu(Game.ModeJeu.HANDICAP);
-                        openGui(player);
-                    } else {
-                        game.setModeJeu(Game.ModeJeu.CLASSIC);
-                        openGui(player);
-                    }
-                } else if (currentItem == Material.WHITE_BANNER) {
-                    openGuiTeams((Player) e.getWhoClicked());
-                } else if (currentItem == Material.REDSTONE_LAMP) {
-                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 500.0f, 1.0f);
-                    game.setDefiBonus(true);
-                    openGui(player);
-
-                } else if (currentItem == Material.NETHERITE_BLOCK) {
-                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 500.0f, 1.0f);
-                    game.setModeAffichage(Game.ModeAffichage.CHILL);
-                    openGui(player);
-                } else if (currentItem == Material.GLOWSTONE) {
-                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 500.0f, 1.0f);
-                    game.setDefiBonus(false);
-                    openGui(player);
-                } else if (currentItem == Material.CAULDRON) {
-                    openGuiDifficult(player);
-                } else if (currentItem == Material.REDSTONE) {
-                    openGuiVictoire(player);
-                } else if (currentItem == Material.REDSTONE_BLOCK) {
-                    //game.resetSettings();
-                    // TODO : faire méthode reset settings
-                    player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 500.0f, 1.0f);
-                    openGui(player);
-                }
-            } else if (clickedInventory == guiDifficult) {
-                Material currentItem = e.getCurrentItem().getType();
-                Player player = (Player) e.getWhoClicked();
-                int cursor = e.getSlot();
-                if (currentItem == Material.BARRIER) {
-                    openGui(player);
-                }
-
-                else if (cursor == 1) {
-                    if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
-                        Bingo.getGame().getSettings().setMaxEasy(Bingo.getGame().getSettings().getMaxEasy() + 1);
-                        openGuiDifficult(player);
-                    }
-                } else if (cursor == 3) {
-                    if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
-                        Bingo.getGame().getSettings().setMaxMedium(Bingo.getGame().getSettings().getMaxMedium() + 1);
-                        openGuiDifficult(player);
-                    }
-                } else if (cursor == 5) {
-                    if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
-                        if (Bingo.getGame().getNbChallenges(Challenge.Difficult.HARD) > Bingo.getGame().getSettings().getMaxHard()) {
-                            Bingo.getGame().getSettings().setMaxHard(Bingo.getGame().getSettings().getMaxHard() + 1);
-                            openGuiDifficult(player);
-                        }
-                    }
-                } else if (cursor == 7) {
-                    if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
-                        if (Bingo.getGame().getNbChallenges(Challenge.Difficult.EXTREME) > Bingo.getGame().getSettings().getMaxExtreme()) {
-                            Bingo.getGame().getSettings().setMaxExtreme(Bingo.getGame().getSettings().getMaxExtreme() + 1);
-                            openGuiDifficult(player);
-                        }
-
-                    }
-                } else if (cursor == 19) {
-                    if (Bingo.getGame().getSettings().getMaxEasy() > 0) {
-                        Bingo.getGame().getSettings().setMaxEasy(Bingo.getGame().getSettings().getMaxEasy() - 1);
-                        openGuiDifficult(player);
-                    }
-                } else if (cursor == 21) {
-                    if (Bingo.getGame().getSettings().getMaxMedium() > 0) {
-                        Bingo.getGame().getSettings().setMaxMedium(Bingo.getGame().getSettings().getMaxMedium() - 1);
-                        openGuiDifficult(player);
-                    }
-                } else if (cursor == 23) {
-                    if (Bingo.getGame().getSettings().getMaxHard() > 0) {
-                        Bingo.getGame().getSettings().setMaxHard(Bingo.getGame().getSettings().getMaxHard() - 1);
-                        openGuiDifficult(player);
-                    }
-                } else if (cursor == 25) {
-                    if (Bingo.getGame().getSettings().getMaxExtreme() > 0) {
-                        Bingo.getGame().getSettings().setMaxExtreme(Bingo.getGame().getSettings().getMaxExtreme() - 1);
-                        openGuiDifficult(player);
-                    }
-                }
-
-            } else if (clickedInventory == guiVictoire) {
-                Material currentItem = e.getCurrentItem().getType();
-                Player player = (Player) e.getWhoClicked();
-                int cursor = e.getSlot();
-                if (currentItem == Material.BARRIER) {
-                    openGui(player);
-                } else if (currentItem == Material.TARGET) {
-                    Game game = Bingo.getGame();
-                    if (!(game.getModeJeu() == Game.ModeJeu.DUEL) && !(game.getModeJeu() == Game.ModeJeu.HANDICAP)) {
-                        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 500.0f, 1.0f);
-                        if (game.getModeVictoire() == Game.ModeVictoire.BINGO) {
-                            game.setModeVictoire(Game.ModeVictoire.DEFIS);
-                            openGuiVictoire(player);
-                        } else {
-                            game.setModeVictoire(Game.ModeVictoire.BINGO);
-                            openGuiVictoire(player);
-                        }
-                    }
-                } else if (cursor == 3) {
-                    if (Bingo.getGame().getNbreBingoForWin() < 10) {
-                        Bingo.getGame().setNbreBingoForWin(Bingo.getGame().getNbreBingoForWin() + 1);
-                        openGuiVictoire(player);
-                    }
-                } else if (cursor == 21) {
-                    if (Bingo.getGame().getNbreBingoForWin() > 1) {
-                        Bingo.getGame().setNbreBingoForWin(Bingo.getGame().getNbreBingoForWin() - 1);
-                        openGuiVictoire(player);
-                    }
-                } else if (cursor == 7) {
-                    if (Bingo.getGame().getSettings().getDurationMinutes() < Settings.MAX_DURATION_MINUTES) {
-                        Bingo.getGame().getSettings().setDurationMinutes(Bingo.getGame().getSettings().getDurationMinutes() + Settings.DURATION_STEP_MINUTES);
-                        openGuiVictoire(player);
-                    }
-                } else if (cursor == 25) {
-                    if (Bingo.getGame().getSettings().getDurationMinutes() > Settings.MIN_DURATION_MINUTES) {
-                        Bingo.getGame().getSettings().setDurationMinutes(Bingo.getGame().getSettings().getDurationMinutes() - Settings.DURATION_STEP_MINUTES);
-                        openGuiVictoire(player);
-                    }
-                }
-
-            } else if (clickedInventory == guiTeams) {
-                Material currentItem = e.getCurrentItem().getType();
-                Player player = (Player) e.getWhoClicked();
-                Settings settings = Bingo.getGame().getSettings();
-                if (currentItem == Material.BARRIER) {
-                    openGui(player);
-                } else if (e.getSlot() == 3) {
-                    if (settings.getNbTeams() < 6) {
-                        settings.setNbTeams(settings.getNbTeams() + 1);
-                        Bingo.getGame().getTeams().create();
-                        openGuiTeams(player);
-                    }
-                } else if (e.getSlot() == 5) {
-                    if (settings.getNbPlayerTeams() < 10) {
-                        settings.setNbPlayerTeams(settings.getNbPlayerTeams() + 1);
-                        Bingo.getGame().getTeams().create();
-                        setChallengePreset(player);
-                    }
-                } else if (e.getSlot() == 21) {
-                    if (settings.getNbTeams() > 2) {
-                        settings.setNbTeams(settings.getNbTeams() - 1);
-                        Bingo.getGame().getTeams().create();
-                        openGuiTeams(player);
-                    }
-                } else if (e.getSlot() == 23) {
-                    if (settings.getNbPlayerTeams() > 1) {
-                        settings.setNbPlayerTeams(settings.getNbPlayerTeams() - 1);
-                        Bingo.getGame().getTeams().create();
-                        setChallengePreset(player);
+        Inventory clickedInventory = e.getClickedInventory();
+        if (Bingo.getGame().getEtat() != Game.Etat.SETUP || !isSettingsGui(clickedInventory)) {
+            return;
+        }
+        e.setCancelled(true);
+        if (!e.getWhoClicked().hasPermission(Spawn.SETTINGS_PERMISSION) || e.getCurrentItem() == null) {
+            return;
+        }
+        Player player = (Player) e.getWhoClicked();
+        Type type = GuiHolder.typeOf(clickedInventory);
+        Material currentItem = e.getCurrentItem().getType();
+        if (currentItem == Material.BARRIER) {
+            openGui(player);
+            return;
+        }
+        if (type == Type.SETTINGS) {
+            switch (currentItem) {
+                case WHITE_BANNER -> openGuiTeams(player);
+                case CAULDRON -> openGuiDifficult(player);
+                case REDSTONE -> openGuiVictoire(player);
+                default -> {
+                    if (clickMain(player, currentItem)) {
+                        settingChanged(player, type);
                     }
                 }
             }
-            e.setCancelled(true);
+            return;
+        }
+        boolean changed = switch (type) {
+            case SETTINGS_GRID -> clickGrid(e.getSlot());
+            case SETTINGS_VICTORY -> clickVictory(player, currentItem, e.getSlot());
+            case SETTINGS_TEAMS -> clickTeams(e.getSlot());
+            default -> false;
+        };
+        if (changed) {
+            settingChanged(player, type);
         }
     }
 
-    private void setChallengePreset(Player player) {
+    private static void settingChanged(Player player, Type type) {
+        open(player, type);
+        refreshOthers(player);
+    }
+
+    private static void playClick(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_LIBRARIAN, 500.0f, 1.0f);
+    }
+
+    // Each click method returns true when a setting changed
+    private static boolean clickMain(Player player, Material currentItem) {
+        Game game = Bingo.getGame();
+        switch (currentItem) {
+            case IRON_BLOCK -> game.setModeAffichage(Game.ModeAffichage.COMPETITION);
+            case NETHERITE_BLOCK -> game.setModeAffichage(Game.ModeAffichage.CHILL);
+            case CRAFTING_TABLE -> {
+                Game.ModeJeu[] modes = Game.ModeJeu.values();
+                game.setModeJeu(modes[(game.getModeJeu().ordinal() + 1) % modes.length]);
+            }
+            case REDSTONE_LAMP -> game.setDefiBonus(true);
+            case GLOWSTONE -> game.setDefiBonus(false);
+            case REDSTONE_BLOCK -> {
+                // TODO: reset the settings
+                player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 500.0f, 1.0f);
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+        playClick(player);
+        return true;
+    }
+
+    private static boolean clickGrid(int slot) {
+        Game game = Bingo.getGame();
+        Settings settings = game.getSettings();
+        switch (slot) {
+            case 1 -> {
+                if (!settings.verifSettingsToHigh()) return false;
+                settings.setMaxEasy(settings.getMaxEasy() + 1);
+            }
+            case 3 -> {
+                if (!settings.verifSettingsToHigh()) return false;
+                settings.setMaxMedium(settings.getMaxMedium() + 1);
+            }
+            case 5 -> {
+                if (!settings.verifSettingsToHigh() || game.getNbChallenges(Challenge.Difficult.HARD) <= settings.getMaxHard()) return false;
+                settings.setMaxHard(settings.getMaxHard() + 1);
+            }
+            case 7 -> {
+                if (!settings.verifSettingsToHigh() || game.getNbChallenges(Challenge.Difficult.EXTREME) <= settings.getMaxExtreme()) return false;
+                settings.setMaxExtreme(settings.getMaxExtreme() + 1);
+            }
+            case 19 -> {
+                if (settings.getMaxEasy() <= 0) return false;
+                settings.setMaxEasy(settings.getMaxEasy() - 1);
+            }
+            case 21 -> {
+                if (settings.getMaxMedium() <= 0) return false;
+                settings.setMaxMedium(settings.getMaxMedium() - 1);
+            }
+            case 23 -> {
+                if (settings.getMaxHard() <= 0) return false;
+                settings.setMaxHard(settings.getMaxHard() - 1);
+            }
+            case 25 -> {
+                if (settings.getMaxExtreme() <= 0) return false;
+                settings.setMaxExtreme(settings.getMaxExtreme() - 1);
+            }
+            default -> {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean clickVictory(Player player, Material currentItem, int slot) {
+        Game game = Bingo.getGame();
+        Settings settings = game.getSettings();
+        if (currentItem == Material.TARGET) {
+            if (game.getModeJeu() == Game.ModeJeu.DUEL || game.getModeJeu() == Game.ModeJeu.HANDICAP) {
+                return false;
+            }
+            playClick(player);
+            game.setModeVictoire(game.getModeVictoire() == Game.ModeVictoire.BINGO ? Game.ModeVictoire.DEFIS : Game.ModeVictoire.BINGO);
+            return true;
+        }
+        switch (slot) {
+            case 3 -> {
+                if (game.getNbreBingoForWin() >= 10) return false;
+                game.setNbreBingoForWin(game.getNbreBingoForWin() + 1);
+            }
+            case 21 -> {
+                if (game.getNbreBingoForWin() <= 1) return false;
+                game.setNbreBingoForWin(game.getNbreBingoForWin() - 1);
+            }
+            case 7 -> {
+                if (settings.getDurationMinutes() >= Settings.MAX_DURATION_MINUTES) return false;
+                settings.setDurationMinutes(settings.getDurationMinutes() + Settings.DURATION_STEP_MINUTES);
+            }
+            case 25 -> {
+                if (settings.getDurationMinutes() <= Settings.MIN_DURATION_MINUTES) return false;
+                settings.setDurationMinutes(settings.getDurationMinutes() - Settings.DURATION_STEP_MINUTES);
+            }
+            default -> {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean clickTeams(int slot) {
+        Settings settings = Bingo.getGame().getSettings();
+        switch (slot) {
+            case 3 -> {
+                if (settings.getNbTeams() >= 6) return false;
+                settings.setNbTeams(settings.getNbTeams() + 1);
+            }
+            case 5 -> {
+                if (settings.getNbPlayerTeams() >= 10) return false;
+                settings.setNbPlayerTeams(settings.getNbPlayerTeams() + 1);
+                setChallengePreset();
+            }
+            case 21 -> {
+                if (settings.getNbTeams() <= 2) return false;
+                settings.setNbTeams(settings.getNbTeams() - 1);
+            }
+            case 23 -> {
+                if (settings.getNbPlayerTeams() <= 1) return false;
+                settings.setNbPlayerTeams(settings.getNbPlayerTeams() - 1);
+                setChallengePreset();
+            }
+            default -> {
+                return false;
+            }
+        }
+        Bingo.getGame().getTeams().create();
+        return true;
+    }
+
+    private static void setChallengePreset() {
         resetColorTab();
         Settings settings = Bingo.getGame().getSettings();
         settings.setChallengePreset(settings.getNbPlayerTeams());
-        openGuiTeams(player);
     }
 
-    private void resetColorTab() {
+    private static void resetColorTab() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.displayName(Component.text(player.getName()));
         }

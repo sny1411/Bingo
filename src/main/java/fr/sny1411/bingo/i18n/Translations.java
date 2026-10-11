@@ -66,6 +66,10 @@ public final class Translations {
      * itself, such as item names and lores.
      */
     public static Component render(Component component, Player player) {
-        return GlobalTranslator.render(component, player.locale());
+        return render(component, player.locale());
+    }
+
+    public static Component render(Component component, Locale locale) {
+        return GlobalTranslator.render(component, locale);
     }
 }

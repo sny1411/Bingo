@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListener implements Listener {
@@ -26,6 +27,14 @@ public class PlayerListener implements Listener {
         } else if ((etat == Game.Etat.STARTING || etat == Game.Etat.INGAME) && Bingo.getGame().getTeams().getTeam(player) == null) {
                 Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);
                 player.setGameMode(GameMode.SPECTATOR);
+        }
+    }
+
+    // The items given during the setup are named in the player's language
+    @EventHandler
+    private void onLocaleChange(PlayerLocaleChangeEvent e) {
+        if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
+            Spawn.giveItemsPlayer(e.getPlayer(), e.locale());
         }
     }
 

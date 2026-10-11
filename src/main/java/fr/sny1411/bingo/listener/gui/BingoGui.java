@@ -6,6 +6,8 @@ import fr.sny1411.bingo.listener.challenges.ChallengeVerifier;
 import fr.sny1411.bingo.utils.*;
 import fr.sny1411.bingo.utils.items.collections.Concrete;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -28,7 +30,7 @@ public class BingoGui implements Listener {
     private static final Set<Player> playersInGui = new HashSet<>();
     private static final HashMap<Player, Material> spectatorMemory = new HashMap<>();
     public static void open(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 45, Component.text("§3§lBINGO"));
+        Inventory gui = GuiHolder.createInventory(GuiHolder.Type.BINGO, 45, Component.text("BINGO", NamedTextColor.DARK_AQUA, TextDecoration.BOLD));
         for (int i = 0; i < 45; i++) {
             gui.setItem(i, Items.getGlassForGui());
         }
@@ -82,27 +84,24 @@ public class BingoGui implements Listener {
         for (Team team : Bingo.getGame().getTeams().values()) {
             Team.Color colorTeam = team.getColor();
             if (colorTeam != Team.Color.SPECTATOR) {
-                ItemStack item = new ItemStack(colorTeam.getMaterialBingoGui());
-                ItemMeta itemMeta = item.getItemMeta();
-                itemMeta.displayName(Component.text(colorTeam.getPrefixe() + colorTeam.getNom()));
                 Team playerTeam = Bingo.getGame().getTeams().getTeam(player);
-                if (playerTeam == team || (Objects.requireNonNull(playerTeam).getColor() == Team.Color.SPECTATOR && spectatorMemory.containsKey(player) && spectatorMemory.get(player) == item.getType())) {
-                    itemMeta.addEnchant(Enchantment.UNBREAKING, 5, true);
-                    itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                }
-                ArrayList<Component> loreTeams = new ArrayList<>();
-                if (Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL) {
-                    loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f" + Bingo.getGame().getTeamsScore().get(team).getNbChallenges()));
-                } else {
-                    loreTeams.add(Component.text("§9Défi(s) réalisé(s): §f§k!!"));
-                }
+                List<Component> loreTeams = new ArrayList<>();
+                Component nbChallenges = Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL
+                        ? Component.text(Bingo.getGame().getTeamsScore().get(team).getNbChallenges())
+                        : Component.text("!!").decorate(TextDecoration.OBFUSCATED);
+                loreTeams.add(Component.translatable("bingo.gui.bingo.realized", NamedTextColor.BLUE, nbChallenges.color(NamedTextColor.WHITE)));
                 for (OfflinePlayer playerInTeam : team.getPlayers()) {
                     Player onlinePlayer = playerInTeam.getPlayer();
                     String playerName = onlinePlayer != null ? Bingo.getPlainSerializer().serialize(onlinePlayer.displayName()) : playerInTeam.getName();
-                    loreTeams.add(Component.text("§7§o- " + playerName));
+                    loreTeams.add(Component.text("- " + playerName, NamedTextColor.GRAY, TextDecoration.ITALIC));
                 }
-                itemMeta.lore(loreTeams);
-                item.setItemMeta(itemMeta);
+                ItemStack item = GuiItems.item(colorTeam.getMaterialBingoGui(), 1, colorTeam.displayName(), loreTeams, player);
+                if (playerTeam == team || (Objects.requireNonNull(playerTeam).getColor() == Team.Color.SPECTATOR && spectatorMemory.containsKey(player) && spectatorMemory.get(player) == item.getType())) {
+                    ItemMeta itemMeta = item.getItemMeta();
+                    itemMeta.addEnchant(Enchantment.UNBREAKING, 5, true);
+                    itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                    item.setItemMeta(itemMeta);
+                }
 
                 switch (team.getColor()) {
                     case ORANGE:
@@ -132,7 +131,7 @@ public class BingoGui implements Listener {
 
     @EventHandler
     private void onClick(InventoryClickEvent e) {
-        if (e.getView().title().equals(Component.text("§3§lBINGO")) && e.getCurrentItem() != null) {
+        if (GuiHolder.typeOf(e.getView().getTopInventory()) == GuiHolder.Type.BINGO && e.getCurrentItem() != null) {
             Bukkit.getLogger().log(Level.INFO, "bingogui2");
             Player player = (Player) e.getWhoClicked();
             if (Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).getColor() == Team.Color.SPECTATOR && e.getCurrentItem() != null) {
@@ -161,14 +160,14 @@ public class BingoGui implements Listener {
 
     @EventHandler
     private void onOpenGui(InventoryOpenEvent e) {
-        if (e.getView().title().equals(Component.text("§3§lBINGO"))) {
+        if (GuiHolder.typeOf(e.getView().getTopInventory()) == GuiHolder.Type.BINGO) {
             playersInGui.add((Player) e.getPlayer());
         }
     }
 
     @EventHandler
     private void onCloseGui(InventoryCloseEvent e) {
-        if (e.getView().title().equals(Component.text("§3§lBINGO"))) {
+        if (GuiHolder.typeOf(e.getView().getTopInventory()) == GuiHolder.Type.BINGO) {
             playersInGui.remove((Player) e.getPlayer());
         }
     }
