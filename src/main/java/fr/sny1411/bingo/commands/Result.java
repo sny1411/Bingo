@@ -5,6 +5,9 @@ import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.Team;
 import fr.sny1411.bingo.utils.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,13 +34,16 @@ public class Result implements CommandExecutor {
     }
 
     private static void showClassment(List<Score> classementPts, List<Score> classementBingo) {
-        Text.broadcastMessage("§7==========[§eClassement§7]==========");
+        Text.broadcastMessage(Component.textOfChildren(
+                Component.text("==========[", NamedTextColor.GRAY),
+                Component.translatable("bingo.result.title", NamedTextColor.YELLOW),
+                Component.text("]==========", NamedTextColor.GRAY)));
         if (Bingo.getGame().getModeVictoire() == Game.ModeVictoire.DEFIS) {
             showClassementPts(classementPts);
         } else {
             showClassementBingo(classementBingo);
         }
-        Text.broadcastMessage("§7==============================");
+        Text.broadcastMessage(Component.text("==============================", NamedTextColor.GRAY));
     }
 
     private static void showClassementPts(List<Score> classementPts) {
@@ -45,7 +51,9 @@ public class Result implements CommandExecutor {
         for (Score scoreTeam : classementPts) {
             Team team = scoreTeam.getTeam();
             Team.Color colorTeam = team.getColor();
-            Text.broadcastMessage(" " + iconesClassement.get(i) + " §l" + colorTeam.getPrefixe() + colorTeam.getNom() + " §f " + scoreTeam.getScore() + " point(s) (§a" + scoreTeam.getNbEasy() + " §f| §6" + scoreTeam.getNbMedium() + " §f| §c" + scoreTeam.getNbHard() + " §f| §8" + scoreTeam.getNbExtreme() + "§f)");
+            Text.broadcastMessage(rankLine(i, colorTeam, Component.translatable("bingo.result.points", Component.text(scoreTeam.getScore()),
+                    Component.text(scoreTeam.getNbEasy(), NamedTextColor.GREEN), Component.text(scoreTeam.getNbMedium(), NamedTextColor.GOLD),
+                    Component.text(scoreTeam.getNbHard(), NamedTextColor.RED), Component.text(scoreTeam.getNbExtreme(), NamedTextColor.DARK_GRAY))));
             i++;
         }
     }
@@ -55,9 +63,17 @@ public class Result implements CommandExecutor {
         for (Score scoreTeam : classementBingo) {
             Team team = scoreTeam.getTeam();
             Team.Color colorTeam = team.getColor();
-            Text.broadcastMessage(" " + iconesClassement.get(i) + " §l" + colorTeam.getPrefixe() + colorTeam.getNom() + " §f " + scoreTeam.getNbBingo() + " bingo(s) (" + scoreTeam.getScore() + " point(s))");
+            Text.broadcastMessage(rankLine(i, colorTeam, Component.translatable("bingo.result.bingos", Component.text(scoreTeam.getNbBingo()), Component.text(scoreTeam.getScore()))));
             i++;
         }
+    }
+
+    private static Component rankLine(int rank, Team.Color colorTeam, Component score) {
+        return Component.textOfChildren(
+                Component.text(" " + iconesClassement.get(rank) + " "),
+                colorTeam.displayName().decorate(TextDecoration.BOLD),
+                Component.text(" "),
+                score.colorIfAbsent(NamedTextColor.WHITE));
     }
 
     private static void sortClassementPts(List<Score> classementPts) {

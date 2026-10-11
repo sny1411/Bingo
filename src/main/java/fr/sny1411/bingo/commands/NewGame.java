@@ -4,6 +4,7 @@ import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Countdown;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,7 +18,7 @@ public class NewGame implements CommandExecutor {
         if (sender instanceof Player) {
             if (Bingo.getGame().getEtat() == Game.Etat.INGAME) {
                 if (args.length == 0 || !args[0].equalsIgnoreCase("confirm")) {
-                    sender.sendMessage(Component.text("§2Une partie est en cours, faites §c\"/newGame confirm\" §2si vous êtes sûr de vous"));
+                    sender.sendMessage(Component.translatable("bingo.newgame.confirm", NamedTextColor.DARK_GREEN, Component.text("\"/newGame confirm\"", NamedTextColor.RED)));
                     return false;
                 }
                 Bingo.getGame().getTimer().stop();
