@@ -1,0 +1,49 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "bingo:font/test_pack.png",
+            "ascent": 25,
+            "height": 60,
+            "chars": [
+                "\ue001"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "bingo:font/first.png",
+            "ascent": 8,
+            "height": 8,
+            "chars": [
+                "\ue002"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "bingo:font/second.png",
+            "ascent": 8,
+            "height": 8,
+            "chars": [
+                "\ue003"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "bingo:font/third.png",
+            "ascent": 8,
+            "height": 8,
+            "chars": [
+                "\ue004"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "bingo:font/bingo.png",
+            "ascent": 16,
+            "height": 18,
+            "chars": [
+                "\ue005"
+            ]
+        }
+    ]
+}
