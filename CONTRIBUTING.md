@@ -12,7 +12,7 @@ Build the plugin:
 ```
 ./gradlew build
 ```
-On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-dev.jar`.
+On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-dev.jar`, and the resource pack is `build/distributions/Bingo-resourcepack-dev.zip`.
 
 The build also runs the unit tests (`src/test/java`, JUnit). Run them alone with `./gradlew test`. They cover the logic that doesn't need a server, such as the bingo and points rules in `ScoreRules`.
 
@@ -48,6 +48,12 @@ Each client joins the test server with an offline username (3 to 16 letters, dig
 4. Write the texts shown to players in the language files, not in the code (see [Texts and translations](#texts-and-translations)), and never use `§` color codes (see [#18](https://github.com/sny1411/Bingo/issues/18)).
 5. Refactoring pull requests must not change the gameplay.
 6. Test your change on a Paper 26.2 server: start a game, and check the server console for errors.
+
+## Resource pack
+
+The icons of the plugin (the BINGO title, the medals of `/result`, the image of `/testPack`) are characters of the default font, from `\uE001` to `\uE005`, that the resource pack draws with the images of `resourcepack/assets/bingo/textures/font/`. They are mapped in `resourcepack/assets/minecraft/font/default.json`. The pack also replaces the sound of the `wait` music disc, played by `/testPack`.
+
+To test it, copy the zip built by `./gradlew build` to `run/clients/<name>/resourcepacks/` and enable it in the game. When the Minecraft version changes, update `min_format` and `max_format` in `resourcepack/pack.mcmeta`: the pack format of a version is `resource_major` in the `version.json` of its client jar.
 
 ## Adding a challenge
 
@@ -93,7 +99,7 @@ git tag v2.0.0
 git push origin v2.0.0
 ```
 
-The `Release` workflow then builds the plugin with the version of the tag and creates the GitHub release, with the jar attached and the list of pull requests merged since the previous release. It fails without creating anything if the tag is not a version like `v2.0.0`. A version with a suffix, such as `v2.0.0-beta.1`, is published as a pre-release.
+The `Release` workflow then builds the plugin with the version of the tag and creates the GitHub release, with the jar and the resource pack attached, and the list of pull requests merged since the previous release. It fails without creating anything if the tag is not a version like `v2.0.0`. A version with a suffix, such as `v2.0.0-beta.1`, is published as a pre-release.
 
 A jar built locally has the version `dev`.
 

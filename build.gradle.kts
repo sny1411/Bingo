@@ -37,6 +37,18 @@ tasks {
         }
     }
 
+    val resourcePack by registering(Zip::class) {
+        description = "Packs the resource pack that players need to see the plugin icons."
+        group = "build"
+        from("resourcepack")
+        archiveBaseName = "Bingo-resourcepack"
+        destinationDirectory = layout.buildDirectory.dir("distributions")
+    }
+
+    assemble {
+        dependsOn(resourcePack)
+    }
+
     runServer {
         minecraftVersion(libs.versions.minecraft.get())
         // Running the test server means accepting the Minecraft EULA (https://aka.ms/MinecraftEULA).

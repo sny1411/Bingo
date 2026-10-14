@@ -39,4 +39,5 @@ jobs:
             prerelease="--prerelease"
           fi
           gh release create "$GITHUB_REF_NAME" "build/libs/Bingo-$VERSION.jar" \
+            "build/distributions/Bingo-resourcepack-$VERSION.zip" \
             --title "Bingo $VERSION" --generate-notes --verify-tag $prerelease

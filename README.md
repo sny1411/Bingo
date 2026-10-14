@@ -9,6 +9,12 @@
 
 - A Paper 26.2 server (Java 25 or newer)
 
+## Installation:
+
+Download the plugin jar and the resource pack from the [latest release](https://github.com/sny1411/Bingo/releases/latest), put the jar in the `plugins/` folder of your server and restart it.
+
+Players need the resource pack to see the icons of the plugin (the BINGO title, the medals of the ranking), otherwise they see boxes. Either each player adds it to their `resourcepacks/` folder and enables it in the game, or the server sends it when they join: set `resource-pack` in `server.properties` to the download link of the resource pack in the release.
+
 ## Building:
 
 ```
