@@ -6,7 +6,8 @@ plugins {
 }
 
 group = "fr.sny1411"
-version = "1.0"
+// Releases are built with the version of their tag (see CONTRIBUTING)
+version = providers.gradleProperty("pluginVersion").getOrElse("dev")
 
 dependencies {
     compileOnly(libs.paper.api)

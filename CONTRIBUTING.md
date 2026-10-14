@@ -12,7 +12,7 @@ Build the plugin:
 ```
 ./gradlew build
 ```
-On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-1.0.jar`.
+On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-dev.jar`.
 
 The build also runs the unit tests (`src/test/java`, JUnit). Run them alone with `./gradlew test`. They cover the logic that doesn't need a server, such as the bingo and points rules in `ScoreRules`.
 
@@ -84,6 +84,18 @@ To add a language, add a file named after its language code (`de.properties`, or
 
 - Describe what you changed and how you tested it.
 - Link the issue with `Fixes #<number>` so it is closed automatically when the pull request is merged.
+
+## Making a release
+
+Releases are made by the maintainers: pull requests don't change the version. Tag the commit of `main` to release with its version prefixed by `v`, and push the tag:
+```
+git tag v2.0.0
+git push origin v2.0.0
+```
+
+The `Release` workflow then builds the plugin with the version of the tag and creates the GitHub release, with the jar attached and the list of pull requests merged since the previous release. It fails without creating anything if the tag is not a version like `v2.0.0`. A version with a suffix, such as `v2.0.0-beta.1`, is published as a pre-release.
+
+A jar built locally has the version `dev`.
 
 ## License
 
