@@ -14,7 +14,7 @@
 ```
 ./gradlew build
 ```
-The plugin jar is `build/libs/Bingo-1.0.jar`. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+The plugin jar is `build/libs/Bingo-dev.jar`. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 ## Development:
 
