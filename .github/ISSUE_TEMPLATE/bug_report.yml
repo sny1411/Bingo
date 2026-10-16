@@ -14,8 +14,8 @@ body:
     attributes:
       label: Steps to reproduce
       placeholder: |
-        1. /newGame
-        2. Join a team and /start
+        1. /bingo new
+        2. Join a team and /bingo start
         3. ...
     validations:
       required: true

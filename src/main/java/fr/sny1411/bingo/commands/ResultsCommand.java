@@ -1,26 +1,39 @@
 package fr.sny1411.bingo.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.Score;
 import fr.sny1411.bingo.utils.Team;
 import fr.sny1411.bingo.utils.Text;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Result implements CommandExecutor {
+public class ResultsCommand {
     private static final List<String> iconesClassement = new ArrayList<>(Arrays.asList("\uE002","\uE003","\uE004","➃","➄","➅"));
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+
+    private ResultsCommand() {
+    }
+
+    public static LiteralCommandNode<CommandSourceStack> node() {
+        return Commands.literal("results")
+                .requires(source -> source.getSender().hasPermission("bingo.command.results"))
+                .executes(context -> {
+                    run();
+                    return Command.SINGLE_SUCCESS;
+                })
+                .build();
+    }
+
+    private static void run() {
         if (Bingo.getGame().getEtat() == Game.Etat.ENDGAME) {
             List<Score> classementPts = new ArrayList<>(Bingo.getGame().getTeamsScore().values());
             List<Score> classementBingo = new ArrayList<>(Bingo.getGame().getTeamsScore().values());
@@ -30,7 +43,6 @@ public class Result implements CommandExecutor {
 
             showClassment(classementPts, classementBingo);
         }
-        return false;
     }
 
     private static void showClassment(List<Score> classementPts, List<Score> classementBingo) {

@@ -3,7 +3,7 @@ package fr.sny1411.bingo;
 import fr.sny1411.bingo.utils.Grid;
 
 /**
- * The game settings, kept from one game to the next by /newGame.
+ * The game settings, kept from one game to the next by /bingo new.
  */
 public class Settings {
     public static final int MIN_DURATION_MINUTES = 30;

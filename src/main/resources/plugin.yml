@@ -4,34 +4,30 @@ main: fr.sny1411.bingo.Bingo
 description: Not approved or affiliated with Mojang or Microsoft
 api-version: '26.2'
 commands:
-  newGame:
-    description: Creates a new game
-    permission: bingo.newGame
-  start:
-    description: Starts the game
-    permission: bingo.start
-  bingo:
-    description: Shows your challenge grid during a game
-  testPack:
-    description: Shows a title and plays a sound to check whether the resource pack is installed
-    permission: bingo.testPack
   valid:
     description: Forces a challenge to be validated in case of a problem
     permission: bingo.valid
-  stopGame:
-    description: Stops the game before the end
-    permission: bingo.stopGame
-  result:
-    description: Shows the ranking once the game is over
-    permission: bingo.result
   bonus:
     description: Validates an active bonus challenge
-  spec:
-    description: Lets players switch to spectator mode once their game is finished
   timer:
     description: Moves the game timer forward or speeds it up, to test or fix a game
     permission: bingo.timer
 permissions:
+  bingo.command.new:
+    description: Allows creating a new game with /bingo new
+    default: op
+  bingo.command.start:
+    description: Allows starting the game with /bingo start
+    default: op
+  bingo.command.stop:
+    description: Allows stopping the game before the end with /bingo stop
+    default: op
+  bingo.command.results:
+    description: Allows showing the ranking with /bingo results
+    default: op
+  bingo.command.pack:
+    description: Allows checking the resource pack with /bingo pack
+    default: op
   bingo.timer:
     description: Allows moving the game timer forward or speeding it up
     default: op
