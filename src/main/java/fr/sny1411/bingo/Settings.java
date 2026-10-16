@@ -10,18 +10,34 @@ public class Settings {
     public static final int MAX_DURATION_MINUTES = 4 * 60;
     public static final int DURATION_STEP_MINUTES = 15;
 
-    private boolean defiBonus = false;
-    private Game.ModeAffichage modeAffichage = Game.ModeAffichage.CHILL;
-    private Game.ModeJeu modeJeu = Game.ModeJeu.CLASSIC;
-    private Game.ModeVictoire modeVictoire = Game.ModeVictoire.BINGO;
-    private int nbreBingoForWin = 3;
-    private int durationMinutes = 2 * 60;
-    private int nbTeams = 4;
-    private int nbPlayerTeams = 2;
-    private int maxEasy = 6;
-    private int maxMedium = 13;
-    private int maxHard = 6;
-    private int maxExtreme = 0;
+    private boolean defiBonus;
+    private Game.ModeAffichage modeAffichage;
+    private Game.ModeJeu modeJeu;
+    private Game.ModeVictoire modeVictoire;
+    private int nbreBingoForWin;
+    private int durationMinutes;
+    private int nbTeams;
+    private int nbPlayerTeams;
+    private int maxEasy;
+    private int maxMedium;
+    private int maxHard;
+    private int maxExtreme;
+
+    public Settings() {
+        reset();
+    }
+
+    public void reset() {
+        defiBonus = false;
+        modeAffichage = Game.ModeAffichage.CHILL;
+        modeJeu = Game.ModeJeu.CLASSIC;
+        modeVictoire = Game.ModeVictoire.BINGO;
+        nbreBingoForWin = 3;
+        durationMinutes = 2 * 60;
+        nbTeams = 4;
+        nbPlayerTeams = 2;
+        setChallengePreset(nbPlayerTeams);
+    }
 
     public boolean isDefiBonus() {
         return defiBonus;

@@ -276,7 +276,7 @@ public class SettingsGui implements Listener {
             case REDSTONE_LAMP -> game.setDefiBonus(true);
             case GLOWSTONE -> game.setDefiBonus(false);
             case REDSTONE_BLOCK -> {
-                // TODO: reset the settings
+                resetSettings();
                 player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 500.0f, 1.0f);
                 return true;
             }
@@ -393,6 +393,17 @@ public class SettingsGui implements Listener {
         }
         Bingo.getGame().getTeams().create();
         return true;
+    }
+
+    private static void resetSettings() {
+        Settings settings = Bingo.getGame().getSettings();
+        int nbTeams = settings.getNbTeams();
+        int nbPlayerTeams = settings.getNbPlayerTeams();
+        settings.reset();
+        if (settings.getNbTeams() != nbTeams || settings.getNbPlayerTeams() != nbPlayerTeams) {
+            resetColorTab();
+            Bingo.getGame().getTeams().create();
+        }
     }
 
     private static void setChallengePreset() {
