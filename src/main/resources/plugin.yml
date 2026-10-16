@@ -9,9 +9,6 @@ commands:
     permission: bingo.valid
   bonus:
     description: Validates an active bonus challenge
-  timer:
-    description: Moves the game timer forward or speeds it up, to test or fix a game
-    permission: bingo.timer
 permissions:
   bingo.command.new:
     description: Allows creating a new game with /bingo new
@@ -25,11 +22,11 @@ permissions:
   bingo.command.results:
     description: Allows showing the ranking with /bingo results
     default: op
+  bingo.command.timer:
+    description: Allows moving the game timer forward or speeding it up with /bingo timer
+    default: op
   bingo.command.pack:
     description: Allows checking the resource pack with /bingo pack
-    default: op
-  bingo.timer:
-    description: Allows moving the game timer forward or speeding it up
     default: op
   bingo.settings:
     description: Allows changing the game settings during setup

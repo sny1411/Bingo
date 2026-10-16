@@ -24,6 +24,7 @@ public final class BingoCommands {
                 .then(StartCommand.node(bingo))
                 .then(StopCommand.node())
                 .then(ResultsCommand.node())
+                .then(TimerCommand.node())
                 .then(SpectateCommand.node())
                 .then(PackCommand.node())
                 .build(), "Shows your challenge grid during a game, and the other commands of the plugin");
