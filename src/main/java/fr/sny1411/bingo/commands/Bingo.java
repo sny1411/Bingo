@@ -1,19 +1,26 @@
 package fr.sny1411.bingo.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.listener.gui.BingoGui;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class Bingo implements CommandExecutor {
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String str, @NotNull String[] args) {
-        if (sender instanceof Player && (fr.sny1411.bingo.Bingo.getGame().getEtat() == Game.Etat.INGAME)) {
-            BingoGui.open((Player) sender);
-        }
-        return false;
+public class Bingo {
+    private Bingo() {
+    }
+
+    public static LiteralCommandNode<CommandSourceStack> node() {
+        return Commands.literal("bingo")
+                .requires(source -> source.getSender() instanceof Player)
+                .executes(context -> {
+                    if (fr.sny1411.bingo.Bingo.getGame().getEtat() == Game.Etat.INGAME) {
+                        BingoGui.open((Player) context.getSource().getSender());
+                    }
+                    return Command.SINGLE_SUCCESS;
+                })
+                .build();
     }
 }

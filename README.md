@@ -44,12 +44,12 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 
 | Command                                    | Description                                                                                            | Permission     |
 |--------------------------------------------|--------------------------------------------------------------------------------------------------------|----------------|
-| `/newGame`                                 | Creates a new game (during a game, use `/newGame confirm`)                                             | bingo.newGame  |
+| `/newgame`                                 | Creates a new game (during a game, use `/newgame confirm`)                                             | bingo.newGame  |
 | `/start`                                   | Starts the game (every online player must be in a team)                                                | bingo.start    |
 | `/bingo`                                   | Shows your challenge grid during a game                                                                | No permission  |
-| `/testPack`                                | Shows a title and plays a sound so players can check whether the resource pack is installed            | bingo.testPack |
+| `/testpack`                                | Shows a title and plays a sound so players can check whether the resource pack is installed            | bingo.testPack |
 | `/valid <add\|remove> <team> <challenge>`  | Forces a challenge to be validated, or un-validated, during or after a game (ids are suggested)        | bingo.valid    |
-| `/stopGame`                                | Stops the game before the end                                                                          | bingo.stopGame |
+| `/stopgame`                                | Stops the game before the end                                                                          | bingo.stopGame |
 | `/timer <set\|add\|speed> <value>`         | Moves the game timer forward (`set 59:59`, `add 10:00`) or speeds it up (`speed 60`)                   | bingo.timer    |
 | `/result`                                  | Shows the ranking to everyone once the game is over                                                    | bingo.result   |
 | `/spec`                                    | Lets players switch to spectator mode once their team has finished                                     | No permission  |

@@ -16,6 +16,7 @@ import fr.sny1411.bingo.listener.gui.SettingsGui;
 import fr.sny1411.bingo.listener.gui.TeamsGui;
 import fr.sny1411.bingo.utils.Items;
 import fr.sny1411.bingo.utils.Spawn;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -51,17 +52,11 @@ public final class Bingo extends JavaPlugin {
         Game.setBingoInstance(this);
         game = new Game();
 
-        Objects.requireNonNull(getCommand("newGame")).setExecutor(new NewGame());
-        Objects.requireNonNull(getCommand("start")).setExecutor(new Start(this));
-        Objects.requireNonNull(getCommand("bingo")).setExecutor(new fr.sny1411.bingo.commands.Bingo());
-        Objects.requireNonNull(getCommand("testPack")).setExecutor(new TestPack());
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> BingoCommands.register(event.registrar(), this));
         Objects.requireNonNull(getCommand("valid")).setExecutor(new ForceValid());
         Objects.requireNonNull(getCommand("valid")).setTabCompleter(new ForceValidCompleter());
-        Objects.requireNonNull(getCommand("stopGame")).setExecutor(new EndGame());
-        Objects.requireNonNull(getCommand("result")).setExecutor(new Result());
         Objects.requireNonNull(getCommand("bonus")).setExecutor(new Bonus());
         Objects.requireNonNull(getCommand("bonus")).setTabCompleter(new BonusCompleter());
-        Objects.requireNonNull(getCommand("spec")).setExecutor(new Spec());
         Objects.requireNonNull(getCommand("timer")).setExecutor(new TimerCommand());
         Objects.requireNonNull(getCommand("timer")).setTabCompleter(new TimerCompleter());
 

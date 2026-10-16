@@ -1,42 +1,53 @@
 package fr.sny1411.bingo.commands;
 
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
 import fr.sny1411.bingo.utils.*;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class Start implements CommandExecutor {
+public class Start {
     private final Bingo bingo;
 
-    public Start(Bingo bingo) {
+    private Start(Bingo bingo) {
         this.bingo = bingo;
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String str, @NotNull String[] args) {
-        if (sender instanceof Player && (Bingo.getGame().getEtat() == Game.Etat.SETUP)) {
-            if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
-                sender.sendMessage(gridIncompleteMessage());
-                return false;
-            }
-            Bingo.getGame().createGrids();
-            if (isTeamComplete()) {
-                Bingo.getGame().setEtat(Game.Etat.STARTING);
-                Countdown.start(bingo, this::startGame);
-            } else {
-                sender.sendMessage(Text.warning(Component.translatable("bingo.start.players_without_team")));
-            }
+    public static LiteralCommandNode<CommandSourceStack> node(Bingo bingo) {
+        Start start = new Start(bingo);
+        return Commands.literal("start")
+                .requires(source -> source.getSender() instanceof Player && source.getSender().hasPermission("bingo.start"))
+                .executes(context -> {
+                    start.run(context.getSource().getSender());
+                    return Command.SINGLE_SUCCESS;
+                })
+                .build();
+    }
+
+    private void run(CommandSender sender) {
+        if (Bingo.getGame().getEtat() != Game.Etat.SETUP) {
+            return;
         }
-        return false;
+        if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
+            sender.sendMessage(gridIncompleteMessage());
+            return;
+        }
+        Bingo.getGame().createGrids();
+        if (isTeamComplete()) {
+            Bingo.getGame().setEtat(Game.Etat.STARTING);
+            Countdown.start(bingo, this::startGame);
+        } else {
+            sender.sendMessage(Text.warning(Component.translatable("bingo.start.players_without_team")));
+        }
     }
 
     private void startGame() {
