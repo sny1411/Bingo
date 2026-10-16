@@ -1,0 +1,49 @@
+package fr.sny1411.bingo;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class SettingsTest {
+
+    @Test
+    void defaultChallengesMatchThePresetOfTheDefaultTeamSize() {
+        Settings settings = new Settings();
+        Settings preset = new Settings();
+        preset.setChallengePreset(settings.getNbPlayerTeams());
+        assertEquals(preset.getMaxEasy(), settings.getMaxEasy());
+        assertEquals(preset.getMaxMedium(), settings.getMaxMedium());
+        assertEquals(preset.getMaxHard(), settings.getMaxHard());
+        assertEquals(preset.getMaxExtreme(), settings.getMaxExtreme());
+    }
+
+    @Test
+    void resetBringsBackEveryDefault() {
+        Settings settings = new Settings();
+        settings.setDefiBonus(true);
+        settings.setModeAffichage(Game.ModeAffichage.COMPETITION);
+        settings.setModeJeu(Game.ModeJeu.DUEL);
+        settings.setModeVictoire(Game.ModeVictoire.DEFIS);
+        settings.setNbreBingoForWin(7);
+        settings.setDurationMinutes(Settings.MAX_DURATION_MINUTES);
+        settings.setNbTeams(6);
+        settings.setNbPlayerTeams(4);
+        settings.setChallengePreset(4);
+
+        settings.reset();
+
+        Settings defaults = new Settings();
+        assertEquals(defaults.isDefiBonus(), settings.isDefiBonus());
+        assertEquals(defaults.getModeAffichage(), settings.getModeAffichage());
+        assertEquals(defaults.getModeJeu(), settings.getModeJeu());
+        assertEquals(defaults.getModeVictoire(), settings.getModeVictoire());
+        assertEquals(defaults.getNbreBingoForWin(), settings.getNbreBingoForWin());
+        assertEquals(defaults.getDurationMinutes(), settings.getDurationMinutes());
+        assertEquals(defaults.getNbTeams(), settings.getNbTeams());
+        assertEquals(defaults.getNbPlayerTeams(), settings.getNbPlayerTeams());
+        assertEquals(defaults.getMaxEasy(), settings.getMaxEasy());
+        assertEquals(defaults.getMaxMedium(), settings.getMaxMedium());
+        assertEquals(defaults.getMaxHard(), settings.getMaxHard());
+        assertEquals(defaults.getMaxExtreme(), settings.getMaxExtreme());
+    }
+}
