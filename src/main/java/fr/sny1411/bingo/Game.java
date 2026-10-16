@@ -2,6 +2,7 @@ package fr.sny1411.bingo;
 
 import fr.sny1411.bingo.utils.Challenge;
 import fr.sny1411.bingo.utils.ChallengeId;
+import fr.sny1411.bingo.utils.Countdown;
 import fr.sny1411.bingo.utils.Environment;
 import fr.sny1411.bingo.utils.Grid;
 import fr.sny1411.bingo.utils.Score;
@@ -9,9 +10,12 @@ import fr.sny1411.bingo.utils.ScoreBoard;
 import fr.sny1411.bingo.utils.Spawn;
 import fr.sny1411.bingo.utils.Team;
 import fr.sny1411.bingo.utils.Teams;
+import fr.sny1411.bingo.utils.Text;
 import fr.sny1411.bingo.utils.Timer;
 import fr.sny1411.bingo.utils.bonus.BonusEvent;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.title.Title;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,6 +90,8 @@ public class Game {
     }
 
     public void end() {
+        Countdown.showTitle(Title.title(Component.translatable("bingo.timer.game_over", NamedTextColor.GOLD), Component.empty()));
+        Text.broadcastMessage(Text.info(Component.translatable("bingo.timer.game_over")));
         ScoreBoard.stop();
         Spawn.create();
         Environment.setGamerulesSetup();
