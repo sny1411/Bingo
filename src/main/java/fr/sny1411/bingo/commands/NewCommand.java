@@ -12,13 +12,13 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class NewGame {
-    private NewGame() {
+public class NewCommand {
+    private NewCommand() {
     }
 
     public static LiteralCommandNode<CommandSourceStack> node() {
-        return Commands.literal("newgame")
-                .requires(source -> source.getSender() instanceof Player && source.getSender().hasPermission("bingo.newGame"))
+        return Commands.literal("new")
+                .requires(source -> source.getSender() instanceof Player && source.getSender().hasPermission("bingo.command.new"))
                 .executes(context -> {
                     run(context.getSource().getSender(), false);
                     return Command.SINGLE_SUCCESS;
@@ -34,7 +34,7 @@ public class NewGame {
     private static void run(CommandSender sender, boolean confirmed) {
         if (Bingo.getGame().getEtat() == Game.Etat.INGAME) {
             if (!confirmed) {
-                sender.sendMessage(Component.translatable("bingo.newgame.confirm", NamedTextColor.DARK_GREEN, Component.text("\"/newgame confirm\"", NamedTextColor.RED)));
+                sender.sendMessage(Component.translatable("bingo.newgame.confirm", NamedTextColor.DARK_GREEN, Component.text("\"/bingo new confirm\"", NamedTextColor.RED)));
                 return;
             }
             Bingo.getGame().getTimer().stop();

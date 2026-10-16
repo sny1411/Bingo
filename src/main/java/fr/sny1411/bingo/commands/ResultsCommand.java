@@ -17,15 +17,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Result {
+public class ResultsCommand {
     private static final List<String> iconesClassement = new ArrayList<>(Arrays.asList("\uE002","\uE003","\uE004","➃","➄","➅"));
 
-    private Result() {
+    private ResultsCommand() {
     }
 
     public static LiteralCommandNode<CommandSourceStack> node() {
-        return Commands.literal("result")
-                .requires(source -> source.getSender().hasPermission("bingo.result"))
+        return Commands.literal("results")
+                .requires(source -> source.getSender().hasPermission("bingo.command.results"))
                 .executes(context -> {
                     run();
                     return Command.SINGLE_SUCCESS;

@@ -1,7 +1,11 @@
 package fr.sny1411.bingo.commands;
 
+import com.mojang.brigadier.Command;
 import fr.sny1411.bingo.Bingo;
+import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.listener.gui.BingoGui;
 import io.papermc.paper.command.brigadier.Commands;
+import org.bukkit.entity.Player;
 
 public final class BingoCommands {
     private BingoCommands() {
@@ -9,12 +13,19 @@ public final class BingoCommands {
     }
 
     public static void register(Commands commands, Bingo bingo) {
-        commands.register(NewGame.node(), "Creates a new game");
-        commands.register(Start.node(bingo), "Starts the game");
-        commands.register(fr.sny1411.bingo.commands.Bingo.node(), "Shows your challenge grid during a game");
-        commands.register(TestPack.node(), "Shows a title and plays a sound to check whether the resource pack is installed");
-        commands.register(EndGame.node(), "Stops the game before the end");
-        commands.register(Result.node(), "Shows the ranking once the game is over");
-        commands.register(Spec.node(), "Lets players switch to spectator mode once their game is finished");
+        commands.register(Commands.literal("bingo")
+                .executes(context -> {
+                    if (context.getSource().getSender() instanceof Player player && Bingo.getGame().getEtat() == Game.Etat.INGAME) {
+                        BingoGui.open(player);
+                    }
+                    return Command.SINGLE_SUCCESS;
+                })
+                .then(NewCommand.node())
+                .then(StartCommand.node(bingo))
+                .then(StopCommand.node())
+                .then(ResultsCommand.node())
+                .then(SpectateCommand.node())
+                .then(PackCommand.node())
+                .build(), "Shows your challenge grid during a game, and the other commands of the plugin");
     }
 }

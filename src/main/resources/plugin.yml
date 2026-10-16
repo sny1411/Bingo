@@ -13,6 +13,21 @@ commands:
     description: Moves the game timer forward or speeds it up, to test or fix a game
     permission: bingo.timer
 permissions:
+  bingo.command.new:
+    description: Allows creating a new game with /bingo new
+    default: op
+  bingo.command.start:
+    description: Allows starting the game with /bingo start
+    default: op
+  bingo.command.stop:
+    description: Allows stopping the game before the end with /bingo stop
+    default: op
+  bingo.command.results:
+    description: Allows showing the ranking with /bingo results
+    default: op
+  bingo.command.pack:
+    description: Allows checking the resource pack with /bingo pack
+    default: op
   bingo.timer:
     description: Allows moving the game timer forward or speeding it up
     default: op

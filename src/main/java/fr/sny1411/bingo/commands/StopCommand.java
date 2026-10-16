@@ -11,13 +11,13 @@ import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
-public class EndGame {
-    private EndGame() {
+public class StopCommand {
+    private StopCommand() {
     }
 
     public static LiteralCommandNode<CommandSourceStack> node() {
-        return Commands.literal("stopgame")
-                .requires(source -> source.getSender() instanceof Player && source.getSender().hasPermission("bingo.stopGame"))
+        return Commands.literal("stop")
+                .requires(source -> source.getSender() instanceof Player && source.getSender().hasPermission("bingo.command.stop"))
                 .executes(context -> {
                     run();
                     return Command.SINGLE_SUCCESS;

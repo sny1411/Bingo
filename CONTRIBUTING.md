@@ -51,7 +51,7 @@ Each client joins the test server with an offline username (3 to 16 letters, dig
 
 ## Resource pack
 
-The icons of the plugin (the BINGO title, the medals of `/result`, the image of `/testpack`) are characters of the default font, from `\uE001` to `\uE005`, that the resource pack draws with the images of `resourcepack/assets/bingo/textures/font/`. They are mapped in `resourcepack/assets/minecraft/font/default.json`. The pack also replaces the sound of the `wait` music disc, played by `/testpack`.
+The icons of the plugin (the BINGO title, the medals of `/bingo results`, the image of `/bingo pack`) are characters of the default font, from `\uE001` to `\uE005`, that the resource pack draws with the images of `resourcepack/assets/bingo/textures/font/`. They are mapped in `resourcepack/assets/minecraft/font/default.json`. The pack also replaces the sound of the `wait` music disc, played by `/bingo pack`.
 
 To test it, copy the zip built by `./gradlew build` to `run/clients/<name>/resourcepacks/` and enable it in the game. When the Minecraft version changes, update `min_format` and `max_format` in `resourcepack/pack.mcmeta`: the pack format of a version is `resource_major` in the `version.json` of its client jar.
 

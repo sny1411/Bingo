@@ -10,13 +10,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class TestPack {
-    private TestPack() {
+public class PackCommand {
+    private PackCommand() {
     }
 
     public static LiteralCommandNode<CommandSourceStack> node() {
-        return Commands.literal("testpack")
-                .requires(source -> source.getSender().hasPermission("bingo.testPack"))
+        return Commands.literal("pack")
+                .requires(source -> source.getSender().hasPermission("bingo.command.pack"))
                 .executes(context -> {
                     for (Player player : Bukkit.getOnlinePlayers()) {
                         player.showTitle(Title.title(Component.text("\uE001"), Component.text("")));

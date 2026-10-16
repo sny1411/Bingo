@@ -15,17 +15,17 @@ import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class Start {
+public class StartCommand {
     private final Bingo bingo;
 
-    private Start(Bingo bingo) {
+    private StartCommand(Bingo bingo) {
         this.bingo = bingo;
     }
 
     public static LiteralCommandNode<CommandSourceStack> node(Bingo bingo) {
-        Start start = new Start(bingo);
+        StartCommand start = new StartCommand(bingo);
         return Commands.literal("start")
-                .requires(source -> source.getSender() instanceof Player && source.getSender().hasPermission("bingo.start"))
+                .requires(source -> source.getSender() instanceof Player && source.getSender().hasPermission("bingo.command.start"))
                 .executes(context -> {
                     start.run(context.getSource().getSender());
                     return Command.SINGLE_SUCCESS;

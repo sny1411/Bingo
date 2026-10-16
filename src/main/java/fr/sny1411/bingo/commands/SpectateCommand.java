@@ -15,12 +15,12 @@ import org.bukkit.entity.Player;
 
 import java.util.Objects;
 
-public class Spec {
-    private Spec() {
+public class SpectateCommand {
+    private SpectateCommand() {
     }
 
     public static LiteralCommandNode<CommandSourceStack> node() {
-        return Commands.literal("spec")
+        return Commands.literal("spectate")
                 .requires(source -> source.getSender() instanceof Player)
                 .executes(context -> {
                     run((Player) context.getSource().getSender());
