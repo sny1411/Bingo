@@ -20,4 +20,14 @@ public final class CommandSuggestions {
         }
         return builder.buildFuture();
     }
+
+    // Numbers are suggested as numbers, so that the client sorts them in order
+    public static CompletableFuture<Suggestions> suggestNumbers(SuggestionsBuilder builder, Collection<Integer> values) {
+        for (int value : values) {
+            if (String.valueOf(value).startsWith(builder.getRemaining())) {
+                builder.suggest(value);
+            }
+        }
+        return builder.buildFuture();
+    }
 }

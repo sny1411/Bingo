@@ -25,6 +25,7 @@ public final class BingoCommands {
                 .then(StopCommand.node())
                 .then(ResultsCommand.node())
                 .then(TimerCommand.node())
+                .then(GridCommand.node())
                 .then(ValidateCommand.validateNode())
                 .then(ValidateCommand.invalidateNode())
                 .then(BonusCommand.node())

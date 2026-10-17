@@ -74,7 +74,7 @@ public class StartCommand {
     }
 
     private static Component gridIncompleteMessage() {
-        return Text.warning(Component.translatable("bingo.start.grid_incomplete", Component.text(Bingo.getGame().getSettings().getMaxTotal()), Component.text(Grid.NB_CHALLENGES)));
+        return Text.warning(Component.translatable("bingo.start.grid_incomplete", Component.text(Bingo.getGame().getSettings().getNbChallengesInGrid()), Component.text(Grid.NB_CHALLENGES)));
     }
 
     private static boolean isTeamComplete() {

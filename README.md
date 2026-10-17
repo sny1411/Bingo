@@ -54,7 +54,10 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 | `/bingo validate <team> <challenge>`     | Validates a challenge by hand for a team, during or after a game                            | bingo.command.validate |
 | `/bingo invalidate <team> <challenge>`   | Removes a challenge validated by mistake, during or after a game                            | bingo.command.validate |
 | `/bingo timer <set\|add\|speed> <value>` | Moves the game timer forward (`set 59:59`, `add 10:00`) or speeds it up (`speed 60`)        | bingo.command.timer    |
+| `/bingo grid [set\|clear\|random]`       | Lists the fixed positions of the grid, or chooses them before the game (see below)          | bingo.command.grid     |
 | `/bingo pack`                            | Shows a title and plays a sound so players can check whether the resource pack is installed | bingo.command.pack     |
+
+- Before the game, `/bingo grid set <position> <challenge>` fixes a challenge at a position of the grid, from 1 to 25, left to right then top to bottom (a challenge already fixed elsewhere is moved). `/bingo grid clear <position>` gives a position back to the random draw, and `/bingo grid random` all of them. The other positions are drawn at random when the game starts, with the difficulty settings. The fixed positions are kept by `/bingo new`, so the same grid can be played again; the Reset button of the settings clears them.
 
 ---
 

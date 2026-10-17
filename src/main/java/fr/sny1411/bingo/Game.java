@@ -107,6 +107,19 @@ public class Game {
         }
     }
 
+    public List<Challenge> getChallenges() {
+        return challenges;
+    }
+
+    public Challenge findChallenge(ChallengeId challengeId) {
+        for (Challenge challenge : challenges) {
+            if (challenge.getId() == challengeId) {
+                return challenge;
+            }
+        }
+        return null;
+    }
+
     public int getNbChallenges(Challenge.Difficult difficult) {
         int nbChallenges = 0;
         for (Challenge challenge : challenges) {

@@ -1,6 +1,11 @@
 package fr.sny1411.bingo;
 
+import fr.sny1411.bingo.utils.ChallengeId;
 import fr.sny1411.bingo.utils.Grid;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * The game settings, kept from one game to the next by /bingo new.
@@ -22,6 +27,8 @@ public class Settings {
     private int maxMedium;
     private int maxHard;
     private int maxExtreme;
+    // Positions from 1 to 25, in reading order, chosen with /bingo grid
+    private final Map<Integer, ChallengeId> fixedChallenges = new TreeMap<>();
 
     public Settings() {
         reset();
@@ -37,6 +44,7 @@ public class Settings {
         nbTeams = 4;
         nbPlayerTeams = 2;
         setChallengePreset(nbPlayerTeams);
+        fixedChallenges.clear();
     }
 
     public boolean isDefiBonus() {
@@ -140,7 +148,43 @@ public class Settings {
     }
 
     public boolean verifSettingsToHigh() {
-        return getMaxTotal() < Grid.NB_CHALLENGES;
+        return getMaxTotal() < getNbRandomChallenges();
+    }
+
+    public int getNbRandomChallenges() {
+        return Grid.NB_CHALLENGES - fixedChallenges.size();
+    }
+
+    // The challenges the grid will have, fixed ones included, out of 25
+    public int getNbChallengesInGrid() {
+        return Math.min(getMaxTotal(), getNbRandomChallenges()) + fixedChallenges.size();
+    }
+
+    public Map<Integer, ChallengeId> getFixedChallenges() {
+        return Collections.unmodifiableMap(fixedChallenges);
+    }
+
+    // Returns the position the challenge was fixed at before, or null
+    public Integer fixChallenge(int position, ChallengeId challengeId) {
+        Integer previous = null;
+        for (Map.Entry<Integer, ChallengeId> entry : fixedChallenges.entrySet()) {
+            if (entry.getValue() == challengeId && entry.getKey() != position) {
+                previous = entry.getKey();
+            }
+        }
+        if (previous != null) {
+            fixedChallenges.remove(previous);
+        }
+        fixedChallenges.put(position, challengeId);
+        return previous;
+    }
+
+    public ChallengeId clearFixedChallenge(int position) {
+        return fixedChallenges.remove(position);
+    }
+
+    public void clearFixedChallenges() {
+        fixedChallenges.clear();
     }
 
     // Challenges per difficulty recommended for a number of players per team

@@ -22,6 +22,9 @@ permissions:
   bingo.command.validate:
     description: Allows validating or invalidating a challenge by hand with /bingo validate and /bingo invalidate
     default: op
+  bingo.command.grid:
+    description: Allows choosing challenges of the grid before the game with /bingo grid
+    default: op
   bingo.command.pack:
     description: Allows checking the resource pack with /bingo pack
     default: op
