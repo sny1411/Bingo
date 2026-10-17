@@ -16,6 +16,14 @@ On Windows, use `gradlew.bat build`. The plugin jar is `build/libs/Bingo-dev.jar
 
 The build also runs the unit tests (`src/test/java`, JUnit). Run them alone with `./gradlew test`. They cover the logic that doesn't need a server, such as the bingo and points rules in `ScoreRules`.
 
+The end-to-end tests (`src/e2eTest/java`) run the plugin on a real Paper server. `./gradlew build` doesn't run them:
+```
+./gradlew e2eTest
+```
+The task downloads the Paper build set by `paper-server` in `gradle/libs.versions.toml` and checks its SHA-256. It starts it with the plugin in `build/e2e/server`, on free ports, runs the tests, then stops and deletes the server, even when a test fails. The server log stays in `build/e2e/server.log`. The first run downloads Minecraft and its libraries to `build/e2e/cache`. Starting the server means you accept the [Minecraft EULA](https://aka.ms/MinecraftEULA).
+
+A test class gets the server with `@ExtendWith(PaperServerExtension.class)` and a `PaperServer` parameter. `server.command("bingo grid")` runs a console command through RCON and returns its answer. A test fails when the plugin throws an exception during it. To update Paper, set `paper-server` to a newer build of the same Minecraft version.
+
 Start a local test server with the plugin:
 ```
 ./gradlew runServer

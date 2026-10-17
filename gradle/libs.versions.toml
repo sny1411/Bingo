@@ -1,6 +1,8 @@
 [versions]
 minecraft = "26.2"
 paper-api = "26.2.build.132-stable"
+# The Paper build the end-to-end tests run on (see CONTRIBUTING)
+paper-server = "134"
 run-paper = "3.1.0"
 fabric-loader = "0.19.5"
 junit = "6.1.3"
