@@ -1,8 +1,6 @@
 package fr.sny1411.bingo;
 
-import fr.sny1411.bingo.commands.*;
-import fr.sny1411.bingo.commands.completer.BonusCompleter;
-import fr.sny1411.bingo.commands.completer.ForceValidCompleter;
+import fr.sny1411.bingo.commands.BingoCommands;
 import fr.sny1411.bingo.i18n.Translations;
 import fr.sny1411.bingo.listener.challenges.AdvancementChallengesListener;
 import fr.sny1411.bingo.listener.challenges.MobChallengesListener;
@@ -25,7 +23,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
@@ -52,10 +49,6 @@ public final class Bingo extends JavaPlugin {
         game = new Game();
 
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> BingoCommands.register(event.registrar(), this));
-        Objects.requireNonNull(getCommand("valid")).setExecutor(new ForceValid());
-        Objects.requireNonNull(getCommand("valid")).setTabCompleter(new ForceValidCompleter());
-        Objects.requireNonNull(getCommand("bonus")).setExecutor(new Bonus());
-        Objects.requireNonNull(getCommand("bonus")).setTabCompleter(new BonusCompleter());
 
         pluginManager.registerEvents(new PlayerListener(), this);
         pluginManager.registerEvents(new SetupListener(), this);
