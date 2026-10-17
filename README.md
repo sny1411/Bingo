@@ -52,7 +52,7 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 | `/bingo stop`                              | Stops the game before the end                                                                          | bingo.command.stop    |
 | `/bingo results`                           | Shows the ranking to everyone once the game is over                                                    | bingo.command.results |
 | `/valid <add\|remove> <team> <challenge>`  | Forces a challenge to be validated, or un-validated, during or after a game (ids are suggested)        | bingo.valid           |
-| `/timer <set\|add\|speed> <value>`         | Moves the game timer forward (`set 59:59`, `add 10:00`) or speeds it up (`speed 60`)                   | bingo.timer           |
+| `/bingo timer <set\|add\|speed> <value>`   | Moves the game timer forward (`set 59:59`, `add 10:00`) or speeds it up (`speed 60`)                   | bingo.command.timer   |
 | `/bingo pack`                              | Shows a title and plays a sound so players can check whether the resource pack is installed            | bingo.command.pack    |
 
 ---
