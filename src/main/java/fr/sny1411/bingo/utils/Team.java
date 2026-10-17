@@ -36,6 +36,10 @@ public class Team {
             this.materialBingoGui = materialBingoGui;
         }
 
+        public String getKey() {
+            return key;
+        }
+
         public Component displayName() {
             return Component.translatable("bingo.team." + key, textColor);
         }

@@ -42,18 +42,19 @@ Starts one Minecraft 26.2 client per player, each joining the test server with a
 
 - The settings item is given to players with the `bingo.settings` permission (operators by default), and is given or removed when it changes during the setup. The commands require either operator status or the permissions listed below:
 
-| Command                                    | Description                                                                                            | Permission            |
-|--------------------------------------------|--------------------------------------------------------------------------------------------------------|-----------------------|
-| `/bingo`                                   | Shows your challenge grid during a game                                                                | No permission         |
-| `/bingo spectate`                          | Lets players switch to spectator mode once their team has finished                                     | No permission         |
-| `/bonus <challenge>`                       | Validates an active bonus challenge                                                                    | No permission         |
-| `/bingo new`                               | Creates a new game (during a game, use `/bingo new confirm`)                                           | bingo.command.new     |
-| `/bingo start`                             | Starts the game (every online player must be in a team)                                                | bingo.command.start   |
-| `/bingo stop`                              | Stops the game before the end                                                                          | bingo.command.stop    |
-| `/bingo results`                           | Shows the ranking to everyone once the game is over                                                    | bingo.command.results |
-| `/valid <add\|remove> <team> <challenge>`  | Forces a challenge to be validated, or un-validated, during or after a game (ids are suggested)        | bingo.valid           |
-| `/bingo timer <set\|add\|speed> <value>`   | Moves the game timer forward (`set 59:59`, `add 10:00`) or speeds it up (`speed 60`)                   | bingo.command.timer   |
-| `/bingo pack`                              | Shows a title and plays a sound so players can check whether the resource pack is installed            | bingo.command.pack    |
+| Command                                  | Description                                                                                 | Permission             |
+|------------------------------------------|---------------------------------------------------------------------------------------------|------------------------|
+| `/bingo`                                 | Shows your challenge grid during a game                                                     | No permission          |
+| `/bingo spectate`                        | Lets players switch to spectator mode once their team has finished                          | No permission          |
+| `/bingo bonus <challenge>`               | Validates an active bonus challenge (active bonuses are suggested)                          | No permission          |
+| `/bingo new`                             | Creates a new game (during a game, use `/bingo new confirm`)                                | bingo.command.new      |
+| `/bingo start`                           | Starts the game (every online player must be in a team)                                     | bingo.command.start    |
+| `/bingo stop`                            | Stops the game before the end                                                               | bingo.command.stop     |
+| `/bingo results`                         | Shows the ranking to everyone once the game is over                                         | bingo.command.results  |
+| `/bingo validate <team> <challenge>`     | Validates a challenge by hand for a team, during or after a game                            | bingo.command.validate |
+| `/bingo invalidate <team> <challenge>`   | Removes a challenge validated by mistake, during or after a game                            | bingo.command.validate |
+| `/bingo timer <set\|add\|speed> <value>` | Moves the game timer forward (`set 59:59`, `add 10:00`) or speeds it up (`speed 60`)        | bingo.command.timer    |
+| `/bingo pack`                            | Shows a title and plays a sound so players can check whether the resource pack is installed | bingo.command.pack     |
 
 ---
 

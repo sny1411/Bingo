@@ -3,12 +3,6 @@ version: '${version}'
 main: fr.sny1411.bingo.Bingo
 description: Not approved or affiliated with Mojang or Microsoft
 api-version: '26.2'
-commands:
-  valid:
-    description: Forces a challenge to be validated in case of a problem
-    permission: bingo.valid
-  bonus:
-    description: Validates an active bonus challenge
 permissions:
   bingo.command.new:
     description: Allows creating a new game with /bingo new
@@ -24,6 +18,9 @@ permissions:
     default: op
   bingo.command.timer:
     description: Allows moving the game timer forward or speeding it up with /bingo timer
+    default: op
+  bingo.command.validate:
+    description: Allows validating or invalidating a challenge by hand with /bingo validate and /bingo invalidate
     default: op
   bingo.command.pack:
     description: Allows checking the resource pack with /bingo pack
