@@ -2,6 +2,7 @@ package fr.sny1411.bingo.commands;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
@@ -13,8 +14,12 @@ import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
+import java.util.function.BiConsumer;
+
 public class TimerCommand {
     private static final int MAX_SPEED = 600;
+    private static final List<String> SPEED_EXAMPLES = List.of("1", "10", "60");
 
     private TimerCommand() {
     }
@@ -22,28 +27,11 @@ public class TimerCommand {
     public static LiteralCommandNode<CommandSourceStack> node() {
         return Commands.literal("timer")
                 .requires(source -> source.getSender().hasPermission("bingo.command.timer"))
-                .then(Commands.literal("set")
-                        .then(Commands.argument("time", new DurationArgument())
-                                .executes(context -> {
-                                    moveTo(context.getSource().getSender(), context.getArgument("time", Integer.class), false);
-                                    return Command.SINGLE_SUCCESS;
-                                })))
-                .then(Commands.literal("add")
-                        .then(Commands.argument("time", new DurationArgument())
-                                .executes(context -> {
-                                    moveTo(context.getSource().getSender(), context.getArgument("time", Integer.class), true);
-                                    return Command.SINGLE_SUCCESS;
-                                })))
+                .then(durationBranch("set", TimerCommand::set))
+                .then(durationBranch("add", TimerCommand::add))
                 .then(Commands.literal("speed")
                         .then(Commands.argument("speed", IntegerArgumentType.integer(1, MAX_SPEED))
-                                .suggests((context, builder) -> {
-                                    for (String speed : new String[]{"1", "10", "60"}) {
-                                        if (speed.startsWith(builder.getRemaining())) {
-                                            builder.suggest(speed);
-                                        }
-                                    }
-                                    return builder.buildFuture();
-                                })
+                                .suggests((context, builder) -> CommandSuggestions.suggest(builder, SPEED_EXAMPLES))
                                 .executes(context -> {
                                     setSpeed(context.getSource().getSender(), IntegerArgumentType.getInteger(context, "speed"));
                                     return Command.SINGLE_SUCCESS;
@@ -51,18 +39,33 @@ public class TimerCommand {
                 .build();
     }
 
-    private static void moveTo(CommandSender sender, int seconds, boolean relative) {
+    private static LiteralArgumentBuilder<CommandSourceStack> durationBranch(String name, BiConsumer<CommandSender, Integer> action) {
+        return Commands.literal(name)
+                .then(Commands.argument("time", new DurationArgument())
+                        .executes(context -> {
+                            action.accept(context.getSource().getSender(), context.getArgument("time", Integer.class));
+                            return Command.SINGLE_SUCCESS;
+                        }));
+    }
+
+    private static void set(CommandSender sender, int seconds) {
         if (isNotInGame(sender)) {
             return;
         }
         Timer timer = Bingo.getGame().getTimer();
-        int elapsed = relative ? timer.getElapsedSeconds() + seconds : seconds;
-        if (elapsed < timer.getElapsedSeconds()) {
+        if (seconds < timer.getElapsedSeconds()) {
             sender.sendMessage(Text.warning(Component.translatable("bingo.timer.cannot_go_back")));
             return;
         }
-        timer.setElapsedSeconds(elapsed);
-        sender.sendMessage(Text.info(Component.translatable("bingo.timer.elapsed", Component.text(formatTime(elapsed)), Component.text(formatTime(timer.getDurationSeconds())))));
+        timer.setElapsedSeconds(seconds);
+        sender.sendMessage(Text.info(Component.translatable("bingo.timer.elapsed", Component.text(formatTime(seconds)), Component.text(formatTime(timer.getDurationSeconds())))));
+    }
+
+    private static void add(CommandSender sender, int seconds) {
+        if (isNotInGame(sender)) {
+            return;
+        }
+        set(sender, Bingo.getGame().getTimer().getElapsedSeconds() + seconds);
     }
 
     private static void setSpeed(CommandSender sender, int speed) {

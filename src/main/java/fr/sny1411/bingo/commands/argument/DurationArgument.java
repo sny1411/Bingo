@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import fr.sny1411.bingo.commands.CommandSuggestions;
 import io.papermc.paper.command.brigadier.MessageComponentSerializer;
 import io.papermc.paper.command.brigadier.argument.CustomArgumentType;
 import net.kyori.adventure.text.Component;
@@ -36,12 +37,7 @@ public class DurationArgument implements CustomArgumentType.Converted<Integer, S
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        for (String example : EXAMPLES) {
-            if (example.startsWith(builder.getRemaining())) {
-                builder.suggest(example);
-            }
-        }
-        return builder.buildFuture();
+        return CommandSuggestions.suggest(builder, EXAMPLES);
     }
 
     // -1 if the format is wrong
