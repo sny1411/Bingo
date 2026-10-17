@@ -161,9 +161,16 @@ public class SettingsGui implements Listener {
     }
 
     private static ItemStack getTotalItem(Player player) {
-        int total = Bingo.getGame().getSettings().getMaxTotal();
-        boolean complete = !Bingo.getGame().getSettings().verifSettingsToHigh();
-        List<Component> lore = complete ? List.of() : List.of(Component.translatable("bingo.gui.settings.grid.missing", NamedTextColor.GRAY, Component.text(Grid.NB_CHALLENGES)));
+        Settings settings = Bingo.getGame().getSettings();
+        int total = settings.getNbChallengesInGrid();
+        boolean complete = !settings.verifSettingsToHigh();
+        List<Component> lore = new ArrayList<>();
+        if (!complete) {
+            lore.add(Component.translatable("bingo.gui.settings.grid.missing", NamedTextColor.GRAY, Component.text(Grid.NB_CHALLENGES)));
+        }
+        if (!settings.getFixedChallenges().isEmpty()) {
+            lore.add(Component.translatable("bingo.gui.settings.grid.fixed", NamedTextColor.GRAY, Component.text(settings.getFixedChallenges().size())));
+        }
         return GuiItems.item(Material.MAP, Math.max(total, 1), Component.translatable("bingo.gui.settings.grid.total", complete ? NamedTextColor.GREEN : NamedTextColor.RED,
                 Component.text(total), Component.text(Grid.NB_CHALLENGES)), lore, player);
     }

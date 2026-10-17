@@ -4,7 +4,9 @@ import fr.sny1411.bingo.Settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class Grid {
     public static final int NB_CHALLENGES = 25;
@@ -27,6 +29,7 @@ public class Grid {
         this.grid = gridCopy;
     }
 
+    // Draws the challenges of the positions that are not fixed, the difficulty settings being maxima
     private static List<Challenge> pickChallenges(List<Challenge> allChallenges, Settings settings) {
         List<Challenge> challenges = new ArrayList<>();
         int i = 0;
@@ -34,8 +37,12 @@ public class Grid {
         int nbMedium = 0;
         int nbHard = 0;
         int nbExtreme = 0;
-        while (challenges.size() != NB_CHALLENGES) {
+        while (challenges.size() != settings.getNbRandomChallenges()) {
             Challenge challenge = allChallenges.get(i);
+            if (settings.getFixedChallenges().containsValue(challenge.getId())) {
+                i++;
+                continue;
+            }
             switch (challenge.getDifficult()) {
                 case EASY:
                     if (nbEasy < settings.getMaxEasy()) {
@@ -70,13 +77,21 @@ public class Grid {
     private void fillGrid(List<Challenge> allChallenges, Settings settings) {
         List<Challenge> challenges = pickChallenges(allChallenges, settings);
         Collections.shuffle(challenges);
-        int i = 0;
-        for (int x = 0; x < 5; x++) {
-            for (int y = 0; y < 5; y++) {
-                grid[y][x] = challenges.get(i);
-                i++;
+        Iterator<Challenge> randomChallenges = challenges.iterator();
+        Map<Integer, ChallengeId> fixed = settings.getFixedChallenges();
+        for (int i = 0; i < NB_CHALLENGES; i++) {
+            ChallengeId fixedId = fixed.get(i + 1);
+            grid[i / 5][i % 5] = fixedId == null ? randomChallenges.next() : find(allChallenges, fixedId);
+        }
+    }
+
+    private static Challenge find(List<Challenge> challenges, ChallengeId challengeId) {
+        for (Challenge challenge : challenges) {
+            if (challenge.getId() == challengeId) {
+                return challenge;
             }
         }
+        throw new IllegalArgumentException("Unknown challenge " + challengeId);
     }
 
     public static Grid random(List<Challenge> challenges, Settings settings) {
