@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     java
     alias(libs.plugins.run.paper)
+    id("bingo.e2e-test")
 }
 
 group = "fr.sny1411"
