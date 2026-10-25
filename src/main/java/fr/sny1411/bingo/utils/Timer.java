@@ -37,7 +37,7 @@ public class Timer {
         stormStarted = false;
         // Between half and 7/8 of the game, like between 60 and 105 minutes in a 2-hour game
         stormTime = Random.choice(getDurationSeconds() / 2, getDurationSeconds() * 7 / 8);
-        Bukkit.getLogger().log(Level.INFO, String.format("Storm planned at minute %d", stormTime / 60));
+        Game.getBingoInstance().getLogger().log(Level.INFO, String.format("Storm planned at minute %d", stormTime / 60));
 
         task = Bukkit.getScheduler().runTaskTimer(bingo, this::tick, 1L, 1L);
     }
@@ -58,7 +58,7 @@ public class Timer {
 
         if (!stormStarted && stormTime <= elapsed) {
             stormStarted = true;
-            Bukkit.getLogger().log(Level.INFO, "Storm started");
+            Game.getBingoInstance().getLogger().log(Level.INFO, "Storm started");
             World world = Bukkit.getWorlds().get(0);
             world.setStorm(true);
             world.setThundering(true);
@@ -117,8 +117,8 @@ public class Timer {
     private void end() {
         task.cancel();
         task = null;
-        game.setEtat(Game.Etat.ENDGAME);
-        Bukkit.getLogger().log(Level.INFO, "Game over");
+        game.setState(Game.State.ENDGAME);
+        Game.getBingoInstance().getLogger().log(Level.INFO, "Game over");
     }
 
     public int getSeconds() {

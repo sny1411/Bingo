@@ -77,7 +77,7 @@ public class TimerCommand {
     }
 
     private static boolean isNotInGame(CommandSender sender) {
-        if (Bingo.getGame().getEtat() != Game.Etat.INGAME) {
+        if (Bingo.getGame().getState() != Game.State.INGAME) {
             sender.sendMessage(Text.warning(Component.translatable("bingo.command.no_game")));
             return true;
         }

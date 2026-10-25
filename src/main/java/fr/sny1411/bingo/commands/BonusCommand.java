@@ -34,7 +34,7 @@ public class BonusCommand {
     }
 
     private static List<String> activeBonuses() {
-        if (!Bingo.getGame().isDefiBonus() || Bingo.getGame().getEtat() != Game.Etat.INGAME) {
+        if (!Bingo.getGame().hasBonusChallenges() || Bingo.getGame().getState() != Game.State.INGAME) {
             return List.of();
         }
         return Bingo.getGame().getBonusEvents().stream()
@@ -44,7 +44,7 @@ public class BonusCommand {
     }
 
     private static void run(Player player, ChallengeId challengeId) {
-        if (Bingo.getGame().getEtat() != Game.Etat.INGAME) {
+        if (Bingo.getGame().getState() != Game.State.INGAME) {
             player.sendMessage(Text.warning(Component.translatable("bingo.command.no_game")));
             return;
         }
@@ -53,7 +53,7 @@ public class BonusCommand {
             player.sendMessage(Text.warning(Component.translatable("bingo.bonus.not_active", Component.text(ChallengeArgument.format(challengeId)))));
             return;
         }
-        if (ChallengeVerifier.verifChallenge(player, challengeId)) {
+        if (ChallengeVerifier.checkChallenge(player, challengeId)) {
             RewardsBonusEvent.setBonus(bonusEvent.getChallenge(), player);
             bonusEvent.setEnable(false);
         }

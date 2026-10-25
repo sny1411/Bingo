@@ -21,7 +21,7 @@ public final class ChallengeProgress {
         }
     }
 
-    private static void valideChallenge(Player player, ChallengeId challengeId) {
+    private static void validateChallenge(Player player, ChallengeId challengeId) {
         Challenge challenge = Bingo.getGame().getChallenge(Bingo.getGame().getTeams().getTeam(player), challengeId);
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);
@@ -31,19 +31,19 @@ public final class ChallengeProgress {
         }
     }
 
-    static boolean verifValideChallenge(Player player, ChallengeId challengeId) {
+    static boolean validateIfRealized(Player player, ChallengeId challengeId) {
         if (Boolean.TRUE.equals(Objects.requireNonNull(Bingo.getGame().getChallenge(Bingo.getGame().getTeams().getTeam(player), challengeId)).getRealized())) {
-            valideChallenge(player, challengeId);
+            validateChallenge(player, challengeId);
             return true;
         }
         return false;
     }
 
-    public static void valideAndRealizeChallenge(Player player, ChallengeId challengeId) {
-        valideAndRealizeChallenge(Bingo.getGame().getTeams().getTeam(player), challengeId);
+    public static void validateAndRealizeChallenge(Player player, ChallengeId challengeId) {
+        validateAndRealizeChallenge(Bingo.getGame().getTeams().getTeam(player), challengeId);
     }
 
-    public static void valideAndRealizeChallenge(Team team, ChallengeId challengeId) {
+    public static void validateAndRealizeChallenge(Team team, ChallengeId challengeId) {
         Challenge challenge = Bingo.getGame().getChallenge(team, challengeId);
         if (challenge != null && !challenge.getValidated()) {
             challenge.setValidated(true);

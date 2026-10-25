@@ -15,7 +15,7 @@ public final class BingoCommands {
     public static void register(Commands commands, Bingo bingo) {
         commands.register(Commands.literal("bingo")
                 .executes(context -> {
-                    if (context.getSource().getSender() instanceof Player player && Bingo.getGame().getEtat() == Game.Etat.INGAME) {
+                    if (context.getSource().getSender() instanceof Player player && Bingo.getGame().getState() == Game.State.INGAME) {
                         BingoGui.open(player);
                     }
                     return Command.SINGLE_SUCCESS;

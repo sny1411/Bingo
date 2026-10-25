@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.listener.challenges.MobChallengesListener;
 import fr.sny1411.bingo.utils.*;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -34,16 +35,16 @@ public class StartCommand {
     }
 
     private void run(CommandSender sender) {
-        if (Bingo.getGame().getEtat() != Game.Etat.SETUP) {
+        if (Bingo.getGame().getState() != Game.State.SETUP) {
             return;
         }
-        if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
+        if (Bingo.getGame().getSettings().isGridIncomplete()) {
             sender.sendMessage(gridIncompleteMessage());
             return;
         }
         Bingo.getGame().createGrids();
         if (isTeamComplete()) {
-            Bingo.getGame().setEtat(Game.Etat.STARTING);
+            Bingo.getGame().setState(Game.State.STARTING);
             Countdown.start(bingo, this::startGame);
         } else {
             sender.sendMessage(Text.warning(Component.translatable("bingo.start.players_without_team")));
@@ -54,19 +55,20 @@ public class StartCommand {
         Countdown.showTitle(Title.title(Component.text("\uE005"), Component.text(""), Countdown.TITLE_TIMES));
         Spawn.remove();
         Game game = Bingo.getGame();
-        game.setEtat(Game.Etat.INGAME);
+        game.setState(Game.State.INGAME);
         Environment.clearPlayers();
         Environment.setGamerulesInGame();
 
         game.getTimer().start(bingo);
         ScoreBoard.createScoreBoard(bingo);
         game.initScores();
+        MobChallengesListener.clearWolfTames();
 
         for (Player player : Bingo.getGame().getTeams().get(Team.Color.SPECTATOR).getOnlinePlayers()) {
             player.setGameMode(GameMode.SPECTATOR);
         }
 
-        if (Bingo.getGame().isDefiBonus()) {
+        if (Bingo.getGame().hasBonusChallenges()) {
             game.initBonusEvents();
         }
 

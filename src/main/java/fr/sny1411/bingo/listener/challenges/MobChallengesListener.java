@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
 
 import static fr.sny1411.bingo.listener.challenges.ChallengeProgress.realizeChallenge;
 
@@ -25,6 +24,11 @@ import static fr.sny1411.bingo.listener.challenges.ChallengeProgress.realizeChal
  */
 public class MobChallengesListener implements Listener {
     private static final Hashtable<Player, Integer> nbWolfTame = new Hashtable<>();
+
+    // The wolves tamed in a previous game don't count
+    public static void clearWolfTames() {
+        nbWolfTame.clear();
+    }
 
     @EventHandler
     private void mobKill(EntityDeathEvent e) {
@@ -91,7 +95,6 @@ public class MobChallengesListener implements Listener {
 
     @EventHandler
     private void projectileHitMob(ProjectileHitEvent e) {
-        Bukkit.getLogger().log(Level.INFO, e.getEntity().getType().toString());
         if (e.getHitEntity() == null) return;
         switch (e.getEntity().getType()) {
             case LLAMA_SPIT:
@@ -130,7 +133,6 @@ public class MobChallengesListener implements Listener {
     @EventHandler
     private void playerInteractMob(PlayerInteractEntityEvent e) {
         if (e.getRightClicked().getType() == EntityType.BAT) {
-            Bukkit.getLogger().log(Level.INFO, "chauve souris");
             PlayerInventory inv = e.getPlayer().getInventory();
             ItemStack mainHand = inv.getItemInMainHand();
             ItemStack offHand = inv.getItemInOffHand();

@@ -42,7 +42,7 @@ public final class Text {
         Component message = info(Component.translatable("bingo.challenge.validated",
                 team.getColor().displayName().decorate(TextDecoration.BOLD),
                 challengeName.color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD)));
-        if (Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL) {
+        if (Bingo.getGame().getDisplayMode() == Game.DisplayMode.CHILL) {
             Bukkit.broadcast(message);
         } else {
             team.sendMessage(message);

@@ -71,27 +71,27 @@ public class SettingsGui implements Listener {
 
         gui.setItem(10, GuiItems.item(Material.WHITE_BANNER, 1, setting("bingo.gui.settings.teams"), List.of(clickToEdit()), player));
 
-        boolean chill = game.getModeAffichage() == Game.ModeAffichage.CHILL;
+        boolean chill = game.getDisplayMode() == Game.DisplayMode.CHILL;
         gui.setItem(11, GuiItems.item(chill ? Material.IRON_BLOCK : Material.NETHERITE_BLOCK, 1, setting("bingo.gui.settings.display"), List.of(
                 GuiItems.option(Component.translatable("bingo.display_mode.chill"), chill),
                 GuiItems.option(Component.translatable("bingo.display_mode.competition"), !chill)), player));
 
         gui.setItem(12, GuiItems.item(Material.CAULDRON, 1, setting("bingo.gui.settings.grid"), List.of(clickToEdit()), player));
 
-        if (game.getModeJeu() == Game.ModeJeu.DUEL) {
+        if (game.getPlayMode() == Game.PlayMode.DUEL) {
             game.setModeVictoire(Game.ModeVictoire.DEFIS);
-        } else if (game.getModeJeu() == Game.ModeJeu.HANDICAP) {
+        } else if (game.getPlayMode() == Game.PlayMode.HANDICAP) {
             game.setModeVictoire(Game.ModeVictoire.BINGO);
         }
         List<Component> modes = new ArrayList<>();
-        for (Game.ModeJeu mode : Game.ModeJeu.values()) {
-            modes.add(GuiItems.option(mode.label(), game.getModeJeu() == mode));
+        for (Game.PlayMode mode : Game.PlayMode.values()) {
+            modes.add(GuiItems.option(mode.label(), game.getPlayMode() == mode));
         }
         gui.setItem(13, GuiItems.item(Material.CRAFTING_TABLE, 1, setting("bingo.gui.settings.game_mode"), modes, player));
 
         gui.setItem(14, GuiItems.item(Material.REDSTONE, 1, setting("bingo.gui.settings.victory"), List.of(clickToEdit()), player));
 
-        boolean bonus = game.isDefiBonus();
+        boolean bonus = game.hasBonusChallenges();
         gui.setItem(15, GuiItems.item(bonus ? Material.GLOWSTONE : Material.REDSTONE_LAMP, 1, setting("bingo.gui.settings.bonus"), List.of(
                 pair(Component.translatable("bingo.gui.on"), Component.translatable("bingo.gui.off"), bonus)), player));
 
@@ -163,7 +163,7 @@ public class SettingsGui implements Listener {
     private static ItemStack getTotalItem(Player player) {
         Settings settings = Bingo.getGame().getSettings();
         int total = settings.getNbChallengesInGrid();
-        boolean complete = !settings.verifSettingsToHigh();
+        boolean complete = !settings.isGridIncomplete();
         List<Component> lore = new ArrayList<>();
         if (!complete) {
             lore.add(Component.translatable("bingo.gui.settings.grid.missing", NamedTextColor.GRAY, Component.text(Grid.NB_CHALLENGES)));
@@ -187,7 +187,7 @@ public class SettingsGui implements Listener {
 
         List<Component> winLore = new ArrayList<>();
         winLore.add(pair(Game.ModeVictoire.BINGO.label(), Game.ModeVictoire.DEFIS.label(), game.getModeVictoire() == Game.ModeVictoire.BINGO));
-        if (game.getModeJeu() == Game.ModeJeu.DUEL || game.getModeJeu() == Game.ModeJeu.HANDICAP) {
+        if (game.getPlayMode() == Game.PlayMode.DUEL || game.getPlayMode() == Game.PlayMode.HANDICAP) {
             winLore.add(Component.translatable("bingo.gui.settings.victory.locked", NamedTextColor.RED));
         }
         gui.setItem(14, GuiItems.item(Material.TARGET, 1, setting("bingo.gui.settings.victory.mode"), winLore, player));
@@ -213,7 +213,7 @@ public class SettingsGui implements Listener {
 
     @EventHandler
     public void clickItems(PlayerInteractEvent e) {
-        if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
+        if (Bingo.getGame().getState() == Game.State.SETUP) {
             if (Items.isSettings(e.getItem()) && e.getPlayer().hasPermission(Spawn.SETTINGS_PERMISSION)) {
                 openGui(e.getPlayer());
             }
@@ -223,7 +223,7 @@ public class SettingsGui implements Listener {
     @EventHandler
     private void inventoryClick(InventoryClickEvent e) {
         Inventory clickedInventory = e.getClickedInventory();
-        if (Bingo.getGame().getEtat() != Game.Etat.SETUP || !isSettingsGui(clickedInventory)) {
+        if (Bingo.getGame().getState() != Game.State.SETUP || !isSettingsGui(clickedInventory)) {
             return;
         }
         e.setCancelled(true);
@@ -274,14 +274,14 @@ public class SettingsGui implements Listener {
     private static boolean clickMain(Player player, Material currentItem) {
         Game game = Bingo.getGame();
         switch (currentItem) {
-            case IRON_BLOCK -> game.setModeAffichage(Game.ModeAffichage.COMPETITION);
-            case NETHERITE_BLOCK -> game.setModeAffichage(Game.ModeAffichage.CHILL);
+            case IRON_BLOCK -> game.setDisplayMode(Game.DisplayMode.COMPETITION);
+            case NETHERITE_BLOCK -> game.setDisplayMode(Game.DisplayMode.CHILL);
             case CRAFTING_TABLE -> {
-                Game.ModeJeu[] modes = Game.ModeJeu.values();
-                game.setModeJeu(modes[(game.getModeJeu().ordinal() + 1) % modes.length]);
+                Game.PlayMode[] modes = Game.PlayMode.values();
+                game.setPlayMode(modes[(game.getPlayMode().ordinal() + 1) % modes.length]);
             }
-            case REDSTONE_LAMP -> game.setDefiBonus(true);
-            case GLOWSTONE -> game.setDefiBonus(false);
+            case REDSTONE_LAMP -> game.setBonusChallenges(true);
+            case GLOWSTONE -> game.setBonusChallenges(false);
             case REDSTONE_BLOCK -> {
                 resetSettings();
                 player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK, 500.0f, 1.0f);
@@ -300,19 +300,19 @@ public class SettingsGui implements Listener {
         Settings settings = game.getSettings();
         switch (slot) {
             case 1 -> {
-                if (!settings.verifSettingsToHigh()) return false;
+                if (!settings.isGridIncomplete()) return false;
                 settings.setMaxEasy(settings.getMaxEasy() + 1);
             }
             case 3 -> {
-                if (!settings.verifSettingsToHigh()) return false;
+                if (!settings.isGridIncomplete()) return false;
                 settings.setMaxMedium(settings.getMaxMedium() + 1);
             }
             case 5 -> {
-                if (!settings.verifSettingsToHigh() || game.getNbChallenges(Challenge.Difficult.HARD) <= settings.getMaxHard()) return false;
+                if (!settings.isGridIncomplete() || game.getNbChallenges(Challenge.Difficult.HARD) <= settings.getMaxHard()) return false;
                 settings.setMaxHard(settings.getMaxHard() + 1);
             }
             case 7 -> {
-                if (!settings.verifSettingsToHigh() || game.getNbChallenges(Challenge.Difficult.EXTREME) <= settings.getMaxExtreme()) return false;
+                if (!settings.isGridIncomplete() || game.getNbChallenges(Challenge.Difficult.EXTREME) <= settings.getMaxExtreme()) return false;
                 settings.setMaxExtreme(settings.getMaxExtreme() + 1);
             }
             case 19 -> {
@@ -342,7 +342,7 @@ public class SettingsGui implements Listener {
         Game game = Bingo.getGame();
         Settings settings = game.getSettings();
         if (currentItem == Material.TARGET) {
-            if (game.getModeJeu() == Game.ModeJeu.DUEL || game.getModeJeu() == Game.ModeJeu.HANDICAP) {
+            if (game.getPlayMode() == Game.PlayMode.DUEL || game.getPlayMode() == Game.PlayMode.HANDICAP) {
                 return false;
             }
             playClick(player);

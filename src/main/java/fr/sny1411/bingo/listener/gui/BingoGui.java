@@ -8,7 +8,6 @@ import fr.sny1411.bingo.utils.items.collections.Concrete;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.OfflinePlayer;
@@ -24,7 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
-import java.util.logging.Level;
 
 public class BingoGui implements Listener {
     private static final Set<Player> playersInGui = new HashSet<>();
@@ -86,7 +84,7 @@ public class BingoGui implements Listener {
             if (colorTeam != Team.Color.SPECTATOR) {
                 Team playerTeam = Bingo.getGame().getTeams().getTeam(player);
                 List<Component> loreTeams = new ArrayList<>();
-                Component nbChallenges = Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL
+                Component nbChallenges = Bingo.getGame().getDisplayMode() == Game.DisplayMode.CHILL
                         ? Component.text(Bingo.getGame().getTeamsScore().get(team).getNbChallenges())
                         : Component.text("!!").decorate(TextDecoration.OBFUSCATED);
                 loreTeams.add(Component.translatable("bingo.gui.bingo.realized", NamedTextColor.BLUE, nbChallenges.color(NamedTextColor.WHITE)));
@@ -132,7 +130,6 @@ public class BingoGui implements Listener {
     @EventHandler
     private void onClick(InventoryClickEvent e) {
         if (GuiHolder.typeOf(e.getView().getTopInventory()) == GuiHolder.Type.BINGO && e.getCurrentItem() != null) {
-            Bukkit.getLogger().log(Level.INFO, "bingogui2");
             Player player = (Player) e.getWhoClicked();
             if (Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).getColor() == Team.Color.SPECTATOR && e.getCurrentItem() != null) {
                 Material concrete = e.getCurrentItem().getType();
@@ -142,11 +139,10 @@ public class BingoGui implements Listener {
             } else {
                 ChallengeId challengeId = Challenge.getId(e.getCurrentItem());
                 if (challengeId != null) {
-                    ChallengeVerifier.verifChallenge(player, challengeId);
+                    ChallengeVerifier.checkChallenge(player, challengeId);
                 }
             }
-           updateGui();
-            Bukkit.getLogger().log(Level.INFO, "refresh bingoGui");
+            updateGui();
             e.setCancelled(true);
         }
     }

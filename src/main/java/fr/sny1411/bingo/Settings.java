@@ -15,9 +15,9 @@ public class Settings {
     public static final int MAX_DURATION_MINUTES = 4 * 60;
     public static final int DURATION_STEP_MINUTES = 15;
 
-    private boolean defiBonus;
-    private Game.ModeAffichage modeAffichage;
-    private Game.ModeJeu modeJeu;
+    private boolean bonusChallenges;
+    private Game.DisplayMode displayMode;
+    private Game.PlayMode playMode;
     private Game.ModeVictoire modeVictoire;
     private int nbreBingoForWin;
     private int durationMinutes;
@@ -35,9 +35,9 @@ public class Settings {
     }
 
     public void reset() {
-        defiBonus = false;
-        modeAffichage = Game.ModeAffichage.CHILL;
-        modeJeu = Game.ModeJeu.CLASSIC;
+        bonusChallenges = false;
+        displayMode = Game.DisplayMode.CHILL;
+        playMode = Game.PlayMode.CLASSIC;
         modeVictoire = Game.ModeVictoire.BINGO;
         nbreBingoForWin = 3;
         durationMinutes = 2 * 60;
@@ -47,28 +47,28 @@ public class Settings {
         fixedChallenges.clear();
     }
 
-    public boolean isDefiBonus() {
-        return defiBonus;
+    public boolean hasBonusChallenges() {
+        return bonusChallenges;
     }
 
-    public void setDefiBonus(boolean defiBonus) {
-        this.defiBonus = defiBonus;
+    public void setBonusChallenges(boolean bonusChallenges) {
+        this.bonusChallenges = bonusChallenges;
     }
 
-    public Game.ModeAffichage getModeAffichage() {
-        return modeAffichage;
+    public Game.DisplayMode getDisplayMode() {
+        return displayMode;
     }
 
-    public void setModeAffichage(Game.ModeAffichage modeAffichage) {
-        this.modeAffichage = modeAffichage;
+    public void setDisplayMode(Game.DisplayMode displayMode) {
+        this.displayMode = displayMode;
     }
 
-    public Game.ModeJeu getModeJeu() {
-        return modeJeu;
+    public Game.PlayMode getPlayMode() {
+        return playMode;
     }
 
-    public void setModeJeu(Game.ModeJeu modeJeu) {
-        this.modeJeu = modeJeu;
+    public void setPlayMode(Game.PlayMode playMode) {
+        this.playMode = playMode;
     }
 
     public Game.ModeVictoire getModeVictoire() {
@@ -147,7 +147,8 @@ public class Settings {
         return maxEasy + maxMedium + maxHard + maxExtreme;
     }
 
-    public boolean verifSettingsToHigh() {
+    // The settings draw fewer challenges than the grid needs
+    public boolean isGridIncomplete() {
         return getMaxTotal() < getNbRandomChallenges();
     }
 

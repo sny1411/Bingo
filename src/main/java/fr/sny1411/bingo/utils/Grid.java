@@ -22,7 +22,7 @@ public class Grid {
         Challenge[][] gridCopy = new Challenge[5][5];
         for (int x = 0; x < grid.getGrid().length; x++) {
             for (int y = 0; y < grid.getGrid()[0].length; y++) {
-                gridCopy[x][y] = grid.getGrid()[x][y].clone();
+                gridCopy[x][y] = grid.getGrid()[x][y].copy();
             }
         }
 

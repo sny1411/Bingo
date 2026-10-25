@@ -60,7 +60,7 @@ public final class ScoreBoard {
                 lines.add(line("bingo.scoreboard.challenges", Component.text(score.getNbChallenges())));
             }
         }
-        lines.add(line("bingo.scoreboard.mode", game.getModeJeu().label()));
+        lines.add(line("bingo.scoreboard.mode", game.getPlayMode().label()));
         lines.add(Component.empty());
         Timer timer = game.getTimer();
         String duration = timer.getHours() == 0

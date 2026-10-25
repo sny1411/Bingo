@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Level;
 
 public class BonusEvent {
     public static List<BonusEvent> createEvents(int durationMinutes) {
@@ -22,9 +21,6 @@ public class BonusEvent {
             events.add(new BonusEvent(Random.choice(durationMinutes / 8, durationMinutes * 3 / 4)));
         }
         events.sort(Comparator.comparingInt(BonusEvent::getTimeLaunch));
-        for (BonusEvent event : events) {
-            Bukkit.getLogger().log(Level.INFO, "event : " + event.getTimeLaunch());
-        }
         return events;
     }
 

@@ -32,14 +32,14 @@ public class NewCommand {
     }
 
     private static void run(CommandSender sender, boolean confirmed) {
-        if (Bingo.getGame().getEtat() == Game.Etat.INGAME) {
+        if (Bingo.getGame().getState() == Game.State.INGAME) {
             if (!confirmed) {
                 sender.sendMessage(Component.translatable("bingo.newgame.confirm", NamedTextColor.DARK_GREEN, Component.text("\"/bingo new confirm\"", NamedTextColor.RED)));
                 return;
             }
             Bingo.getGame().getTimer().stop();
         }
-        if (Bingo.getGame().getEtat() == Game.Etat.STARTING) {
+        if (Bingo.getGame().getState() == Game.State.STARTING) {
             Countdown.cancel();
         }
         Bingo.setGame(new Game(Bingo.getGame().getSettings()));

@@ -13,7 +13,7 @@ import static fr.sny1411.bingo.listener.challenges.ChallengeProgress.realizeChal
  */
 public class AdvancementChallengesListener implements Listener {
     @EventHandler
-    private void advencementDone(PlayerAdvancementDoneEvent e) {
+    private void advancementDone(PlayerAdvancementDoneEvent e) {
         Player player = e.getPlayer();
         switch (e.getAdvancement().getKey().getKey()) {
             case "story/enter_the_nether":

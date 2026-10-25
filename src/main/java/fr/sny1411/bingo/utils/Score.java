@@ -111,7 +111,7 @@ public class Score {
 
     private void testGameFinish() {
         Game game = Bingo.getGame();
-        if (game.getEtat() == Game.Etat.INGAME && ((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
+        if (game.getState() == Game.State.INGAME && ((game.getModeVictoire() == Game.ModeVictoire.BINGO && nbBingo >= game.getNbreBingoForWin()) ||
                 (game.getModeVictoire() == Game.ModeVictoire.DEFIS && nbChallenges == 25)) && !team.isGameFinish()) {
             team.setGameFinish(true);
             Bukkit.broadcast(Text.info(Component.translatable("bingo.team.finished", team.getColor().displayName())));
