@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
 
 import static fr.sny1411.bingo.listener.challenges.ChallengeProgress.realizeChallenge;
 
@@ -91,7 +90,6 @@ public class MobChallengesListener implements Listener {
 
     @EventHandler
     private void projectileHitMob(ProjectileHitEvent e) {
-        Bukkit.getLogger().log(Level.INFO, e.getEntity().getType().toString());
         if (e.getHitEntity() == null) return;
         switch (e.getEntity().getType()) {
             case LLAMA_SPIT:
@@ -130,7 +128,6 @@ public class MobChallengesListener implements Listener {
     @EventHandler
     private void playerInteractMob(PlayerInteractEntityEvent e) {
         if (e.getRightClicked().getType() == EntityType.BAT) {
-            Bukkit.getLogger().log(Level.INFO, "chauve souris");
             PlayerInventory inv = e.getPlayer().getInventory();
             ItemStack mainHand = inv.getItemInMainHand();
             ItemStack offHand = inv.getItemInOffHand();

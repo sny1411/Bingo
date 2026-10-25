@@ -16,7 +16,6 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.logging.Level;
 
 import static fr.sny1411.bingo.listener.challenges.ChallengeProgress.valideAndRealizeChallenge;
 import static fr.sny1411.bingo.listener.challenges.ChallengeProgress.verifValideChallenge;
@@ -38,9 +37,7 @@ public final class ChallengeVerifier {
     }
 
     public static boolean verifChallenge(Player player, ChallengeId challengeId) {
-        Bukkit.getLogger().log(Level.INFO, "test");
         PlayerInventory playerInventory = player.getInventory();
-        Bukkit.getLogger().log(Level.INFO, challengeId.name());
         switch (challengeId) {
             case SUICIDE_SQUAD:
             case AUREVOIR_SABRINA:

@@ -8,7 +8,6 @@ import fr.sny1411.bingo.utils.Text;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -31,7 +30,6 @@ public class TeamsGui implements Listener {
     public static void openGui(Player player) {
         Inventory gui = GuiHolder.createInventory(GuiHolder.Type.TEAMS, 27, GuiItems.title("bingo.gui.teams.title", player));
         Iterator<Team> iteratorTeam = Bingo.getGame().getTeams().values().iterator();
-        Bukkit.getConsoleSender().sendMessage(Component.text(Bingo.getGame().getTeams().values().toString()));
         int compteurTeam = 0;
         for (int i = 0; i < 27; i++) {
             if (i > 9 && i < 17) {

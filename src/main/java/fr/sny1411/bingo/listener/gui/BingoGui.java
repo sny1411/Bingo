@@ -8,7 +8,6 @@ import fr.sny1411.bingo.utils.items.collections.Concrete;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.OfflinePlayer;
@@ -24,7 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
-import java.util.logging.Level;
 
 public class BingoGui implements Listener {
     private static final Set<Player> playersInGui = new HashSet<>();
@@ -132,7 +130,6 @@ public class BingoGui implements Listener {
     @EventHandler
     private void onClick(InventoryClickEvent e) {
         if (GuiHolder.typeOf(e.getView().getTopInventory()) == GuiHolder.Type.BINGO && e.getCurrentItem() != null) {
-            Bukkit.getLogger().log(Level.INFO, "bingogui2");
             Player player = (Player) e.getWhoClicked();
             if (Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).getColor() == Team.Color.SPECTATOR && e.getCurrentItem() != null) {
                 Material concrete = e.getCurrentItem().getType();
@@ -145,8 +142,7 @@ public class BingoGui implements Listener {
                     ChallengeVerifier.verifChallenge(player, challengeId);
                 }
             }
-           updateGui();
-            Bukkit.getLogger().log(Level.INFO, "refresh bingoGui");
+            updateGui();
             e.setCancelled(true);
         }
     }
