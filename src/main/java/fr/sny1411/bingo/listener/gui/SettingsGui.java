@@ -163,7 +163,7 @@ public class SettingsGui implements Listener {
     private static ItemStack getTotalItem(Player player) {
         Settings settings = Bingo.getGame().getSettings();
         int total = settings.getNbChallengesInGrid();
-        boolean complete = !settings.verifSettingsToHigh();
+        boolean complete = !settings.isGridIncomplete();
         List<Component> lore = new ArrayList<>();
         if (!complete) {
             lore.add(Component.translatable("bingo.gui.settings.grid.missing", NamedTextColor.GRAY, Component.text(Grid.NB_CHALLENGES)));
@@ -300,19 +300,19 @@ public class SettingsGui implements Listener {
         Settings settings = game.getSettings();
         switch (slot) {
             case 1 -> {
-                if (!settings.verifSettingsToHigh()) return false;
+                if (!settings.isGridIncomplete()) return false;
                 settings.setMaxEasy(settings.getMaxEasy() + 1);
             }
             case 3 -> {
-                if (!settings.verifSettingsToHigh()) return false;
+                if (!settings.isGridIncomplete()) return false;
                 settings.setMaxMedium(settings.getMaxMedium() + 1);
             }
             case 5 -> {
-                if (!settings.verifSettingsToHigh() || game.getNbChallenges(Challenge.Difficult.HARD) <= settings.getMaxHard()) return false;
+                if (!settings.isGridIncomplete() || game.getNbChallenges(Challenge.Difficult.HARD) <= settings.getMaxHard()) return false;
                 settings.setMaxHard(settings.getMaxHard() + 1);
             }
             case 7 -> {
-                if (!settings.verifSettingsToHigh() || game.getNbChallenges(Challenge.Difficult.EXTREME) <= settings.getMaxExtreme()) return false;
+                if (!settings.isGridIncomplete() || game.getNbChallenges(Challenge.Difficult.EXTREME) <= settings.getMaxExtreme()) return false;
                 settings.setMaxExtreme(settings.getMaxExtreme() + 1);
             }
             case 19 -> {

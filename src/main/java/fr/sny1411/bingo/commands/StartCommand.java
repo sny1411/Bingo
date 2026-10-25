@@ -37,7 +37,7 @@ public class StartCommand {
         if (Bingo.getGame().getEtat() != Game.Etat.SETUP) {
             return;
         }
-        if (Bingo.getGame().getSettings().verifSettingsToHigh()) {
+        if (Bingo.getGame().getSettings().isGridIncomplete()) {
             sender.sendMessage(gridIncompleteMessage());
             return;
         }

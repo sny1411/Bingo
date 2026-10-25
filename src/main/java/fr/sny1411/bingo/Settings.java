@@ -147,7 +147,8 @@ public class Settings {
         return maxEasy + maxMedium + maxHard + maxExtreme;
     }
 
-    public boolean verifSettingsToHigh() {
+    // The settings draw fewer challenges than the grid needs
+    public boolean isGridIncomplete() {
         return getMaxTotal() < getNbRandomChallenges();
     }
 

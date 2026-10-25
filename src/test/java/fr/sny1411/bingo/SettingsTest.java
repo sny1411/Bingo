@@ -86,11 +86,11 @@ class SettingsTest {
     void fixedPositionsLowerTheChallengesToDraw() {
         Settings settings = new Settings();
         settings.setMaxEasy(settings.getMaxEasy() - 2);
-        assertTrue(settings.verifSettingsToHigh());
+        assertTrue(settings.isGridIncomplete());
         settings.fixChallenge(1, ChallengeId.BATMAN);
         settings.fixChallenge(2, ChallengeId.AFFAME);
         assertEquals(23, settings.getNbRandomChallenges());
-        assertFalse(settings.verifSettingsToHigh());
+        assertFalse(settings.isGridIncomplete());
         assertEquals(25, settings.getNbChallengesInGrid());
         settings.setMaxEasy(settings.getMaxEasy() - 2);
         assertEquals(23, settings.getNbChallengesInGrid());
