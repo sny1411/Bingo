@@ -76,7 +76,7 @@ public final class Spawn {
     }
 
     public static void updateSettingsItems() {
-        if (Bingo.getGame().getEtat() != Game.Etat.SETUP) {
+        if (Bingo.getGame().getState() != Game.State.SETUP) {
             return;
         }
         for (Player player : Bukkit.getOnlinePlayers()) {

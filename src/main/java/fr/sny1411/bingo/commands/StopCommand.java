@@ -28,13 +28,13 @@ public class StopCommand {
 
     private static void run(CommandSender sender) {
         Game game = Bingo.getGame();
-        if (game.getEtat() == Game.Etat.STARTING) {
+        if (game.getState() == Game.State.STARTING) {
             Countdown.cancel();
-            game.setEtat(Game.Etat.SETUP);
+            game.setState(Game.State.SETUP);
             Text.broadcastMessage(Text.info(Component.translatable("bingo.start.cancelled")));
             return;
         }
-        if (game.getEtat() != Game.Etat.INGAME) {
+        if (game.getState() != Game.State.INGAME) {
             sender.sendMessage(Text.warning(Component.translatable("bingo.command.no_game")));
             return;
         }

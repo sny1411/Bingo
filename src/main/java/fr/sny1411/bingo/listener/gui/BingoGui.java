@@ -84,7 +84,7 @@ public class BingoGui implements Listener {
             if (colorTeam != Team.Color.SPECTATOR) {
                 Team playerTeam = Bingo.getGame().getTeams().getTeam(player);
                 List<Component> loreTeams = new ArrayList<>();
-                Component nbChallenges = Bingo.getGame().getModeAffichage() == Game.ModeAffichage.CHILL
+                Component nbChallenges = Bingo.getGame().getDisplayMode() == Game.DisplayMode.CHILL
                         ? Component.text(Bingo.getGame().getTeamsScore().get(team).getNbChallenges())
                         : Component.text("!!").decorate(TextDecoration.OBFUSCATED);
                 loreTeams.add(Component.translatable("bingo.gui.bingo.realized", NamedTextColor.BLUE, nbChallenges.color(NamedTextColor.WHITE)));
@@ -139,7 +139,7 @@ public class BingoGui implements Listener {
             } else {
                 ChallengeId challengeId = Challenge.getId(e.getCurrentItem());
                 if (challengeId != null) {
-                    ChallengeVerifier.verifChallenge(player, challengeId);
+                    ChallengeVerifier.checkChallenge(player, challengeId);
                 }
             }
             updateGui();

@@ -124,7 +124,7 @@ public class GridCommand {
     }
 
     private static boolean isNotSetup(CommandSender sender) {
-        if (Bingo.getGame().getEtat() != Game.Etat.SETUP) {
+        if (Bingo.getGame().getState() != Game.State.SETUP) {
             sender.sendMessage(Text.warning(Component.translatable("bingo.grid.setup_only")));
             return true;
         }

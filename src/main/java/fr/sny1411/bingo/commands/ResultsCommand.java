@@ -34,7 +34,7 @@ public class ResultsCommand {
     }
 
     private static void run() {
-        if (Bingo.getGame().getEtat() == Game.Etat.ENDGAME) {
+        if (Bingo.getGame().getState() == Game.State.ENDGAME) {
             List<Score> classementPts = new ArrayList<>(Bingo.getGame().getTeamsScore().values());
             List<Score> classementBingo = new ArrayList<>(Bingo.getGame().getTeamsScore().values());
 

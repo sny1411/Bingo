@@ -30,7 +30,7 @@ public class TeamsGui implements Listener {
     public static void openGui(Player player) {
         Inventory gui = GuiHolder.createInventory(GuiHolder.Type.TEAMS, 27, GuiItems.title("bingo.gui.teams.title", player));
         Iterator<Team> iteratorTeam = Bingo.getGame().getTeams().values().iterator();
-        int compteurTeam = 0;
+        int teamIndex = 0;
         for (int i = 0; i < 27; i++) {
             if (i > 9 && i < 17) {
                 if (iteratorTeam.hasNext()) {
@@ -38,8 +38,8 @@ public class TeamsGui implements Listener {
                     if (team.getColor() == Team.Color.SPECTATOR) {
                         gui.setItem(16, itemTeam(team.getColor(), player));
                     } else {
-                        gui.setItem(10 + compteurTeam, itemTeam(team.getColor(), player));
-                        compteurTeam++;
+                        gui.setItem(10 + teamIndex, itemTeam(team.getColor(), player));
+                        teamIndex++;
                     }
                 }
             } else {
@@ -69,14 +69,14 @@ public class TeamsGui implements Listener {
 
     @EventHandler
     private void compassClick(PlayerInteractEvent e) {
-        if (Bingo.getGame().getEtat() == Game.Etat.SETUP && Items.isTeamSelector(e.getItem())) {
+        if (Bingo.getGame().getState() == Game.State.SETUP && Items.isTeamSelector(e.getItem())) {
             openGui(e.getPlayer());
         }
     }
 
     @EventHandler
     private void clickItemGui(InventoryClickEvent e) {
-        if (Bingo.getGame().getEtat() == Game.Etat.SETUP && GuiHolder.typeOf(e.getView().getTopInventory()) == GuiHolder.Type.TEAMS && e.getCurrentItem() != null) {
+        if (Bingo.getGame().getState() == Game.State.SETUP && GuiHolder.typeOf(e.getView().getTopInventory()) == GuiHolder.Type.TEAMS && e.getCurrentItem() != null) {
             Player player = (Player) e.getWhoClicked();
             Team.Color color = getColor(e.getCurrentItem().getType());
             if (color == null) {

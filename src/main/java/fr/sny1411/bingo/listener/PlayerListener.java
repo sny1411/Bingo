@@ -21,11 +21,11 @@ public class PlayerListener implements Listener {
     private void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         e.joinMessage(connectionMessage("+", NamedTextColor.GREEN, player.getName()));
-        Game.Etat etat = Bingo.getGame().getEtat();
-        if (etat == Game.Etat.SETUP) {
+        Game.State state = Bingo.getGame().getState();
+        if (state == Game.State.SETUP) {
             Spawn.teleportPlayer(player);
             Spawn.giveItemsPlayer(player);
-        } else if ((etat == Game.Etat.STARTING || etat == Game.Etat.INGAME) && Bingo.getGame().getTeams().getTeam(player) == null) {
+        } else if ((state == Game.State.STARTING || state == Game.State.INGAME) && Bingo.getGame().getTeams().getTeam(player) == null) {
                 Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);
                 player.setGameMode(GameMode.SPECTATOR);
         }
@@ -34,7 +34,7 @@ public class PlayerListener implements Listener {
     // The items given during the setup are named in the player's language
     @EventHandler
     private void onLocaleChange(PlayerLocaleChangeEvent e) {
-        if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
+        if (Bingo.getGame().getState() == Game.State.SETUP) {
             Spawn.giveItemsPlayer(e.getPlayer(), e.locale());
         }
     }
@@ -42,7 +42,7 @@ public class PlayerListener implements Listener {
     @EventHandler
     private void onPlayerQuit(PlayerQuitEvent e) {
         e.quitMessage(connectionMessage("-", NamedTextColor.RED, e.getPlayer().getName()));
-        if (Bingo.getGame().getEtat() == Game.Etat.SETUP) {
+        if (Bingo.getGame().getState() == Game.State.SETUP) {
             Bingo.getGame().getTeams().leave(e.getPlayer());
         }
     }

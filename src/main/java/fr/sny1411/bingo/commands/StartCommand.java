@@ -35,7 +35,7 @@ public class StartCommand {
     }
 
     private void run(CommandSender sender) {
-        if (Bingo.getGame().getEtat() != Game.Etat.SETUP) {
+        if (Bingo.getGame().getState() != Game.State.SETUP) {
             return;
         }
         if (Bingo.getGame().getSettings().isGridIncomplete()) {
@@ -44,7 +44,7 @@ public class StartCommand {
         }
         Bingo.getGame().createGrids();
         if (isTeamComplete()) {
-            Bingo.getGame().setEtat(Game.Etat.STARTING);
+            Bingo.getGame().setState(Game.State.STARTING);
             Countdown.start(bingo, this::startGame);
         } else {
             sender.sendMessage(Text.warning(Component.translatable("bingo.start.players_without_team")));
@@ -55,7 +55,7 @@ public class StartCommand {
         Countdown.showTitle(Title.title(Component.text("\uE005"), Component.text(""), Countdown.TITLE_TIMES));
         Spawn.remove();
         Game game = Bingo.getGame();
-        game.setEtat(Game.Etat.INGAME);
+        game.setState(Game.State.INGAME);
         Environment.clearPlayers();
         Environment.setGamerulesInGame();
 
@@ -68,7 +68,7 @@ public class StartCommand {
             player.setGameMode(GameMode.SPECTATOR);
         }
 
-        if (Bingo.getGame().isDefiBonus()) {
+        if (Bingo.getGame().hasBonusChallenges()) {
             game.initBonusEvents();
         }
 

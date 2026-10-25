@@ -30,7 +30,7 @@ public class SpectateCommand {
     }
 
     private static void run(Player player) {
-        if (Bingo.getGame().getEtat() == Game.Etat.INGAME) {
+        if (Bingo.getGame().getState() == Game.State.INGAME) {
             if (Objects.requireNonNull(Bingo.getGame().getTeams().getTeam(player)).isGameFinish()) {
                 player.setGameMode(GameMode.SPECTATOR);
                 Bingo.getGame().getTeams().join(player, Team.Color.SPECTATOR);

@@ -117,7 +117,7 @@ public class Timer {
     private void end() {
         task.cancel();
         task = null;
-        game.setEtat(Game.Etat.ENDGAME);
+        game.setState(Game.State.ENDGAME);
         Game.getBingoInstance().getLogger().log(Level.INFO, "Game over");
     }
 

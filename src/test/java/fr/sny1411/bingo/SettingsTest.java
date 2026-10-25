@@ -26,9 +26,9 @@ class SettingsTest {
     @Test
     void resetBringsBackEveryDefault() {
         Settings settings = new Settings();
-        settings.setDefiBonus(true);
-        settings.setModeAffichage(Game.ModeAffichage.COMPETITION);
-        settings.setModeJeu(Game.ModeJeu.DUEL);
+        settings.setBonusChallenges(true);
+        settings.setDisplayMode(Game.DisplayMode.COMPETITION);
+        settings.setPlayMode(Game.PlayMode.DUEL);
         settings.setModeVictoire(Game.ModeVictoire.DEFIS);
         settings.setNbreBingoForWin(7);
         settings.setDurationMinutes(Settings.MAX_DURATION_MINUTES);
@@ -40,9 +40,9 @@ class SettingsTest {
         settings.reset();
 
         Settings defaults = new Settings();
-        assertEquals(defaults.isDefiBonus(), settings.isDefiBonus());
-        assertEquals(defaults.getModeAffichage(), settings.getModeAffichage());
-        assertEquals(defaults.getModeJeu(), settings.getModeJeu());
+        assertEquals(defaults.hasBonusChallenges(), settings.hasBonusChallenges());
+        assertEquals(defaults.getDisplayMode(), settings.getDisplayMode());
+        assertEquals(defaults.getPlayMode(), settings.getPlayMode());
         assertEquals(defaults.getModeVictoire(), settings.getModeVictoire());
         assertEquals(defaults.getNbreBingoForWin(), settings.getNbreBingoForWin());
         assertEquals(defaults.getDurationMinutes(), settings.getDurationMinutes());

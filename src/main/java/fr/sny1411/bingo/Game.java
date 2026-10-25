@@ -24,9 +24,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class Game {
-    public enum ModeAffichage {CHILL, COMPETITION}
+    public enum DisplayMode {CHILL, COMPETITION}
 
-    public enum ModeJeu {
+    public enum PlayMode {
         CLASSIC, DUEL, HANDICAP;
 
         public Component label() {
@@ -48,7 +48,7 @@ public class Game {
         }
     }
 
-    public enum Etat {
+    public enum State {
         SETUP, STARTING, INGAME, ENDGAME;
 
         public boolean isBeforeGame() {
@@ -62,7 +62,7 @@ public class Game {
     private final List<Challenge> challenges;
     private final List<BonusEvent> bonusEvents = new ArrayList<>();
     private boolean playersDamage;
-    private Etat etat;
+    private State state;
     private final Map<Team, Score> teamsScore = new HashMap<>();
     private Grid gameGrid;
     private final Map<Team, Grid> teamsGrid = new HashMap<>();
@@ -78,7 +78,7 @@ public class Game {
         this.teams = new Teams(settings);
         this.challenges = Challenge.loadChallenges();
         this.playersDamage = false;
-        this.etat = Etat.SETUP;
+        this.state = State.SETUP;
         setup();
     }
 
@@ -185,58 +185,58 @@ public class Game {
         Game.bingoInstance = bingoInstance;
     }
 
-    public void setDefiBonus(boolean defiBonus) {
-        settings.setDefiBonus(defiBonus);
+    public void setBonusChallenges(boolean bonusChallenges) {
+        settings.setBonusChallenges(bonusChallenges);
     }
 
     public void setPlayersDamage(boolean playersDamage) {
         this.playersDamage = playersDamage;
     }
 
-    public void setModeAffichage(ModeAffichage modeAffichage) {
-        settings.setModeAffichage(modeAffichage);
+    public void setDisplayMode(DisplayMode displayMode) {
+        settings.setDisplayMode(displayMode);
     }
 
-    public void setModeJeu(ModeJeu modeJeu) {
-        settings.setModeJeu(modeJeu);
+    public void setPlayMode(PlayMode playMode) {
+        settings.setPlayMode(playMode);
     }
 
     public void setModeVictoire(ModeVictoire modeVictoire) {
         settings.setModeVictoire(modeVictoire);
     }
 
-    public void setEtat(Etat etat) {
-        this.etat = etat;
-        if (etat == Etat.ENDGAME) {
+    public void setState(State state) {
+        this.state = state;
+        if (state == State.ENDGAME) {
             Bingo.setNotListenChallenges();
             end();
-        } else if (etat == Etat.INGAME) {
+        } else if (state == State.INGAME) {
             Bingo.setListenChallenges();
         }
     }
 
-    public boolean isDefiBonus() {
-        return settings.isDefiBonus();
+    public boolean hasBonusChallenges() {
+        return settings.hasBonusChallenges();
     }
 
     public boolean isPlayersDamage() {
         return playersDamage;
     }
 
-    public ModeAffichage getModeAffichage() {
-        return settings.getModeAffichage();
+    public DisplayMode getDisplayMode() {
+        return settings.getDisplayMode();
     }
 
-    public ModeJeu getModeJeu() {
-        return settings.getModeJeu();
+    public PlayMode getPlayMode() {
+        return settings.getPlayMode();
     }
 
     public ModeVictoire getModeVictoire() {
         return settings.getModeVictoire();
     }
 
-    public Etat getEtat() {
-        return etat;
+    public State getState() {
+        return state;
     }
 
     public int getNbreBingoForWin() {

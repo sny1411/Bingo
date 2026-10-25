@@ -69,8 +69,8 @@ public class ValidateCommand {
     }
 
     private static void run(CommandSender sender, Team team, ChallengeId challengeId, Action action) {
-        Game.Etat etat = Bingo.getGame().getEtat();
-        if (etat != Game.Etat.INGAME && etat != Game.Etat.ENDGAME) {
+        Game.State state = Bingo.getGame().getState();
+        if (state != Game.State.INGAME && state != Game.State.ENDGAME) {
             sender.sendMessage(Text.warning(Component.translatable("bingo.command.no_game")));
             return;
         }
@@ -87,7 +87,7 @@ public class ValidateCommand {
             sender.sendMessage(Text.warning(Component.translatable("bingo.valid.already_validated", challenge.getName())));
             return;
         }
-        ChallengeProgress.valideAndRealizeChallenge(team, challengeId);
+        ChallengeProgress.validateAndRealizeChallenge(team, challengeId);
     }
 
     private static void invalidate(CommandSender sender, Team team, ChallengeId challengeId, Challenge challenge) {
