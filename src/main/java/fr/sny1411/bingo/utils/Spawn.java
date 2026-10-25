@@ -48,9 +48,9 @@ public final class Spawn {
     public static void teleportPlayer(Player player) {
         player.teleportAsync(SPAWN_LOC).thenAccept(result -> {
             if (Boolean.TRUE.equals(result)) {
-                Bukkit.getLogger().log(Level.INFO, String.format("%s teleport to spawn", player.getName()));
+                Game.getBingoInstance().getLogger().log(Level.INFO, String.format("%s teleport to spawn", player.getName()));
             } else {
-                Bukkit.getLogger().log(Level.WARNING, String.format("%s teleport error", player.getName()));
+                Game.getBingoInstance().getLogger().log(Level.WARNING, String.format("%s teleport error", player.getName()));
             }
         });
     }

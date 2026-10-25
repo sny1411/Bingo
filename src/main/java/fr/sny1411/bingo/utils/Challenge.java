@@ -9,7 +9,6 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -66,22 +65,22 @@ public class Challenge {
                 String[] lineSplit = line.split("\\|");
                 ChallengeId id = ChallengeId.fromString(lineSplit[0]);
                 if (id == null) {
-                    Bukkit.getLogger().log(Level.SEVERE, String.format("challenges.csv: unknown challenge id %s, add it to ChallengeId", lineSplit[0]));
+                    Game.getBingoInstance().getLogger().log(Level.SEVERE, String.format("challenges.csv: unknown challenge id %s, add it to ChallengeId", lineSplit[0]));
                 } else if (!loadedIds.add(id)) {
-                    Bukkit.getLogger().log(Level.SEVERE, String.format("challenges.csv: duplicate challenge id %s", id));
+                    Game.getBingoInstance().getLogger().log(Level.SEVERE, String.format("challenges.csv: duplicate challenge id %s", id));
                 } else {
                     challenges.add(new Challenge(id, Difficult.valueOf(lineSplit[1]), createItem(id, lineSplit[2])));
                 }
             }
             for (ChallengeId id : ChallengeId.values()) {
                 if (!loadedIds.contains(id)) {
-                    Bukkit.getLogger().log(Level.SEVERE, String.format("challenges.csv: missing challenge id %s", id));
+                    Game.getBingoInstance().getLogger().log(Level.SEVERE, String.format("challenges.csv: missing challenge id %s", id));
                 }
             }
             Collections.shuffle(challenges);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Game.getBingoInstance().getLogger().log(Level.SEVERE, "Could not read challenges.csv", e);
         }
         return challenges;
     }
