@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import fr.sny1411.bingo.Bingo;
 import fr.sny1411.bingo.Game;
+import fr.sny1411.bingo.listener.challenges.MobChallengesListener;
 import fr.sny1411.bingo.utils.*;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -61,6 +62,7 @@ public class StartCommand {
         game.getTimer().start(bingo);
         ScoreBoard.createScoreBoard(bingo);
         game.initScores();
+        MobChallengesListener.clearWolfTames();
 
         for (Player player : Bingo.getGame().getTeams().get(Team.Color.SPECTATOR).getOnlinePlayers()) {
             player.setGameMode(GameMode.SPECTATOR);

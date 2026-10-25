@@ -25,6 +25,11 @@ import static fr.sny1411.bingo.listener.challenges.ChallengeProgress.realizeChal
 public class MobChallengesListener implements Listener {
     private static final Hashtable<Player, Integer> nbWolfTame = new Hashtable<>();
 
+    // The wolves tamed in a previous game don't count
+    public static void clearWolfTames() {
+        nbWolfTame.clear();
+    }
+
     @EventHandler
     private void mobKill(EntityDeathEvent e) {
         LivingEntity entity = e.getEntity();
