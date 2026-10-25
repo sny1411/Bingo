@@ -248,12 +248,8 @@ public class Challenge {
         this.validated = validated;
     }
 
-    @Override
-    public Challenge clone() {
-        try {
-            return (Challenge) super.clone();
-        } catch (CloneNotSupportedException e) {
-            return new Challenge(this.getId(), this.getDifficult(), this.item);
-        }
+    // The same challenge, not realized nor validated yet, for the grid of another team
+    public Challenge copy() {
+        return new Challenge(id, difficult, item);
     }
 }
